@@ -1,0 +1,40 @@
+{
+  "countryId": "canada",
+  "period": "Q4 2025",
+  "gdp": "$2.14T CAD",
+  "gdpGrowth": "+1.8%",
+  "inflation": "2.4%",
+  "unemployment": "5.8%",
+  "interestRate": "4.25%",
+  "currencyRate": "0.74 CAD/USD",
+  "tradeBalance": "-$2.1B",
+  "indicators": [
+    { "name": "GDP", "value": "$2.14T CAD", "change": "+1.8%", "direction": "up" },
+    { "name": "GDP Growth", "value": "+1.8%", "change": "+0.3pp", "direction": "up" },
+    { "name": "Inflation (CPI)", "value": "2.4%", "change": "-0.8pp", "direction": "down" },
+    { "name": "Unemployment", "value": "5.8%", "change": "+0.2pp", "direction": "up" },
+    { "name": "BoC Rate", "value": "4.25%", "change": "-0.50pp", "direction": "down" },
+    { "name": "CAD/USD", "value": "0.74", "change": "-1.2%", "direction": "down" },
+    { "name": "Trade Balance", "value": "-$2.1B", "change": "-$0.4B", "direction": "down" },
+    { "name": "Consumer Confidence", "value": "98.4", "change": "+2.1", "direction": "up" }
+  ],
+  "trends": [
+    { "name": "AI Corridor Expansion", "description": "Toronto-Montreal AI corridor attracting $4.8B in venture investment, creating demand for AI talent and consulting services across financial services and healthcare.", "impact": "high", "category": "Technology" },
+    { "name": "Green Energy Transition", "description": "Canada's Net-Zero by 2050 commitment driving $120B in clean energy infrastructure, hydrogen hubs, and carbon capture projects across Alberta and BC.", "impact": "high", "category": "Sustainability" },
+    { "name": "Digital Government Modernization", "description": "Federal and provincial governments accelerating cloud migration and digital services, with $8.2B allocated for IT modernization through 2027.", "impact": "high", "category": "Public Sector" },
+    { "name": "Open Banking Framework", "description": "Canada's phased open banking rollout creates advisory and implementation opportunities across all Big Five banks and fintech ecosystem.", "impact": "medium", "category": "Financial Services" },
+    { "name": "Critical Minerals Strategy", "description": "Government investing $3.8B in critical mineral supply chains (lithium, cobalt, nickel) to position Canada as global EV supply chain leader.", "impact": "medium", "category": "Resources" }
+  ],
+  "risks": [
+    { "title": "Housing Affordability Crisis", "description": "Persistent housing costs affecting talent attraction in Toronto and Vancouver. Could impact Accenture's ability to recruit and retain in key markets.", "severity": "high", "category": "Labor Market" },
+    { "title": "US-Canada Trade Tensions", "description": "Potential tariff escalation on critical sectors. Cross-border supply chain disruptions could impact manufacturing and energy clients.", "severity": "high", "category": "Geopolitical" },
+    { "title": "Tech Sector Correction", "description": "Ongoing rationalization in Canadian tech sector. May reduce near-term IT spending, but creates consulting opportunity for cost optimization.", "severity": "medium", "category": "Industry" },
+    { "title": "Interest Rate Uncertainty", "description": "BoC rate path unclear — further cuts could stimulate investment, but persistent inflation could pause easing.", "severity": "medium", "category": "Economic" }
+  ],
+  "opportunities": [
+    { "title": "AI/ML Advisory & Implementation", "description": "Canada's AI ecosystem creates a unique position for Accenture to lead enterprise AI transformation across financial services and healthcare.", "potential": "$120M+", "timeline": "FY25-FY27", "category": "Technology" },
+    { "title": "Federal Cloud Migration", "description": "Government of Canada's cloud-first policy and $4.2B IT modernization budget. Major opportunity in SAP, ServiceNow, and cloud infrastructure.", "potential": "$85M+", "timeline": "FY25-FY28", "category": "Public Sector" },
+    { "title": "Energy Transition Consulting", "description": "Alberta energy companies pivoting to clean tech. Carbon capture, hydrogen, and renewable energy consulting.", "potential": "$60M+", "timeline": "FY25-FY30", "category": "Energy" },
+    { "title": "Open Banking Implementation", "description": "All Big Five banks plus 20+ fintechs need API infrastructure, compliance frameworks, and customer experience redesign.", "potential": "$45M+", "timeline": "FY25-FY27", "category": "Financial Services" }
+  ]
+}

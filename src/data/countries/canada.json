@@ -1,0 +1,25 @@
+{
+  "id": "canada",
+  "name": "Canada",
+  "code": "CAN",
+  "region": "North America",
+  "subRegion": "Northern America",
+  "coordinates": [-96.0, 56.0],
+  "available": true,
+  "overview": {
+    "population": "40.1M",
+    "gdp": "$2.14T CAD",
+    "gdpGrowth": "+1.8%",
+    "accentureHeadcount": 12500,
+    "accentureRevenue": "$1.8B CAD",
+    "utilization": 87.2,
+    "keyIndustries": [
+      "Technology",
+      "Financial Services",
+      "Energy & Resources",
+      "Public Services",
+      "Health & Life Sciences"
+    ],
+    "description": "Canada represents Accenture's second-largest North American market with 12,500+ professionals across 9 cities. The country's strong technology ecosystem — anchored by the Toronto-Montreal AI Corridor — combined with robust financial services, energy transition initiatives, and accelerated government digital modernization creates a $1.8B revenue base growing at 9.4% annually. Key strategic themes include AI/ML advisory, cloud migration, open banking implementation, and green energy transition consulting."
+  }
+}

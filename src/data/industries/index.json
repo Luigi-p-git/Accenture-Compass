@@ -1,0 +1,98 @@
+[
+  {
+    "id": "technology",
+    "name": "Technology",
+    "slug": "technology",
+    "icon": "Monitor",
+    "description": "Enterprise software, cloud platforms, AI/ML, SaaS, cybersecurity, and digital infrastructure consulting and implementation.",
+    "globalRevenue": "$16.2B",
+    "globalGrowth": "+12.4%",
+    "countriesActive": 48,
+    "accentureShare": "6.8%",
+    "color": "#a600ff"
+  },
+  {
+    "id": "financial-services",
+    "name": "Financial Services",
+    "slug": "financial-services",
+    "icon": "DollarSign",
+    "description": "Banking, insurance, capital markets, payments, wealth management, and fintech advisory services.",
+    "globalRevenue": "$14.8B",
+    "globalGrowth": "+8.2%",
+    "countriesActive": 45,
+    "accentureShare": "5.4%",
+    "color": "#7c3aed"
+  },
+  {
+    "id": "energy",
+    "name": "Energy & Resources",
+    "slug": "energy",
+    "icon": "Zap",
+    "description": "Oil & gas, mining, utilities, renewable energy, grid modernization, and energy transition consulting.",
+    "globalRevenue": "$8.4B",
+    "globalGrowth": "+6.8%",
+    "countriesActive": 38,
+    "accentureShare": "4.2%",
+    "color": "#2563eb"
+  },
+  {
+    "id": "public-services",
+    "name": "Public Services",
+    "slug": "public-services",
+    "icon": "Building",
+    "description": "Federal, state, and local government. Defense, intelligence, public health, and civic technology.",
+    "globalRevenue": "$7.6B",
+    "globalGrowth": "+14.6%",
+    "countriesActive": 32,
+    "accentureShare": "8.1%",
+    "color": "#059669"
+  },
+  {
+    "id": "health",
+    "name": "Health & Life Sciences",
+    "slug": "health",
+    "icon": "HeartPulse",
+    "description": "Pharmaceuticals, medical devices, biotech, healthcare providers, payers, and life sciences R&D.",
+    "globalRevenue": "$6.2B",
+    "globalGrowth": "+18.4%",
+    "countriesActive": 35,
+    "accentureShare": "3.8%",
+    "color": "#0891b2"
+  },
+  {
+    "id": "communications",
+    "name": "Communications & Media",
+    "slug": "communications",
+    "icon": "Radio",
+    "description": "Telecommunications, broadcasting, streaming platforms, advertising technology, and content.",
+    "globalRevenue": "$5.8B",
+    "globalGrowth": "+5.2%",
+    "countriesActive": 40,
+    "accentureShare": "4.5%",
+    "color": "#d97706"
+  },
+  {
+    "id": "retail",
+    "name": "Retail & Consumer Goods",
+    "slug": "retail",
+    "icon": "ShoppingCart",
+    "description": "E-commerce, CPG, supply chain, omnichannel retail, consumer experience, and logistics.",
+    "globalRevenue": "$5.4B",
+    "globalGrowth": "+9.8%",
+    "countriesActive": 42,
+    "accentureShare": "3.6%",
+    "color": "#e11d48"
+  },
+  {
+    "id": "security",
+    "name": "Security",
+    "slug": "security",
+    "icon": "Shield",
+    "description": "Cyber defense, managed security, identity & access, risk management, and compliance.",
+    "globalRevenue": "$4.2B",
+    "globalGrowth": "+24.2%",
+    "countriesActive": 44,
+    "accentureShare": "7.2%",
+    "color": "#dc2626"
+  }
+]

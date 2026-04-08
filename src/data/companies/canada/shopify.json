@@ -1,0 +1,140 @@
+{
+  "id": "shopify",
+  "name": "Shopify",
+  "slug": "shopify",
+  "industryId": "technology",
+  "countryId": "canada",
+  "description": "Canada's largest technology company. Leading global e-commerce platform powering millions of merchants worldwide. Accenture partnership focuses on cloud migration, AI-powered analytics, merchant experience optimization, and global expansion consulting.",
+  "founded": 2006,
+  "headquarters": "Ottawa, Ontario",
+  "revenue": "$7.1B USD",
+  "employees": 11600,
+  "growth": "+26%",
+  "marketCap": "$120B USD",
+  "stockTicker": "SHOP (NYSE/TSX)",
+  "accentureEngagement": {
+    "startYear": 2018,
+    "totalRevenue": "$68M",
+    "activeProjects": 8,
+    "teamSize": 420,
+    "services": [
+      "Cloud Infrastructure Migration (AWS/GCP)",
+      "AI/ML Analytics Platform",
+      "Merchant Experience Optimization",
+      "Global Expansion Strategy",
+      "Data Platform Architecture",
+      "Cybersecurity Assessment"
+    ],
+    "satisfaction": 4.7
+  },
+  "topClients": [
+    {
+      "id": "shopify-enterprise",
+      "name": "Shopify Enterprise Division",
+      "slug": "shopify-enterprise",
+      "companyId": "shopify",
+      "role": "Strategic Account — Enterprise Platform",
+      "engagementValue": "$32M",
+      "startDate": "2019-03",
+      "status": "active",
+      "projects": [
+        {
+          "name": "Cloud Migration — Phase 3",
+          "value": "$12M",
+          "status": "active",
+          "startDate": "2024-06",
+          "description": "Migration of enterprise merchant services to multi-cloud architecture (AWS + GCP). Includes Kubernetes orchestration and edge computing for global CDN."
+        },
+        {
+          "name": "AI Recommendation Engine",
+          "value": "$8M",
+          "status": "active",
+          "startDate": "2025-01",
+          "description": "Building AI-powered product recommendation engine using transformer models trained on anonymized merchant data. Expected to increase merchant conversion rates by 15-22%."
+        },
+        {
+          "name": "Merchant Analytics Dashboard",
+          "value": "$5M",
+          "status": "completed",
+          "startDate": "2023-09",
+          "endDate": "2024-08",
+          "description": "Real-time analytics dashboard for enterprise merchants with predictive inventory management and demand forecasting."
+        }
+      ],
+      "contacts": [
+        { "name": "Sarah Chen", "role": "VP Engineering", "department": "Platform" },
+        { "name": "Marcus Williams", "role": "Director of Strategy", "department": "Enterprise" },
+        { "name": "Priya Sharma", "role": "Head of AI/ML", "department": "Data Science" }
+      ]
+    },
+    {
+      "id": "shopify-payments",
+      "name": "Shopify Payments & Financial Services",
+      "slug": "shopify-payments",
+      "companyId": "shopify",
+      "role": "Growth Account — FinTech",
+      "engagementValue": "$18M",
+      "startDate": "2021-06",
+      "status": "active",
+      "projects": [
+        {
+          "name": "Payments Infrastructure Modernization",
+          "value": "$10M",
+          "status": "active",
+          "startDate": "2024-01",
+          "description": "Rebuilding payments processing infrastructure for sub-100ms latency globally. Includes PCI-DSS compliance overhaul and fraud detection AI."
+        },
+        {
+          "name": "Shop Pay International Expansion",
+          "value": "$6M",
+          "status": "active",
+          "startDate": "2025-02",
+          "description": "Regulatory and technical advisory for expanding Shop Pay into 12 new markets across Europe and APAC."
+        }
+      ],
+      "contacts": [
+        { "name": "David Okonkwo", "role": "GM Payments", "department": "Financial Services" },
+        { "name": "Lisa Tremblay", "role": "VP Compliance", "department": "Legal & Compliance" }
+      ]
+    },
+    {
+      "id": "shopify-security",
+      "name": "Shopify Security & Trust",
+      "slug": "shopify-security",
+      "companyId": "shopify",
+      "role": "Specialist Engagement — Cybersecurity",
+      "engagementValue": "$8M",
+      "startDate": "2022-11",
+      "status": "active",
+      "projects": [
+        {
+          "name": "Zero Trust Architecture Implementation",
+          "value": "$5M",
+          "status": "active",
+          "startDate": "2024-09",
+          "description": "Enterprise-wide zero trust security architecture. Identity-based access controls, micro-segmentation, and continuous verification across all internal and merchant-facing systems."
+        },
+        {
+          "name": "Threat Intelligence Platform",
+          "value": "$3M",
+          "status": "pipeline",
+          "startDate": "2025-06",
+          "description": "AI-driven threat intelligence platform aggregating signals across merchant ecosystem for proactive fraud and attack prevention."
+        }
+      ],
+      "contacts": [
+        { "name": "Andrew Park", "role": "CISO", "department": "Security" }
+      ]
+    }
+  ],
+  "revenueHistory": [
+    { "period": "Q1 2024", "value": 12 },
+    { "period": "Q2 2024", "value": 14 },
+    { "period": "Q3 2024", "value": 15 },
+    { "period": "Q4 2024", "value": 16 },
+    { "period": "Q1 2025", "value": 16 },
+    { "period": "Q2 2025", "value": 17 },
+    { "period": "Q3 2025", "value": 18 },
+    { "period": "Q4 2025", "value": 19 }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "countryId": "canada",
+  "period": "Q4 2025",
+  "totalRevenue": "$1.8B CAD",
+  "totalRevenueValue": 1800,
+  "revenueGrowth": "+9.4%",
+  "operatingMargin": "16.2%",
+  "bookings": "$2.1B",
+  "pipeline": "$3.4B",
+  "serviceLines": [
+    { "name": "Technology", "revenue": "$630M", "revenueValue": 630, "growth": "+12.8%", "percentage": 35 },
+    { "name": "Strategy & Consulting", "revenue": "$360M", "revenueValue": 360, "growth": "+7.4%", "percentage": 20 },
+    { "name": "Operations", "revenue": "$324M", "revenueValue": 324, "growth": "+8.1%", "percentage": 18 },
+    { "name": "Interactive (Song)", "revenue": "$270M", "revenueValue": 270, "growth": "+15.2%", "percentage": 15 },
+    { "name": "Security", "revenue": "$216M", "revenueValue": 216, "growth": "+22.6%", "percentage": 12 }
+  ],
+  "quarterlyRevenue": [
+    { "quarter": "Q1 2024", "revenue": 410, "previousYear": 380 },
+    { "quarter": "Q2 2024", "revenue": 430, "previousYear": 395 },
+    { "quarter": "Q3 2024", "revenue": 445, "previousYear": 405 },
+    { "quarter": "Q4 2024", "revenue": 460, "previousYear": 420 },
+    { "quarter": "Q1 2025", "revenue": 470, "previousYear": 410 },
+    { "quarter": "Q2 2025", "revenue": 480, "previousYear": 430 },
+    { "quarter": "Q3 2025", "revenue": 490, "previousYear": 445 },
+    { "quarter": "Q4 2025", "revenue": 495, "previousYear": 460 }
+  ],
+  "topAccounts": [
+    { "name": "Royal Bank of Canada", "revenue": "$68M", "growth": "+12%" },
+    { "name": "Government of Canada", "revenue": "$62M", "growth": "+18%" },
+    { "name": "TD Bank Group", "revenue": "$54M", "growth": "+8%" },
+    { "name": "Shopify", "revenue": "$48M", "growth": "+24%" },
+    { "name": "Suncor Energy", "revenue": "$42M", "growth": "+6%" },
+    { "name": "Bell Canada", "revenue": "$38M", "growth": "+10%" },
+    { "name": "Manulife Financial", "revenue": "$35M", "growth": "+14%" },
+    { "name": "Province of Ontario", "revenue": "$32M", "growth": "+22%" }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "countryId": "canada",
+  "period": "Q4 2025",
+  "totalHeadcount": 12500,
+  "utilizationRate": 87.2,
+  "benchPercentage": 8.4,
+  "attritionRate": 12.1,
+  "avgTenure": 4.2,
+  "skillsBreakdown": [
+    { "name": "Cloud & Infrastructure", "count": 2800, "percentage": 22.4, "growth": 18 },
+    { "name": "AI / Machine Learning", "count": 1650, "percentage": 13.2, "growth": 34 },
+    { "name": "Data & Analytics", "count": 1900, "percentage": 15.2, "growth": 22 },
+    { "name": "Cybersecurity", "count": 1100, "percentage": 8.8, "growth": 28 },
+    { "name": "SAP / ERP", "count": 1400, "percentage": 11.2, "growth": 5 },
+    { "name": "Salesforce", "count": 800, "percentage": 6.4, "growth": 12 },
+    { "name": "Digital Commerce", "count": 650, "percentage": 5.2, "growth": 15 },
+    { "name": "Strategy Consulting", "count": 1200, "percentage": 9.6, "growth": 8 },
+    { "name": "Agile / DevOps", "count": 600, "percentage": 4.8, "growth": 20 },
+    { "name": "Industry Specialists", "count": 400, "percentage": 3.2, "growth": 10 }
+  ],
+  "levelDistribution": [
+    { "level": "Analyst", "count": 3750, "percentage": 30 },
+    { "level": "Consultant", "count": 3375, "percentage": 27 },
+    { "level": "Manager", "count": 2500, "percentage": 20 },
+    { "level": "Senior Manager", "count": 1875, "percentage": 15 },
+    { "level": "Managing Director", "count": 1000, "percentage": 8 }
+  ],
+  "cityDensity": [
+    { "city": "Toronto", "province": "ON", "headcount": 5200, "coordinates": [-79.38, 43.65] },
+    { "city": "Montreal", "province": "QC", "headcount": 2800, "coordinates": [-73.57, 45.50] },
+    { "city": "Ottawa", "province": "ON", "headcount": 1500, "coordinates": [-75.70, 45.42] },
+    { "city": "Vancouver", "province": "BC", "headcount": 1200, "coordinates": [-123.12, 49.28] },
+    { "city": "Calgary", "province": "AB", "headcount": 800, "coordinates": [-114.07, 51.05] },
+    { "city": "Edmonton", "province": "AB", "headcount": 400, "coordinates": [-113.49, 53.55] },
+    { "city": "Winnipeg", "province": "MB", "headcount": 300, "coordinates": [-97.14, 49.90] },
+    { "city": "Halifax", "province": "NS", "headcount": 200, "coordinates": [-63.57, 44.65] },
+    { "city": "Kitchener-Waterloo", "province": "ON", "headcount": 100, "coordinates": [-80.52, 43.45] }
+  ],
+  "trends": [
+    { "period": "Jan 2025", "value": 11200 },
+    { "period": "Feb 2025", "value": 11400 },
+    { "period": "Mar 2025", "value": 11550 },
+    { "period": "Apr 2025", "value": 11700 },
+    { "period": "May 2025", "value": 11900 },
+    { "period": "Jun 2025", "value": 12000 },
+    { "period": "Jul 2025", "value": 12100 },
+    { "period": "Aug 2025", "value": 12150 },
+    { "period": "Sep 2025", "value": 12250 },
+    { "period": "Oct 2025", "value": 12350 },
+    { "period": "Nov 2025", "value": 12400 },
+    { "period": "Dec 2025", "value": 12500 }
+  ]
+}

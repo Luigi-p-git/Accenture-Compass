@@ -1,0 +1,171 @@
+[
+  {
+    "industryId": "technology",
+    "countryId": "canada",
+    "revenue": "$520M",
+    "revenueValue": 520,
+    "growth": "+14.2%",
+    "companiesCount": 45,
+    "employeesInSector": 3200,
+    "marketShare": "8.5%",
+    "outlook": "Canada's technology sector continues strong growth driven by AI/ML adoption, cloud migration, and digital transformation across all industries. The Toronto-Montreal AI corridor is a major catalyst, with $4.8B in venture investment.",
+    "topCompanies": [
+      { "id": "shopify", "name": "Shopify", "revenue": "$68M", "employees": 420, "growth": "+18%", "isClient": true },
+      { "id": "opentext", "name": "OpenText", "revenue": "$52M", "employees": 310, "growth": "+12%", "isClient": true },
+      { "id": "constellation", "name": "Constellation Software", "revenue": "$45M", "employees": 280, "growth": "+8%", "isClient": true },
+      { "id": "lightspeed", "name": "Lightspeed Commerce", "revenue": "$38M", "employees": 240, "growth": "+22%", "isClient": true },
+      { "id": "descartes", "name": "Descartes Systems", "revenue": "$32M", "employees": 180, "growth": "+15%", "isClient": true },
+      { "id": "kinaxis", "name": "Kinaxis", "revenue": "$28M", "employees": 160, "growth": "+20%", "isClient": false }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 380 },
+      { "period": "Q2 2024", "value": 400 },
+      { "period": "Q3 2024", "value": 420 },
+      { "period": "Q4 2024", "value": 450 },
+      { "period": "Q1 2025", "value": 470 },
+      { "period": "Q2 2025", "value": 490 },
+      { "period": "Q3 2025", "value": 510 },
+      { "period": "Q4 2025", "value": 520 }
+    ]
+  },
+  {
+    "industryId": "financial-services",
+    "countryId": "canada",
+    "revenue": "$410M",
+    "revenueValue": 410,
+    "growth": "+8.6%",
+    "companiesCount": 32,
+    "employeesInSector": 2600,
+    "marketShare": "6.2%",
+    "outlook": "Canada's Big Five banks continue investing heavily in digital transformation, open banking readiness, and AI-powered risk management. Fintech ecosystem growth creating new advisory opportunities.",
+    "topCompanies": [
+      { "id": "rbc", "name": "Royal Bank of Canada", "revenue": "$68M", "employees": 480, "growth": "+12%", "isClient": true },
+      { "id": "td", "name": "TD Bank Group", "revenue": "$54M", "employees": 380, "growth": "+8%", "isClient": true },
+      { "id": "manulife", "name": "Manulife Financial", "revenue": "$35M", "employees": 240, "growth": "+14%", "isClient": true },
+      { "id": "sunlife", "name": "Sun Life Financial", "revenue": "$30M", "employees": 200, "growth": "+10%", "isClient": true },
+      { "id": "bmo", "name": "BMO Financial Group", "revenue": "$28M", "employees": 190, "growth": "+6%", "isClient": true }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 340 },
+      { "period": "Q2 2024", "value": 350 },
+      { "period": "Q3 2024", "value": 360 },
+      { "period": "Q4 2024", "value": 370 },
+      { "period": "Q1 2025", "value": 380 },
+      { "period": "Q2 2025", "value": 390 },
+      { "period": "Q3 2025", "value": 400 },
+      { "period": "Q4 2025", "value": 410 }
+    ]
+  },
+  {
+    "industryId": "energy",
+    "countryId": "canada",
+    "revenue": "$320M",
+    "revenueValue": 320,
+    "growth": "+6.1%",
+    "companiesCount": 28,
+    "employeesInSector": 1800,
+    "marketShare": "5.8%",
+    "outlook": "Energy transition is the dominant theme. Oil sands companies pivoting to carbon capture and hydrogen. Renewable energy investments accelerating across provinces. Grid modernization creating digital infrastructure opportunities.",
+    "topCompanies": [
+      { "id": "suncor", "name": "Suncor Energy", "revenue": "$42M", "employees": 280, "growth": "+6%", "isClient": true },
+      { "id": "enbridge", "name": "Enbridge", "revenue": "$38M", "employees": 240, "growth": "+4%", "isClient": true },
+      { "id": "tcenergy", "name": "TC Energy", "revenue": "$32M", "employees": 200, "growth": "+8%", "isClient": true },
+      { "id": "cnrl", "name": "Canadian Natural Resources", "revenue": "$28M", "employees": 180, "growth": "+5%", "isClient": true },
+      { "id": "imperial", "name": "Imperial Oil", "revenue": "$22M", "employees": 140, "growth": "+3%", "isClient": false }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 270 },
+      { "period": "Q2 2024", "value": 280 },
+      { "period": "Q3 2024", "value": 290 },
+      { "period": "Q4 2024", "value": 295 },
+      { "period": "Q1 2025", "value": 300 },
+      { "period": "Q2 2025", "value": 305 },
+      { "period": "Q3 2025", "value": 315 },
+      { "period": "Q4 2025", "value": 320 }
+    ]
+  },
+  {
+    "industryId": "public-services",
+    "countryId": "canada",
+    "revenue": "$280M",
+    "revenueValue": 280,
+    "growth": "+11.8%",
+    "companiesCount": 15,
+    "employeesInSector": 2100,
+    "marketShare": "12.4%",
+    "outlook": "Federal and provincial governments accelerating cloud migration and digital services modernization. $8.2B allocated for IT modernization through 2027. Strong pipeline in defense, immigration services, and tax administration.",
+    "topCompanies": [
+      { "id": "goc", "name": "Government of Canada", "revenue": "$62M", "employees": 520, "growth": "+18%", "isClient": true },
+      { "id": "ontario", "name": "Province of Ontario", "revenue": "$32M", "employees": 280, "growth": "+22%", "isClient": true },
+      { "id": "bc", "name": "Province of British Columbia", "revenue": "$24M", "employees": 180, "growth": "+15%", "isClient": true },
+      { "id": "cra", "name": "Canada Revenue Agency", "revenue": "$20M", "employees": 160, "growth": "+12%", "isClient": true },
+      { "id": "dnd", "name": "Dept of National Defence", "revenue": "$18M", "employees": 140, "growth": "+8%", "isClient": true }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 210 },
+      { "period": "Q2 2024", "value": 220 },
+      { "period": "Q3 2024", "value": 235 },
+      { "period": "Q4 2024", "value": 240 },
+      { "period": "Q1 2025", "value": 250 },
+      { "period": "Q2 2025", "value": 260 },
+      { "period": "Q3 2025", "value": 270 },
+      { "period": "Q4 2025", "value": 280 }
+    ]
+  },
+  {
+    "industryId": "health",
+    "countryId": "canada",
+    "revenue": "$170M",
+    "revenueValue": 170,
+    "growth": "+19.4%",
+    "companiesCount": 22,
+    "employeesInSector": 1200,
+    "marketShare": "4.8%",
+    "outlook": "Healthcare digitization accelerating post-pandemic. Virtual care platforms, electronic health records modernization, and pharmaceutical supply chain optimization driving growth. Fastest-growing sector in Canada.",
+    "topCompanies": [
+      { "id": "bausch", "name": "Bausch Health", "revenue": "$28M", "employees": 180, "growth": "+16%", "isClient": true },
+      { "id": "apotex", "name": "Apotex", "revenue": "$24M", "employees": 160, "growth": "+12%", "isClient": true },
+      { "id": "telushealth", "name": "Telus Health", "revenue": "$22M", "employees": 140, "growth": "+28%", "isClient": true },
+      { "id": "wellhealth", "name": "WELL Health Technologies", "revenue": "$18M", "employees": 120, "growth": "+32%", "isClient": false },
+      { "id": "medavail", "name": "MedAvail", "revenue": "$14M", "employees": 90, "growth": "+20%", "isClient": false }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 110 },
+      { "period": "Q2 2024", "value": 120 },
+      { "period": "Q3 2024", "value": 130 },
+      { "period": "Q4 2024", "value": 140 },
+      { "period": "Q1 2025", "value": 145 },
+      { "period": "Q2 2025", "value": 155 },
+      { "period": "Q3 2025", "value": 162 },
+      { "period": "Q4 2025", "value": 170 }
+    ]
+  },
+  {
+    "industryId": "communications",
+    "countryId": "canada",
+    "revenue": "$100M",
+    "revenueValue": 100,
+    "growth": "+5.3%",
+    "companiesCount": 18,
+    "employeesInSector": 600,
+    "marketShare": "3.2%",
+    "outlook": "Telecom consolidation (Rogers-Shaw) creating integration opportunities. 5G rollout driving network modernization. Media companies investing in streaming and digital advertising platforms.",
+    "topCompanies": [
+      { "id": "bell", "name": "Bell Canada", "revenue": "$38M", "employees": 220, "growth": "+10%", "isClient": true },
+      { "id": "rogers", "name": "Rogers Communications", "revenue": "$24M", "employees": 140, "growth": "+4%", "isClient": true },
+      { "id": "telus", "name": "Telus", "revenue": "$20M", "employees": 120, "growth": "+6%", "isClient": true },
+      { "id": "cbc", "name": "CBC/Radio-Canada", "revenue": "$12M", "employees": 80, "growth": "+8%", "isClient": true },
+      { "id": "corus", "name": "Corus Entertainment", "revenue": "$6M", "employees": 40, "growth": "-2%", "isClient": false }
+    ],
+    "trends": [
+      { "period": "Q1 2024", "value": 82 },
+      { "period": "Q2 2024", "value": 85 },
+      { "period": "Q3 2024", "value": 88 },
+      { "period": "Q4 2024", "value": 90 },
+      { "period": "Q1 2025", "value": 92 },
+      { "period": "Q2 2025", "value": 95 },
+      { "period": "Q3 2025", "value": 98 },
+      { "period": "Q4 2025", "value": 100 }
+    ]
+  }
+]
