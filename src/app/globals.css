@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Fonts loaded via <link> in layout.tsx */
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -51,6 +53,10 @@ a{text-decoration:none;color:inherit}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes zoomGlow{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes gradientDrift{0%{background-position:0% 0%,100% 100%,50% 50%}50%{background-position:100% 50%,0% 50%,80% 20%}100%{background-position:0% 0%,100% 100%,50% 50%}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes drumOpen{from{opacity:0;transform:translateX(-50%) translateY(-6px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
 
 /* ── TOKENS ── */
 .tag{font-size:9px;font-weight:800;letter-spacing:.25em;text-transform:uppercase;color:var(--p)}
@@ -223,6 +229,19 @@ a{text-decoration:none;color:inherit}
 .reg-table td{padding:12px 0;border-bottom:1px solid var(--s2);font-size:12px;font-weight:600}
 .reg-table tr:hover td{background:var(--s1)}
 .reg-table .num{text-align:right;font-weight:900;font-size:13px}
+
+/* ── BENTO TILES ── */
+.bento-tile:hover{background:rgba(255,255,255,.04) !important;border-color:rgba(161,0,255,.2) !important;transform:translateY(-2px)}
+.bento-tile:hover .bento-glow{opacity:1 !important}
+.bento-tile:hover .bento-arrow{color:var(--p) !important;transform:translateX(3px)}
+
+/* ── INDUSTRY BAR ── */
+.ind-bar{display:flex;flex-direction:column;align-items:center;gap:6px;padding:2px 0}
+.ind-row{display:flex;justify-content:center;gap:6px}
+.ind-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--s2);background:var(--s1);color:var(--t2);font:600 10px/1 'Inter';letter-spacing:.02em;white-space:nowrap;transition:all .25s cubic-bezier(.16,1,.3,1)}
+.ind-pill:hover{background:rgba(161,0,255,.08);border-color:rgba(161,0,255,.2);color:#fff;transform:translateY(-1px)}
+.ind-pill svg{opacity:.4;transition:all .25s}
+.ind-pill:hover svg{opacity:1;color:var(--p)}
 
 /* ── MACRO ── */
 .macro-wrap{height:300px;background:var(--s1);border:1px solid var(--s2);border-radius:14px;overflow:hidden;margin-bottom:16px;position:relative}

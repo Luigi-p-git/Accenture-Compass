@@ -4,6 +4,28 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
+import {
+  Landmark, ShoppingBag, FlaskConical, Radio, Zap,
+  HeartPulse, Cpu, Factory, ShieldCheck, Dna,
+  Building2, Layers, PlugZap,
+} from 'lucide-react';
+
+/* ── Industries ── */
+const INDUSTRIES = [
+  { key: 'banking-capital-markets', label: 'Banking & Cap Mkts', Icon: Landmark },
+  { key: 'cgs-retail-travel', label: 'CG&S, Retail, Travel', Icon: ShoppingBag },
+  { key: 'chemicals-natural-resources', label: 'Chem & Nat Resources', Icon: FlaskConical },
+  { key: 'communications-media', label: 'Comms & Media', Icon: Radio },
+  { key: 'energy', label: 'Energy', Icon: Zap },
+  { key: 'health', label: 'Health', Icon: HeartPulse },
+  { key: 'high-tech', label: 'High Tech', Icon: Cpu },
+  { key: 'industrials', label: 'Industrials', Icon: Factory },
+  { key: 'insurance', label: 'Insurance', Icon: ShieldCheck },
+  { key: 'life-sciences', label: 'Life Sciences', Icon: Dna },
+  { key: 'public-service', label: 'Public Service', Icon: Building2 },
+  { key: 'software-platforms', label: 'Software & Platforms', Icon: Layers },
+  { key: 'utilities', label: 'Utilities', Icon: PlugZap },
+];
 
 /* ── Data ── */
 const COUNTRIES: Record<string, { name: string; route: string; center: [number, number]; kpis: { l: string; v: string; d: string }[] }> = {
@@ -155,8 +177,30 @@ export default function LandingPage() {
         ))}
       </div>
 
+      {/* ── Industry Selector ── */}
+      <div style={{ padding: '14px 48px 0' }}>
+        <div className="ind-bar">
+          <div className="ind-row">
+            {INDUSTRIES.slice(0, 7).map(({ key, label, Icon }) => (
+              <button key={key} className="ind-pill" onClick={() => router.push(`/industries/${key}`)}>
+                <Icon size={13} strokeWidth={1.5} />
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="ind-row">
+            {INDUSTRIES.slice(7).map(({ key, label, Icon }) => (
+              <button key={key} className="ind-pill" onClick={() => router.push(`/industries/${key}`)}>
+                <Icon size={13} strokeWidth={1.5} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── World Map ── */}
-      <div style={{ padding: '24px 48px 0' }}>
+      <div style={{ padding: '10px 48px 0' }}>
         <div ref={mapRef} style={{ position: 'relative', height: 'calc(100vh - 340px)', minHeight: 360, background: '#060606', border: '1px solid var(--s2)', borderRadius: 14, overflow: 'hidden' }}>
 
           {/* Region buttons */}

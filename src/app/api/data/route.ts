@@ -21,12 +21,14 @@ const TOPIC_PATHS: Record<string, (country: string) => string> = {
   industries: (country) => `industries/${country}/index.json`,
   financials: (country) => `financials/${country}.json`,
   macro: (country) => `macro/${country}.json`,
+  trends: (country) => `trends/${country}/all-industries.json`,
 };
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const country = searchParams.get('country') || 'canada';
   const topic = searchParams.get('topic') || 'overview';
+  const industry = searchParams.get('industry') || '';
 
   const pathResolver = TOPIC_PATHS[topic];
   if (!pathResolver) {
@@ -36,7 +38,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const filePath = path.join(DATA_DIR, pathResolver(country));
+  let filePath = path.join(DATA_DIR, pathResolver(country));
+  // For trends topic, support industry-specific files
+  if (topic === 'trends' && industry) {
+    const slug = industry.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    filePath = path.join(DATA_DIR, 'trends', country, `${slug}.json`);
+  }
 
   try {
     const raw = await fs.readFile(filePath, 'utf-8');
@@ -59,7 +66,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { country, topic, data, period } = body;
+    const { country, topic, data, period, industry } = body;
 
     if (!country || !topic || !data) {
       return NextResponse.json(
@@ -76,7 +83,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const filePath = path.join(DATA_DIR, pathResolver(country));
+    let filePath = path.join(DATA_DIR, pathResolver(country));
+    // For trends topic, support industry-specific files
+    if (topic === 'trends' && industry) {
+      const slug = industry.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      filePath = path.join(DATA_DIR, 'trends', country, `${slug}.json`);
+    }
 
     // Ensure directory exists
     await fs.mkdir(path.dirname(filePath), { recursive: true });

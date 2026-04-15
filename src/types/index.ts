@@ -286,3 +286,124 @@ export interface PipelineJob {
   results?: Record<string, unknown>;
   errors?: string[];
 }
+
+// ── AlphaSense / Trends ──
+
+export interface AffectedCompany {
+  name: string;
+  ticker: string | null;
+  impact: 'positive' | 'negative' | 'neutral';
+  detail: string;
+}
+
+export interface KeyMetric {
+  label: string;
+  value: string;
+  trend?: 'up' | 'down' | 'stable';
+}
+
+export interface NewsItem {
+  id: number;
+  headline: string;
+  summary: string;
+  source_org: string;
+  date: string | null;
+  type: string | null;
+  url: string | null;
+  related_finding_ids: number[];
+}
+
+export interface FinancialHighlight {
+  id: number;
+  metric: string;
+  current_value: string;
+  previous_value: string | null;
+  change: string | null;
+  chart_type: 'bar' | 'line' | 'donut';
+  data_points: { label: string; value: string }[];
+}
+
+export interface AlphaSenseFinding {
+  id: number;
+  category: 'Emerging Trend' | 'Strategic Opportunity' | 'Key Challenge';
+  finding: string;
+  description: string;
+  impact_level: 'High' | 'Medium' | 'Low' | null;
+  timeframe: string | null;
+  source: {
+    document_title: string | null;
+    organization: string | null;
+    document_type: string | null;
+    date: string | null;
+    url: string | null;
+    headline: string | null;
+  };
+  affected_companies?: AffectedCompany[];
+  key_metrics?: KeyMetric[];
+}
+
+export interface AlphaSensePayload {
+  subject: string;
+  date_generated: string;
+  total_findings: number;
+  findings: AlphaSenseFinding[];
+  synthesis: string;
+  news_items: NewsItem[];
+  financial_highlights: FinancialHighlight[];
+  metadata: {
+    emerging_trend_count: number;
+    strategic_opportunity_count: number;
+    key_challenge_count: number;
+    high_impact_count: number;
+    medium_impact_count: number;
+    low_impact_count: number;
+    news_count: number;
+    financial_highlight_count: number;
+  };
+}
+
+export interface TrendsChallenge {
+  t: string;
+  d: string;
+  severity: 'high' | 'medium';
+  ic: string;
+  source?: AlphaSenseFinding['source'];
+  affected_companies?: AffectedCompany[];
+  key_metrics?: KeyMetric[];
+}
+
+export interface TrendsOpportunity {
+  t: string;
+  p: string;
+  timeline: string;
+  d: string;
+  ic: string;
+  source?: AlphaSenseFinding['source'];
+  affected_companies?: AffectedCompany[];
+  key_metrics?: KeyMetric[];
+}
+
+export interface TrendsTrend {
+  t: string;
+  tag: string;
+  d: string;
+  ic: string;
+  source?: AlphaSenseFinding['source'];
+  affected_companies?: AffectedCompany[];
+  key_metrics?: KeyMetric[];
+}
+
+export interface TrendsData {
+  challenges: TrendsChallenge[];
+  opportunities: TrendsOpportunity[];
+  trends: TrendsTrend[];
+  synthesis: string;
+  source: {
+    subject: string;
+    date_generated: string;
+    total_findings: number;
+  };
+  news_items?: NewsItem[];
+  financial_highlights?: FinancialHighlight[];
+  images?: { src: string; caption?: string }[];
+}
