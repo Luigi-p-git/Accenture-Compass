@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const REGION_COUNTRIES: Record<string, string[]> = {
+export const REGION_COUNTRIES: Record<string, string[]> = {
   'World': [],
   'Americas': ['Canada', 'United States', 'Brazil', 'Mexico', 'Argentina', 'Colombia', 'Chile'],
   'EMEA': ['United Kingdom', 'Germany', 'France', 'Italy', 'Spain', 'Netherlands', 'Switzerland', 'South Africa', 'UAE', 'Saudi Arabia'],
@@ -45,10 +45,10 @@ export default function HeaderSelector({ region, country, industry, onRegionChan
     <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
       <Chip id="region" label="Region" value={region} openId={openId} toggle={toggle} close={close}
         options={REGIONS} onSelect={onRegionChange} />
-      <span style={{ color: 'rgba(255,255,255,.08)', fontSize: 11 }}>›</span>
+      <span style={{ color: 'rgb(var(--ink) / .15)', fontSize: 11 }}>›</span>
       <Chip id="country" label="Country" value={country} openId={openId} toggle={toggle} close={close}
         options={countryOpts} onSelect={onCountryChange} />
-      <span style={{ color: 'rgba(255,255,255,.08)', fontSize: 11 }}>›</span>
+      <span style={{ color: 'rgb(var(--ink) / .15)', fontSize: 11 }}>›</span>
       <Chip id="industry" label="Industry" value={industry} openId={openId} toggle={toggle} close={close}
         options={INDUSTRIES} onSelect={onIndustryChange} />
     </div>
@@ -88,9 +88,9 @@ function Chip({ id, label, value, openId, toggle, close, options, onSelect }: {
           borderBottom: isOpen ? '2px solid #A100FF' : '2px solid transparent',
         }}
       >
-        <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: '.1em', color: 'rgba(255,255,255,.2)', textTransform: 'uppercase' }}>{label}</span>
-        <span style={{ fontSize: 11, fontWeight: 900, color: isOpen ? '#A100FF' : '#fff', letterSpacing: '-.01em', transition: 'color .15s' }}>{value}</span>
-        <span style={{ fontSize: 6, color: isOpen ? '#A100FF' : 'rgba(255,255,255,.15)', transition: 'transform .2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
+        <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: '.1em', color: 'rgb(var(--ink) / .35)', textTransform: 'uppercase' }}>{label}</span>
+        <span style={{ fontSize: 11, fontWeight: 900, color: isOpen ? '#A100FF' : 'var(--t1)', letterSpacing: '-.01em', transition: 'color .15s' }}>{value}</span>
+        <span style={{ fontSize: 6, color: isOpen ? '#A100FF' : 'rgb(var(--ink) / .15)', transition: 'transform .2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
       </button>
 
       <AnimatePresence>
@@ -151,14 +151,14 @@ function Spinner({ options, current, onPick }: {
       style={{
         position: 'absolute', top: 'calc(100% + 2px)', left: 0, zIndex: 200,
         width: 220, height: ITEM_H * VIS,
-        background: 'rgba(6,6,6,.98)', backdropFilter: 'blur(12px)',
+        background: 'var(--panel)', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgb(var(--ink) / .15)',
         borderLeft: '2px solid #A100FF',
         overflow: 'hidden',
       }}
     >
       {/* Fade masks */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: 'linear-gradient(to bottom, rgba(6,6,6,.97), transparent)', pointerEvents: 'none', zIndex: 3 }} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: 'linear-gradient(to top, rgba(6,6,6,.97), transparent)', pointerEvents: 'none', zIndex: 3 }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: 'linear-gradient(to bottom, var(--panel), transparent)', pointerEvents: 'none', zIndex: 3 }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: 'linear-gradient(to top, var(--panel), transparent)', pointerEvents: 'none', zIndex: 3 }} />
 
       {/* Center band */}
       <div style={{ position: 'absolute', top: ITEM_H * HALF, left: 0, right: 0, height: ITEM_H, borderTop: '1px solid rgba(161,0,255,.15)', borderBottom: '1px solid rgba(161,0,255,.15)', background: 'rgba(161,0,255,.04)', pointerEvents: 'none', zIndex: 1 }} />
@@ -190,7 +190,7 @@ function Spinner({ options, current, onPick }: {
               <span style={{
                 fontSize: isCenter ? 12 : 10,
                 fontWeight: isCenter ? 900 : 500,
-                color: isCenter ? '#A100FF' : 'rgba(255,255,255,.4)',
+                color: isCenter ? '#A100FF' : 'rgb(var(--ink) / .4)',
                 letterSpacing: isCenter ? '-.01em' : '0',
                 whiteSpace: 'nowrap',
               }}>{opt}</span>

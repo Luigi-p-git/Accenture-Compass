@@ -224,11 +224,23 @@
   "images": [
     {
       "src": "/visuals/canada/chart-1.jpeg",
-      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-14-2026-18-38.pdf"
+      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
     },
     {
       "src": "/visuals/canada/chart-2.jpeg",
-      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-14-2026-18-38.pdf"
+      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+    },
+    {
+      "src": "/visuals/canada/chart-3.jpeg",
+      "caption": "Chart 3 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+    },
+    {
+      "src": "/visuals/canada/chart-4.jpeg",
+      "caption": "Chart 4 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+    },
+    {
+      "src": "/visuals/canada/chart-5.jpeg",
+      "caption": "Chart 5 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
     }
   ]
 }

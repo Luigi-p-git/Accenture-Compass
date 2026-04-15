@@ -2,60 +2,119 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
-import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight } from '@/types';
+import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany } from '@/types';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { parseChartValue } from '@/lib/alphasenseParser';
 import { generateIntelligenceReport } from '@/lib/intelligenceReport';
-import HeaderSelector from '@/components/intelligence/HeadlineSelector';
-
-const CLIENTS = [
-  { n: 'Shopify', s: 'Technology', r: '$68M', g: '+18%', init: 'SH', score: 94, ceo: 'Tobias Lütke', hq: 'Ottawa, ON', projects: [{ t: 'Cloud Migration III', s: 'Active', d: 'Enterprise AWS migration' }, { t: 'AI Recommendation Engine', s: 'Active', d: 'ML product recs' }], team: [{ n: 'Sarah Chen', r: 'MD', i: 'SC' }, { n: 'Marcus W.', r: 'Lead', i: 'MW' }] },
-  { n: 'Royal Bank of Canada', s: 'Financial Services', r: '$68M', g: '+12%', init: 'RB', score: 92, ceo: 'Dave McKay', hq: 'Toronto, ON', projects: [{ t: 'Open Banking Platform', s: 'Active', d: 'API regulatory compliance' }], team: [{ n: 'James Park', r: 'MD', i: 'JP' }] },
-  { n: 'Government of Canada', s: 'Public Services', r: '$62M', g: '+18%', init: 'GC', score: 88, ceo: 'Federal CIO', hq: 'Ottawa, ON', projects: [{ t: 'Cloud First Migration', s: 'Active', d: '14 department cloud migration' }], team: [{ n: 'Rachel Kim', r: 'MD', i: 'RK' }] },
-  { n: 'TD Bank Group', s: 'Financial Services', r: '$54M', g: '+8%', init: 'TD', score: 86, ceo: 'Bharat Masrani', hq: 'Toronto, ON', projects: [{ t: 'Core Banking', s: 'Active', d: 'Legacy → cloud-native' }], team: [{ n: 'Michael T.', r: 'MD', i: 'MT' }] },
-  { n: 'Suncor Energy', s: 'Energy & Resources', r: '$42M', g: '+6%', init: 'SE', score: 86, ceo: 'Rich Kruger', hq: 'Calgary, AB', projects: [{ t: 'Carbon Capture AI', s: 'Active', d: 'Emissions optimization' }, { t: 'Digital Twin', s: 'Planning', d: 'Oil sands simulation' }], team: [{ n: 'Olga P.', r: 'MD', i: 'OP' }] },
-];
+import HeaderSelector, { REGION_COUNTRIES } from '@/components/intelligence/HeadlineSelector';
+import { useCompassStore } from '@/lib/store';
+import RobinChat, { type RobinFocus } from '@/components/intelligence/RobinChat';
 
 const ease = [0.4, 0, 0.2, 1] as const;
-const sevColor = (s: string) => s === 'high' ? '#f87171' : s === 'medium' ? '#fbbf24' : '#60a5fa';
+const sevColor = (s: string) => s === 'critical' ? '#ef4444' : s === 'high' ? '#f87171' : s === 'medium' ? '#fbbf24' : '#60a5fa';
 
-function findRelevant(sector: string, items: { t: string; d: string }[]): number[] {
-  const kw = sector.toLowerCase().split(/[\s&,]+/).filter(w => w.length > 3);
-  return items.map((f, i) => kw.some(k => `${f.t} ${f.d}`.toLowerCase().includes(k)) ? i : -1).filter(i => i >= 0);
+/** Split description into 2-3 sentence chunks and render as editorial arrow points */
+function DescriptionBullets({ text, accent = '#A100FF' }: { text: string; accent?: string }) {
+  // Protect abbreviations, then split on real sentence boundaries
+  const safe = text
+    .replace(/U\.S\./g, 'U·S·')
+    .replace(/Inc\./g, 'Inc·')
+    .replace(/Ltd\./g, 'Ltd·')
+    .replace(/Corp\./g, 'Corp·')
+    .replace(/Dr\./g, 'Dr·')
+    .replace(/vs\./g, 'vs·')
+    .replace(/etc\./g, 'etc·')
+    .replace(/e\.g\./g, 'e·g·')
+    .replace(/i\.e\./g, 'i·e·');
+  const rawSentences = safe.split(/(?<=[.!?])\s+(?=[A-Z])/).map(s => s.replace(/·/g, '.'));
+
+  // Group into chunks of 2 sentences for better readability
+  const chunks: string[] = [];
+  for (let i = 0; i < rawSentences.length; i += 2) {
+    chunks.push(rawSentences.slice(i, i + 2).join(' ').trim());
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+      {chunks.map((chunk, i) => (
+        <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+          <span style={{ color: accent, fontSize: 10, marginTop: 3, flexShrink: 0, opacity: .6 }}>›</span>
+          <span style={{ fontSize: 11, lineHeight: 1.75, color: 'rgb(var(--ink) / .5)' }}>{chunk}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CompanyLogo({ name, logoUrl, size = 36 }: { name: string; logoUrl?: string; size?: number }) {
+  const [failed, setFailed] = useState(false);
+  const initials = name.split(/\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  if (!logoUrl || failed) {
+    return <span style={{ width: size, height: size, display: 'grid', placeItems: 'center', fontSize: size * 0.28, fontWeight: 900, color: '#60a5fa', background: 'rgba(96,165,250,.08)', border: '1px solid rgba(96,165,250,.12)', flexShrink: 0, borderRadius: 4 }}>{initials}</span>;
+  }
+  return <img src={logoUrl} alt={name} onError={() => setFailed(true)} style={{ width: size, height: size, objectFit: 'contain', flexShrink: 0, borderRadius: 4, background: 'rgb(var(--ink) / .03)', padding: 2 }} />;
 }
 
 export default function IntelligencePage({ data, country, countrySlug }: {
   data: TrendsData | null; country: string; countrySlug: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const { scrollYProgress } = useScroll({ container: ref });
+  const theme = useCompassStore(s => s.theme);
+  const toggleTheme = useCompassStore(s => s.toggleTheme);
+  const light = theme === 'light';
+  const a = (o: number) => `rgb(var(--ink) / ${o})`;
   const [expanded, setExpanded] = useState<{ t: string; i: number } | null>(null);
-  const [selClient, setSelClient] = useState<number | null>(null);
   const [activeTrend, setActiveTrend] = useState(0);
   const [synthOpen, setSynthOpen] = useState(false);
-  const [selRegion, setSelRegion] = useState('Americas');
-  const [selCountry, setSelCountry] = useState(country);
+  const [activeChallenge, setActiveChallenge] = useState(0);
+  const [selCompany, setSelCompany] = useState<number | null>(null);
+  const [robinFocus, setRobinFocus] = useState<RobinFocus | null>(null);
+  const [robinAutoMsg, setRobinAutoMsg] = useState<string | null>(null);
+  // Derive initial region & country from the URL slug
+  const initRegion = countrySlug === 'world' ? 'World'
+    : Object.entries(REGION_COUNTRIES).find(([, cs]) =>
+        cs.some(c => c.toLowerCase().replace(/\s+/g, '-') === countrySlug)
+      )?.[0] ?? 'World';
+  const initCountry = countrySlug === 'world' ? 'All Countries' : country;
+
+  const [selRegion, setSelRegion] = useState(initRegion);
+  const [selCountry, setSelCountry] = useState(initCountry);
   const [selIndustry, setSelIndustry] = useState('All Industries');
   const [heroKey, setHeroKey] = useState(0);
   const [liveData, setLiveData] = useState<TrendsData | null>(data);
 
-  // When industry changes, fetch industry-specific data
+  // Derive live country slug from selection
+  const liveSlug = selCountry !== 'All Countries'
+    ? selCountry.toLowerCase().replace(/\s+/g, '-')
+    : selRegion !== 'World'
+      ? selRegion.toLowerCase().replace(/\s+/g, '-')
+      : 'world';
+
+  // Silently sync URL when selection changes (no navigation / no remount)
   useEffect(() => {
-    const slug = selIndustry.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const industryParam = selIndustry === 'All Industries' ? '' : slug;
-    fetch(`/api/data?country=${countrySlug}&topic=trends${industryParam ? `&industry=${industryParam}` : ''}`)
+    const url = `/explore/${liveSlug}/intelligence`;
+    if (window.location.pathname !== url) {
+      window.history.replaceState(null, '', url);
+    }
+  }, [liveSlug]);
+
+  // Fetch data when country or industry changes
+  useEffect(() => {
+    const indSlug = selIndustry.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const industryParam = selIndustry === 'All Industries' ? '' : indSlug;
+    fetch(`/api/data?country=${liveSlug}&topic=trends${industryParam ? `&industry=${industryParam}` : ''}`)
       .then(r => r.ok ? r.json() : null)
       .then(d => {
         if (d?.data) setLiveData(d.data);
-        else if (selIndustry === 'All Industries') setLiveData(data); // fallback to server data
-        else setLiveData(null); // no data for this industry yet
+        else if (liveSlug === countrySlug && selIndustry === 'All Industries') setLiveData(data);
+        else setLiveData(null);
       })
-      .catch(() => setLiveData(selIndustry === 'All Industries' ? data : null));
-  }, [selIndustry, countrySlug, data]);
+      .catch(() => setLiveData(liveSlug === countrySlug && selIndustry === 'All Industries' ? data : null));
+    setActiveTrend(0);
+  }, [selIndustry, liveSlug, countrySlug, data]);
 
   const activeData = liveData;
   const trends = activeData?.trends ?? [];
@@ -64,24 +123,25 @@ export default function IntelligencePage({ data, country, countrySlug }: {
   const synthesis = activeData?.synthesis ?? '';
   const newsItems = activeData?.news_items ?? [];
   const financials = activeData?.financial_highlights ?? [];
+  const topCompanies = activeData?.top_companies ?? [];
   const total = activeData?.source?.total_findings ?? (trends.length + opps.length + challenges.length);
   const date = activeData?.source?.date_generated ?? new Date().toISOString().split('T')[0];
 
   return (
-    <div ref={ref} style={{ height: '100vh', overflowY: 'auto', overflowX: 'hidden', background: '#0a0a0a', color: '#fff', fontFamily: "'Inter',system-ui,sans-serif" }}>
+    <div ref={ref} data-theme={theme} style={{ height: '100vh', overflowY: 'auto', overflowX: 'hidden', background: 'var(--bg)', color: 'var(--t1)', fontFamily: "'Inter',system-ui,sans-serif", transition: 'background .4s, color .4s' }}>
       {/* Progress bar */}
       <motion.div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 2, zIndex: 100, background: '#A100FF', scaleX: scrollYProgress, transformOrigin: 'left' }} />
 
       {/* ════════════════════════════════════════
           MASTHEAD — fixed top bar
          ════════════════════════════════════════ */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(10,10,10,.9)', backdropFilter: 'blur(12px)', borderBottom: '2px solid #fff', padding: '10px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--mast)', backdropFilter: 'blur(12px)', borderBottom: '2px solid var(--rule)', padding: '10px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'background .4s, border-color .4s' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a href={`/explore/${countrySlug}`} style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 6 }}>
-            <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-.02em', color: '#fff', borderBottom: '2px solid #A100FF', paddingBottom: 1 }}>ACCSENSE</span>
-            <span style={{ fontSize: 13, fontWeight: 300, fontStyle: 'italic', color: 'rgba(255,255,255,.4)', letterSpacing: '.02em' }}>Magazine</span>
+            <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-.02em', color: 'var(--t1)', borderBottom: '2px solid #A100FF', paddingBottom: 1 }}>ACCSENSE</span>
+            <span style={{ fontSize: 15, fontWeight: 400, fontStyle: 'italic', fontFamily: "'Playfair Display', Georgia, serif", color: a(.45), letterSpacing: '.01em' }}>Magazine</span>
           </a>
-          <span style={{ width: 1, height: 18, background: 'rgba(255,255,255,.1)' }} />
+          <span style={{ width: 1, height: 18, background: a(.1) }} />
           <HeaderSelector
             region={selRegion}
             country={selCountry}
@@ -89,32 +149,43 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             onRegionChange={(r) => {
               setSelRegion(r);
               setSelCountry('All Countries');
+              setSelIndustry('All Industries');
               setHeroKey(k => k + 1);
-              if (r !== 'World') {
-                const slug = r.toLowerCase().replace(/\s+/g, '-');
-                router.push(`/explore/${slug}/intelligence`);
-              } else {
-                router.push('/explore/world/intelligence');
-              }
             }}
             onCountryChange={(c) => {
               setSelCountry(c);
+              setSelIndustry('All Industries');
               setHeroKey(k => k + 1);
-              if (c !== 'All Countries') {
-                const slug = c.toLowerCase().replace(/\s+/g, '-');
-                router.push(`/explore/${slug}/intelligence`);
-              }
             }}
             onIndustryChange={(ind) => { setSelIndustry(ind); setHeroKey(k => k + 1); }}
           />
         </div>
         <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           {['Trends', 'Analysis', 'Opportunities', 'Visuals', 'Challenges', 'Companies', 'News'].map((s, i) => (
-            <a key={s} href={`#sec-${i}`} style={{ fontSize: 8, fontWeight: 900, letterSpacing: '-.01em', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', transition: 'color .2s', opacity: .35 }}
+            <a key={s} href={`#sec-${i}`} style={{ fontSize: 8, fontWeight: 900, letterSpacing: '-.01em', textTransform: 'uppercase', color: 'var(--t1)', textDecoration: 'none', transition: 'color .2s', opacity: .35 }}
               onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; e.currentTarget.style.opacity = '1'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.opacity = '.35'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = ''; e.currentTarget.style.opacity = '.35'; }}
             >{s}</a>
           ))}
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            title={light ? 'Switch to dark mode' : 'Switch to light mode'}
+            style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${a(.1)}`, background: 'transparent', display: 'grid', placeItems: 'center', cursor: 'pointer', transition: 'all .2s', color: a(.5) }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(161,0,255,.1)'; e.currentTarget.style.borderColor = 'rgba(161,0,255,.3)'; e.currentTarget.style.color = '#A100FF'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = a(.1); e.currentTarget.style.color = a(.5); }}
+          >
+            <motion.span
+              key={theme}
+              initial={{ rotate: -30, opacity: 0, scale: 0.5 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.25 }}
+              className="ms"
+              style={{ fontSize: 16 }}
+            >{light ? 'dark_mode' : 'light_mode'}</motion.span>
+          </button>
+          <span style={{ width: 1, height: 16, background: a(.1) }} />
           <a href="/admin" style={{ fontSize: 7, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: '#A100FF', textDecoration: 'none', padding: '4px 10px', border: '1px solid rgba(161,0,255,.2)', transition: 'all .2s' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(161,0,255,.1)'; e.currentTarget.style.borderColor = 'rgba(161,0,255,.4)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(161,0,255,.2)'; }}
@@ -127,13 +198,13 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         {/* ════════════════════════════════════════
             HERO — The Chaos Grid (magazine style)
            ════════════════════════════════════════ */}
-        <section style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: 0, borderBottom: '3px solid #fff', marginBottom: 48, position: 'relative' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: 0, borderBottom: '3px solid var(--rule)', marginBottom: 48, position: 'relative' }}>
           {/* Left: headline + map side by side */}
-          <div style={{ borderRight: '2px solid #fff', paddingRight: 28, paddingBottom: 28, paddingTop: 24, position: 'relative', zIndex: 2 }}>
+          <div style={{ borderRight: '2px solid var(--rule)', paddingRight: 28, paddingBottom: 28, paddingTop: 24, position: 'relative', zIndex: 2 }}>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, ease }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <span style={{ background: '#A100FF', color: '#fff', fontSize: 7, fontWeight: 900, padding: '2px 7px', textTransform: 'uppercase' }}>Strategic Intelligence</span>
-                <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.15em', color: 'rgba(255,255,255,.2)', textTransform: 'uppercase' }}>{date}</span>
+                <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.15em', color: a(.2), textTransform: 'uppercase' }}>{date}</span>
               </div>
             </motion.div>
 
@@ -201,7 +272,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <div style={{ position: 'absolute', bottom: -1, right: -1, width: 8, height: 8, borderBottom: '2px solid #60a5fa', borderRight: '2px solid #60a5fa' }} />
 
                       <span className="ms" style={{ fontSize: 12, color: '#60a5fa' }}>picture_as_pdf</span>
-                      <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.14em', color: 'rgba(255,255,255,.7)' }}>GENERATE REPORT</span>
+                      <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.14em', color: a(.7) }}>GENERATE REPORT</span>
                     </div>
                   </motion.button>
                 )}
@@ -210,8 +281,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
             {/* Synthesis — first sentence + popup */}
             <div style={{ maxWidth: 420, position: 'relative' }}>
-              <p style={{ fontSize: 10, fontWeight: 400, lineHeight: 1.7, color: 'rgba(255,255,255,.35)' }}>
-                {synthesis ? synthesis.split('.').slice(0, 1).join('.') + '.' : 'Emerging trends, opportunities, and challenges.'}
+              <p style={{ fontSize: 10, fontWeight: 400, lineHeight: 1.7, color: a(.35) }}>
+                {synthesis ? (() => { const m = synthesis.substring(80).match(/\.\s/); return m ? synthesis.substring(0, 80 + m.index! + 1) : synthesis.substring(0, 200) + '...'; })() : 'Emerging trends, opportunities, and challenges.'}
               </p>
               {synthesis && (
                 <>
@@ -223,9 +294,9 @@ export default function IntelligencePage({ data, country, countrySlug }: {
               )}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10 }}>
-              <span style={{ fontSize: 7, fontWeight: 900, borderTop: '1px solid #fff', paddingTop: 3, letterSpacing: '.1em', textTransform: 'uppercase' }}>AlphaSense</span>
-              <span style={{ fontSize: 7, color: 'rgba(255,255,255,.15)' }}>·</span>
-              <span style={{ fontSize: 7, color: 'rgba(255,255,255,.2)', letterSpacing: '.06em' }}>{total} FINDINGS</span>
+              <span style={{ fontSize: 7, fontWeight: 900, borderTop: '1px solid var(--rule)', paddingTop: 3, letterSpacing: '.1em', textTransform: 'uppercase' }}>AlphaSense</span>
+              <span style={{ fontSize: 7, color: a(.15) }}>·</span>
+              <span style={{ fontSize: 7, color: a(.2), letterSpacing: '.06em' }}>{total} FINDINGS</span>
             </div>
           </div>
 
@@ -235,8 +306,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: '.15em', color: 'rgba(255,255,255,.2)', textTransform: 'uppercase' }}>Key Metrics</div>
-                <div style={{ fontSize: 9, color: 'rgba(255,255,255,.25)', marginTop: 3 }}>{total} findings · {date}</div>
+                <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: '.15em', color: a(.2), textTransform: 'uppercase' }}>Key Metrics</div>
+                <div style={{ fontSize: 9, color: a(.25), marginTop: 3 }}>{total} findings · {date}</div>
               </div>
             </div>
 
@@ -244,24 +315,66 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             {financials.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(financials.length, 3)}, 1fr)`, gap: 0, flex: 1 }}>
                 {financials.slice(0, 6).map((fin, i) => (
-                  <div key={fin.id} style={{ padding: '12px 16px', borderBottom: i < 3 && financials.length > 3 ? '1px solid rgba(255,255,255,.05)' : 'none', borderRight: (i % Math.min(financials.length, 3)) < Math.min(financials.length, 3) - 1 ? '1px solid rgba(255,255,255,.05)' : 'none' }}>
-                    <div style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,.2)', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fin.metric}</div>
+                  <div key={fin.id} style={{ padding: '12px 16px', borderBottom: i < 3 && financials.length > 3 ? `1px solid ${a(.05)}` : 'none', borderRight: (i % Math.min(financials.length, 3)) < Math.min(financials.length, 3) - 1 ? `1px solid ${a(.05)}` : 'none' }}>
+                    <div style={{ fontSize: 8, fontWeight: 800, color: a(.2), letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fin.metric}</div>
                     <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-.03em' }}>{fin.current_value}</div>
                     {fin.change && <div style={{ fontSize: 11, fontWeight: 800, color: fin.change.startsWith('-') ? '#f87171' : '#34d399', marginTop: 3 }}>{fin.change}</div>}
-                    {fin.previous_value && <div style={{ fontSize: 8, color: 'rgba(255,255,255,.15)', marginTop: 2 }}>prev: {fin.previous_value}</div>}
+                    {fin.previous_value && <div style={{ fontSize: 8, color: a(.15), marginTop: 2 }}>prev: {fin.previous_value}</div>}
                   </div>
                 ))}
               </div>
             ) : (
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,.15)', fontWeight: 700 }}>Financial metrics will appear here</div>
-                  <div style={{ fontSize: 8, color: 'rgba(255,255,255,.08)', marginTop: 4 }}>Upload AlphaSense data with the enhanced prompt</div>
+                  <div style={{ fontSize: 11, color: a(.15), fontWeight: 700 }}>Financial metrics will appear here</div>
+                  <div style={{ fontSize: 8, color: a(.08), marginTop: 4 }}>Upload AlphaSense data with the enhanced prompt</div>
                 </div>
               </div>
             )}
           </motion.div>
         </section>
+
+        {/* ════════════════════════════════════════
+            INTELLIGENCE BRIEF — top 5 per category
+           ════════════════════════════════════════ */}
+        {(trends.length > 0 || opps.length > 0 || challenges.length > 0) && (
+          <section style={{ marginBottom: 48 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 20 }}>
+              <span style={{ fontSize: 8, fontWeight: 900, letterSpacing: '.2em', color: a(.2), textTransform: 'uppercase' }}>Intelligence Brief</span>
+              <div style={{ flex: 1, height: 1, background: a(.08) }} />
+              <span style={{ fontSize: 7, fontWeight: 700, color: a(.15) }}>{total} findings</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
+              {([
+                { label: 'Trends', items: trends.slice(0, 5).map(t => ({ title: t.t, sub: t.tag })), accent: '#A100FF', anchor: '#sec-0', total: trends.length },
+                { label: 'Opportunities', items: opps.slice(0, 5).map(o => ({ title: o.t, sub: o.timeline || o.p })), accent: '#34d399', anchor: '#sec-2', total: opps.length },
+                { label: 'Challenges', items: challenges.slice(0, 5).map(c => ({ title: c.t, sub: c.severity })), accent: '#f87171', anchor: '#sec-4', total: challenges.length },
+              ] as const).map((col, ci) => (
+                <div key={col.label} style={{ borderRight: ci < 2 ? `1px solid ${a(.08)}` : 'none', padding: ci === 0 ? '0 24px 0 0' : ci === 1 ? '0 24px' : '0 0 0 24px' }}>
+                  {/* Column header */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 3, height: 14, background: col.accent }} />
+                      <span style={{ fontSize: 9, fontWeight: 900, letterSpacing: '.06em', textTransform: 'uppercase' }}>{col.label}</span>
+                      <span style={{ fontSize: 11, fontWeight: 900, color: col.accent, letterSpacing: '-.01em' }}>{col.total}</span>
+                    </div>
+                    <a href={col.anchor} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', fontSize: 7, fontWeight: 700, letterSpacing: '.04em', color: '#A100FF', transition: 'gap .2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.gap = '7px'; }}
+                      onMouseLeave={e => { e.currentTarget.style.gap = '4px'; }}
+                    >View more <span style={{ fontSize: 9, transition: 'transform .2s' }}>→</span></a>
+                  </div>
+                  {/* Top 5 list */}
+                  {col.items.map((item, ii) => (
+                    <div key={ii} style={{ padding: '8px 0', borderTop: `1px solid ${a(.06)}` }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '-.01em', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{item.title}</div>
+                      {item.sub && <div style={{ fontSize: 7, fontWeight: 700, color: col.accent, textTransform: 'uppercase', letterSpacing: '.04em', marginTop: 2, opacity: .7 }}>{item.sub}</div>}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ════════════════════════════════════════
             EMERGING TRENDS — Master-detail layout
@@ -271,7 +384,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             <SectionRule label="Emerging Trends" accent="#A100FF" />
             <div style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: 0, marginTop: 20 }}>
               {/* Left: trend list */}
-              <div style={{ borderRight: '2px solid rgba(255,255,255,.04)' }}>
+              <div style={{ borderRight: `2px solid ${a(.04)}` }}>
                 {trends.map((item, i) => (
                   <div
                     key={i}
@@ -285,10 +398,10 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                      <span className="ms" style={{ fontSize: 14, color: activeTrend === i ? '#A100FF' : 'rgba(255,255,255,.15)', transition: 'color .2s' }}>{item.ic}</span>
+                      <span className="ms" style={{ fontSize: 14, color: activeTrend === i ? '#A100FF' : a(.15), transition: 'color .2s' }}>{item.ic}</span>
                       <span style={{ fontSize: 7, fontWeight: 800, color: '#A100FF', letterSpacing: '.06em', textTransform: 'uppercase', opacity: activeTrend === i ? 1 : .4, transition: 'opacity .2s' }}>{item.tag}</span>
                     </div>
-                    <h3 style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em', lineHeight: 1.25, color: activeTrend === i ? '#fff' : 'rgba(255,255,255,.5)', transition: 'color .2s' }}>{item.t}</h3>
+                    <h3 style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em', lineHeight: 1.25, color: activeTrend === i ? 'var(--t1)' : a(.5), transition: 'color .2s' }}>{item.t}</h3>
                   </div>
                 ))}
               </div>
@@ -311,21 +424,21 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
                         <span style={{ fontSize: 7, fontWeight: 900, padding: '2px 6px', background: 'rgba(161,0,255,.1)', color: '#A100FF', textTransform: 'uppercase', letterSpacing: '.06em' }}>{trends[activeTrend].tag}</span>
                         {trends[activeTrend].source?.document_type && (
-                          <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: 'rgba(255,255,255,.03)', color: 'rgba(255,255,255,.25)' }}>{trends[activeTrend].source?.document_type}</span>
+                          <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: a(.03), color: a(.25) }}>{trends[activeTrend].source?.document_type}</span>
                         )}
                       </div>
 
                       <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.15, marginBottom: 14 }}>{trends[activeTrend].t}</h2>
 
-                      <p style={{ fontSize: 11, lineHeight: 1.8, color: 'rgba(255,255,255,.45)', marginBottom: 16 }}>{trends[activeTrend].d}</p>
+                      <DescriptionBullets text={trends[activeTrend].d} accent="#A100FF" />
 
                       {/* Companies affected */}
                       {trends[activeTrend].affected_companies && trends[activeTrend].affected_companies!.length > 0 && (
                         <div style={{ marginBottom: 14 }}>
-                          <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.15)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 6 }}>Companies Affected</div>
+                          <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 6 }}>Companies Affected</div>
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             {trends[activeTrend].affected_companies!.map((co, ci) => (
-                              <span key={ci} style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', background: co.impact === 'positive' ? 'rgba(52,211,153,.06)' : co.impact === 'negative' ? 'rgba(248,113,113,.06)' : 'rgba(255,255,255,.03)', color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : 'rgba(255,255,255,.3)', border: `1px solid ${co.impact === 'positive' ? 'rgba(52,211,153,.12)' : co.impact === 'negative' ? 'rgba(248,113,113,.12)' : 'rgba(255,255,255,.06)'}` }}>
+                              <span key={ci} style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', background: co.impact === 'positive' ? 'rgba(52,211,153,.06)' : co.impact === 'negative' ? 'rgba(248,113,113,.06)' : a(.03), color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : a(.3), border: `1px solid ${co.impact === 'positive' ? 'rgba(52,211,153,.12)' : co.impact === 'negative' ? 'rgba(248,113,113,.12)' : a(.06)}` }}>
                                 {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'} {co.name}
                               </span>
                             ))}
@@ -335,8 +448,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
                       {/* Source */}
                       {trends[activeTrend].source?.document_title && (
-                        <div style={{ paddingTop: 10, borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                          <div style={{ fontSize: 8, color: 'rgba(255,255,255,.25)' }}>
+                        <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.04)}` }}>
+                          <div style={{ fontSize: 8, color: a(.25) }}>
                             {trends[activeTrend].source!.document_title}
                             {trends[activeTrend].source!.organization ? ` — ${trends[activeTrend].source!.organization}` : ''}
                             {trends[activeTrend].source!.date ? ` · ${trends[activeTrend].source!.date}` : ''}
@@ -344,7 +457,14 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                         </div>
                       )}
 
-                      <div style={{ marginTop: 14, fontSize: 8, fontWeight: 800, color: '#A100FF', letterSpacing: '.08em' }}>CLICK FOR FULL DETAIL →</div>
+                      <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 8, fontWeight: 800, color: '#A100FF', letterSpacing: '.08em' }}>CLICK FOR FULL DETAIL →</span>
+                        <button onClick={(e) => { e.stopPropagation(); setRobinFocus({ type: 'trend', label: trends[activeTrend].t }); }}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(59,130,246,.06)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 6, padding: '3px 8px', cursor: 'pointer', fontSize: 7, fontWeight: 800, color: '#60a5fa', transition: 'all .15s' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.15)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,.06)'; }}
+                        >Ask Robin</button>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -376,8 +496,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   onClick={() => setExpanded({ t: 'opportunity', i })}
                   style={{
                     width: 260, minWidth: 260, flexShrink: 0, cursor: 'pointer',
-                    background: 'linear-gradient(180deg, rgba(52,211,153,.04) 0%, rgba(10,10,10,.6) 100%)',
-                    border: '1px solid rgba(255,255,255,.04)',
+                    background: light ? 'linear-gradient(180deg, rgba(52,211,153,.06) 0%, rgba(0,0,0,.02) 100%)' : 'linear-gradient(180deg, rgba(52,211,153,.04) 0%, rgba(10,10,10,.6) 100%)',
+                    border: `1px solid ${a(.04)}`,
                     padding: '24px 22px', display: 'flex', flexDirection: 'column',
                     transition: 'all .3s cubic-bezier(.4,0,.2,1)',
                     position: 'relative', overflow: 'hidden',
@@ -390,9 +510,9 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   {/* Title */}
                   <h3 style={{ fontSize: 14, fontWeight: 900, letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: 10, flex: 1 }}>{item.t}</h3>
                   {/* Description */}
-                  <p style={{ fontSize: 9, lineHeight: 1.6, color: 'rgba(255,255,255,.3)', marginBottom: 12 }}>{item.d.substring(0, 100)}...</p>
+                  <p style={{ fontSize: 9, lineHeight: 1.6, color: a(.3), marginBottom: 12 }}>{(() => { const cut = item.d.substring(60).match(/\.\s/); return cut ? item.d.substring(0, 60 + cut.index! + 1) : item.d.substring(0, 120) + '...'; })()}</p>
                   {/* Bottom */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,.04)', paddingTop: 10 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid ${a(.04)}`, paddingTop: 10 }}>
                     {item.p ? <span style={{ fontSize: 9, fontWeight: 900, color: '#34d399' }}>{item.p}</span> : <span />}
                     <span style={{ fontSize: 9, color: 'rgba(52,211,153,.4)', transition: 'color .2s' }}>→</span>
                   </div>
@@ -407,25 +527,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             VISUAL INTELLIGENCE — extracted chart images
            ════════════════════════════════════════ */}
         {activeData?.images && activeData.images.length > 0 && (
-          <section id="sec-3" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
-            <SectionRule label="Visual Intelligence" accent="#fbbf24" />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 12, marginTop: 20 }}>
-              {activeData.images.map((img: { src: string; caption?: string }, i: number) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .4, delay: i * .06, ease }}
-                  style={{ position: 'relative', overflow: 'hidden', background: 'rgba(255,255,255,.02)', border: '1px solid rgba(255,255,255,.04)', cursor: 'pointer' }}
-                  whileHover={{ borderColor: 'rgba(251,191,36,.15)' }}
-                  onClick={() => window.open(img.src, '_blank')}
-                >
-                  <img src={img.src} alt={img.caption || `Chart ${i + 1}`} style={{ width: '100%', display: 'block' }} />
-                  {img.caption && (
-                    <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,.4)', lineHeight: 1.4 }}>{img.caption}</div>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </section>
+          <VisualIntelligenceSection images={activeData.images} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
         )}
 
         {/* ════════════════════════════════════════
@@ -434,64 +536,140 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         {challenges.length > 0 && (
           <section id="sec-4" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
             <SectionRule label="Key Challenges" accent="#f87171" />
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 0 }}>
-              <div style={{ borderRight: '1px solid rgba(255,255,255,.08)', paddingRight: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: 0, marginTop: 20 }}>
+              {/* Left: challenge list */}
+              <div style={{ borderRight: `2px solid ${a(.08)}` }}>
                 {challenges.map((item, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: .4, delay: i * .05, ease }}
+                  <div
+                    key={i}
+                    onMouseEnter={() => setActiveChallenge(i)}
                     onClick={() => setExpanded({ t: 'challenge', i })}
-                    style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,.04)', cursor: 'pointer', transition: 'border-color .2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.borderBottomColor = 'rgba(248,113,113,.2)')}
-                    onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,.04)')}>
-                    <span style={{ fontSize: 24, fontWeight: 900, color: 'rgba(255,255,255,.06)', fontStyle: 'italic', width: 32, flexShrink: 0 }}>0{i + 1}</span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <h3 style={{ fontSize: 13, fontWeight: 900, letterSpacing: '-.01em' }}>{item.t}</h3>
-                        <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 6px', background: `${sevColor(item.severity)}15`, color: sevColor(item.severity), textTransform: 'uppercase' }}>{item.severity}</span>
-                      </div>
-                      <p style={{ fontSize: 10, lineHeight: 1.65, color: 'rgba(255,255,255,.35)' }}>{item.d.substring(0, 180)}{item.d.length > 180 ? '...' : ''}</p>
+                    style={{
+                      padding: '14px 20px 14px 16px', cursor: 'pointer',
+                      background: activeChallenge === i ? 'rgba(248,113,113,.06)' : 'transparent',
+                      borderLeft: activeChallenge === i ? `3px solid ${sevColor(item.severity)}` : '3px solid transparent',
+                      transition: 'all .2s cubic-bezier(.4,0,.2,1)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                      <span className="ms" style={{ fontSize: 14, color: activeChallenge === i ? sevColor(item.severity) : a(.15), transition: 'color .2s' }}>{item.ic}</span>
+                      <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 6px', background: `${sevColor(item.severity)}15`, color: sevColor(item.severity), textTransform: 'uppercase' }}>{item.severity}</span>
                     </div>
-                    <span style={{ fontSize: 10, color: 'rgba(248,113,113,.3)', alignSelf: 'center', transition: 'transform .2s, color .2s' }}>→</span>
-                  </motion.div>
+                    <h3 style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em', lineHeight: 1.25, color: activeChallenge === i ? 'var(--t1)' : a(.5), transition: 'color .2s' }}>{item.t}</h3>
+                  </div>
                 ))}
               </div>
-              {/* Right sidebar: severity summary */}
-              <div style={{ paddingLeft: 32, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, letterSpacing: '.2em', color: 'rgba(255,255,255,.2)', textTransform: 'uppercase', marginBottom: 16 }}>Severity Distribution</div>
-                {['high', 'medium', 'low'].map(sev => {
-                  const count = challenges.filter(c => c.severity === sev).length;
-                  if (count === 0) return null;
-                  return (
-                    <div key={sev} style={{ marginBottom: 12 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <span style={{ fontSize: 8, fontWeight: 800, color: sevColor(sev), textTransform: 'uppercase', letterSpacing: '.1em' }}>{sev}</span>
-                        <span style={{ fontSize: 18, fontWeight: 900 }}>{count}</span>
+              {/* Right: expanded detail */}
+              <div style={{ paddingLeft: 32, position: 'relative', minHeight: 300 }}>
+                <AnimatePresence mode="wait">
+                  {challenges[activeChallenge] && (
+                    <motion.div
+                      key={activeChallenge}
+                      initial={{ opacity: 0, x: 12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -12 }}
+                      transition={{ duration: .25, ease }}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setExpanded({ t: 'challenge', i: activeChallenge })}
+                    >
+                      <span className="ms" style={{ position: 'absolute', top: 0, right: 0, fontSize: 80, color: 'rgba(248,113,113,.04)' }}>{challenges[activeChallenge].ic}</span>
+
+                      <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+                        <span style={{ fontSize: 7, fontWeight: 900, padding: '2px 6px', background: `${sevColor(challenges[activeChallenge].severity)}15`, color: sevColor(challenges[activeChallenge].severity), textTransform: 'uppercase', letterSpacing: '.06em' }}>{challenges[activeChallenge].severity} severity</span>
                       </div>
-                      <div style={{ height: 2, background: 'rgba(255,255,255,.04)' }}>
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${(count / challenges.length) * 100}%` }} viewport={{ once: true }} transition={{ duration: .8, ease }}
-                          style={{ height: '100%', background: sevColor(sev) }} />
+
+                      <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.15, marginBottom: 14 }}>{challenges[activeChallenge].t}</h2>
+
+                      <DescriptionBullets text={challenges[activeChallenge].d} accent="#f87171" />
+
+                      {challenges[activeChallenge].affected_companies && challenges[activeChallenge].affected_companies!.length > 0 && (
+                        <div style={{ marginBottom: 14 }}>
+                          <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 6 }}>Companies Affected</div>
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                            {challenges[activeChallenge].affected_companies!.map((co, ci) => (
+                              <span key={ci} style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', background: co.impact === 'positive' ? 'rgba(52,211,153,.06)' : co.impact === 'negative' ? 'rgba(248,113,113,.06)' : a(.03), color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : a(.3) }}>
+                                {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'} {co.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {challenges[activeChallenge].source?.document_title && (
+                        <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.08)}` }}>
+                          <div style={{ fontSize: 8, color: a(.25) }}>
+                            {challenges[activeChallenge].source!.document_title}
+                            {challenges[activeChallenge].source!.organization ? ` — ${challenges[activeChallenge].source!.organization}` : ''}
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 8, fontWeight: 800, color: '#f87171', letterSpacing: '.08em' }}>CLICK FOR FULL DETAIL →</span>
+                        <button onClick={(e) => { e.stopPropagation(); setRobinFocus({ type: 'challenge', label: challenges[activeChallenge].t }); }}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(59,130,246,.06)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 6, padding: '3px 8px', cursor: 'pointer', fontSize: 7, fontWeight: 800, color: '#60a5fa', transition: 'all .15s' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.15)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,.06)'; }}
+                        >Ask Robin</button>
                       </div>
-                    </div>
-                  );
-                })}
-                <div style={{ marginTop: 20, padding: 20, background: 'rgba(248,113,113,.04)', borderLeft: '2px solid rgba(248,113,113,.2)' }}>
-                  <div style={{ fontSize: 9, fontWeight: 800, color: '#f87171', marginBottom: 4 }}>Risk Alert</div>
-                  <p style={{ fontSize: 9, lineHeight: 1.6, color: 'rgba(255,255,255,.35)' }}>{challenges.filter(c => c.severity === 'high').length} high-severity challenges require immediate strategic attention.</p>
-                </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </section>
         )}
 
         {/* ════════════════════════════════════════
-            CLIENT IMPACT
+            COMPANIES INTELLIGENCE
            ════════════════════════════════════════ */}
         <section id="sec-5" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
           <SectionRule label="Companies Intelligence" accent="#60a5fa" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 0 }}>
-            {CLIENTS.map((c, i) => (
-              <CompanyCard key={c.n} client={c} index={i} trends={trends} opps={opps} challenges={challenges} onSelect={() => setSelClient(i)} isLast={i === CLIENTS.length - 1} />
-            ))}
-          </div>
+          {topCompanies.length > 0 ? (
+            <div>
+              {topCompanies.map((co, i) => {
+                const tCount = co.linked_findings.trends.length;
+                const oCount = co.linked_findings.opportunities.length;
+                const cCount = co.linked_findings.challenges.length;
+                return (
+                  <motion.div key={co.name} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .3, delay: i * .04, ease }}
+                    onClick={() => setSelCompany(i)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 0', borderBottom: `1px solid ${a(.08)}`, cursor: 'pointer', transition: 'background .2s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(96,165,250,.04)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <CompanyLogo name={co.name} logoUrl={co.logo_url} size={36} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em' }}>{co.name}</span>
+                        {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: a(.2) }}>{co.ticker}</span>}
+                      </div>
+                      <div style={{ fontSize: 8, color: a(.3), marginTop: 1 }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}{co.revenue ? ` · ${co.revenue}` : ''}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                      {tCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(161,0,255,.06)', color: '#A100FF' }}>{tCount} trend{tCount > 1 ? 's' : ''}</span>}
+                      {oCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(52,211,153,.06)', color: '#34d399' }}>{oCount} opp{oCount > 1 ? 's' : ''}</span>}
+                      {cCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(248,113,113,.06)', color: '#f87171' }}>{cCount} risk{cCount > 1 ? 's' : ''}</span>}
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setRobinFocus({ type: 'company', label: co.name }); }}
+                      title={`Ask Robin about ${co.name}`}
+                      style={{ width: 24, height: 24, borderRadius: '50%', border: '1px solid rgba(59,130,246,.15)', background: 'rgba(59,130,246,.06)', cursor: 'pointer', display: 'grid', placeItems: 'center', flexShrink: 0, transition: 'all .2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.2)'; e.currentTarget.style.borderColor = 'rgba(59,130,246,.4)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,.06)'; e.currentTarget.style.borderColor = 'rgba(59,130,246,.15)'; }}
+                    ><span style={{ fontSize: 10, color: '#60a5fa' }}>?</span></button>
+                    <span style={{ fontSize: 10, color: a(.15), flexShrink: 0 }}>→</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{ padding: '40px 0', textAlign: 'center' }}>
+              <span className="ms" style={{ fontSize: 32, color: a(.08) }}>domain</span>
+              <div style={{ fontSize: 11, color: a(.2), fontWeight: 700, marginTop: 8 }}>Company intelligence will appear here</div>
+              <div style={{ fontSize: 8, color: a(.1), marginTop: 4 }}>Run the enhanced AlphaSense prompt to generate company data with linked findings</div>
+            </div>
+          )}
         </section>
 
         {/* Synthesis moved to hero — removed from here */}
@@ -563,14 +741,14 @@ export default function IntelligencePage({ data, country, countrySlug }: {
       {/* ════════════════════════════════════════
           FOOTER
          ════════════════════════════════════════ */}
-      <footer style={{ borderTop: '3px solid #A100FF', background: '#000', padding: '32px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 40 }}>
+      <footer style={{ borderTop: '3px solid #A100FF', background: 'var(--foot)', padding: '32px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 40, color: '#fff', transition: 'background .4s' }}>
         <div>
           <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-.02em' }}>ACCENTURE</div>
-          <div style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.2em', color: 'rgba(255,255,255,.25)', marginTop: 4, textTransform: 'uppercase' }}>© 2026 Accenture. Compass Intelligence Platform.</div>
+          <div style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.2em', color: 'rgb(var(--ink) / .25)', marginTop: 4, textTransform: 'uppercase' }}>© 2026 Accenture. Compass Intelligence Platform.</div>
         </div>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <span style={{ fontSize: 8, fontWeight: 700, padding: '3px 10px', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.3)' }}>AlphaSense Powered</span>
-          <span style={{ fontSize: 8, color: 'rgba(255,255,255,.15)' }}>{country} · {date}</span>
+          <span style={{ fontSize: 8, fontWeight: 700, padding: '3px 10px', border: '1px solid rgb(var(--ink) / .1)', color: 'rgb(var(--ink) / .3)' }}>AlphaSense Powered</span>
+          <span style={{ fontSize: 8, color: 'rgb(var(--ink) / .15)' }}>{country} · {date}</span>
         </div>
       </footer>
 
@@ -578,7 +756,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
       {!data && (
         <div style={{ padding: '80px 48px', textAlign: 'center' }}>
           <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-.03em' }}>No data yet</div>
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', marginTop: 6 }}>Upload AlphaSense output via <a href="/admin" style={{ color: '#A100FF', textDecoration: 'none' }}>Admin</a></p>
+          <p style={{ fontSize: 11, color: a(.3), marginTop: 6 }}>Upload AlphaSense output via <a href="/admin" style={{ color: '#A100FF', textDecoration: 'none' }}>Admin</a></p>
         </div>
       )}
 
@@ -610,7 +788,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                 transition={{ duration: .5, delay: .15, ease: [.16, 1, .3, 1] }}
                 style={{ height: 3, background: 'linear-gradient(90deg, #A100FF, #60a5fa)', transformOrigin: 'left' }}
               />
-              <div style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,.06)', borderTop: 'none', padding: '32px 36px 28px' }}>
+              <div style={{ background: 'var(--panel)', border: `1px solid ${a(.06)}`, borderTop: 'none', padding: '32px 36px 28px' }}>
                 {/* Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                   <div>
@@ -619,13 +797,13 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       Executive Synthesis
                     </motion.div>
                     <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .3, delay: .15 }}
-                      style={{ fontSize: 8, color: 'rgba(255,255,255,.2)' }}>
+                      style={{ fontSize: 8, color: 'rgb(var(--ink) / .2)' }}>
                       {total} findings · {date}
                     </motion.div>
                   </div>
-                  <button onClick={() => setSynthOpen(false)} style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.06)', width: 28, height: 28, display: 'grid', placeItems: 'center', cursor: 'pointer', color: 'rgba(255,255,255,.3)', fontSize: 12, transition: 'all .2s' }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,.15)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,.3)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,.06)'; }}
+                  <button onClick={() => setSynthOpen(false)} style={{ background: a(.04), border: `1px solid ${a(.06)}`, width: 28, height: 28, display: 'grid', placeItems: 'center', cursor: 'pointer', color: a(.3), fontSize: 12, transition: 'all .2s' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--t1)'; e.currentTarget.style.borderColor = a(.15); }}
+                    onMouseLeave={e => { e.currentTarget.style.color = a(.3); e.currentTarget.style.borderColor = a(.06); }}
                   >✕</button>
                 </div>
                 {/* > motif */}
@@ -642,18 +820,18 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   transition={{ duration: .4, delay: .2, ease }}
                   style={{ borderLeft: '2px solid rgba(161,0,255,.25)', paddingLeft: 20 }}
                 >
-                  <p style={{ fontSize: 13, fontWeight: 300, lineHeight: 2, color: 'rgba(255,255,255,.65)', letterSpacing: '-.005em' }}>{synthesis}</p>
+                  <p style={{ fontSize: 13, fontWeight: 300, lineHeight: 2, color: a(.65), letterSpacing: '-.005em' }}>{synthesis}</p>
                 </motion.div>
                 {/* Footer */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: .3, delay: .35 }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 20, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,.04)' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 20, paddingTop: 14, borderTop: `1px solid ${a(.04)}` }}
                 >
                   <span style={{ fontSize: 9, fontWeight: 900, letterSpacing: '-.01em' }}>accenture</span>
-                  <span style={{ width: 1, height: 10, background: 'rgba(255,255,255,.08)' }} />
-                  <span style={{ fontSize: 7, fontWeight: 300, color: 'rgba(255,255,255,.2)' }}>Compass Intelligence</span>
+                  <span style={{ width: 1, height: 10, background: a(.08) }} />
+                  <span style={{ fontSize: 7, fontWeight: 300, color: a(.2) }}>Compass Intelligence</span>
                   <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: 'rgba(161,0,255,.06)', color: 'rgba(161,0,255,.4)', marginLeft: 'auto' }}>AlphaSense</span>
                 </motion.div>
               </div>
@@ -674,20 +852,25 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                 <div style={{ flex: 1 }} />
                 <motion.div initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
                   onClick={e => e.stopPropagation()}
-                  style={{ width: 480, background: '#0d0d0d', borderLeft: '2px solid #60a5fa', padding: '36px 32px', overflowY: 'auto' }}>
-                  <button onClick={() => setExpanded(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: 'rgba(255,255,255,.25)', cursor: 'pointer', fontSize: 14 }}>✕</button>
+                  style={{ width: 480, background: 'var(--panel)', borderLeft: '2px solid #60a5fa', padding: '36px 32px', overflowY: 'auto', color: 'var(--t1)' }}>
+                  <button onClick={() => setExpanded(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 14 }}>✕</button>
                   <div style={{ width: 20, height: 2, background: '#60a5fa', marginBottom: 16 }} />
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
                     {n.type && <span style={{ fontSize: 7, fontWeight: 900, padding: '2px 6px', background: '#60a5fa', color: '#fff', textTransform: 'uppercase' }}>{n.type}</span>}
-                    {n.date && <span style={{ fontSize: 8, color: 'rgba(255,255,255,.25)' }}>{n.date}</span>}
+                    {n.date && <span style={{ fontSize: 8, color: a(.25) }}>{n.date}</span>}
                   </div>
                   <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.02em', lineHeight: 1.25, marginBottom: 14 }}>{n.headline}</h2>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, marginBottom: 20 }}>{n.summary}</p>
+                  <p style={{ fontSize: 12, color: a(.5), lineHeight: 1.8, marginBottom: 20 }}>{n.summary}</p>
+                  {n.analyst_quote && (
+                    <div style={{ margin: '0 0 20px', padding: '12px 16px', borderLeft: '2px solid rgba(96,165,250,.3)', background: 'rgba(96,165,250,.04)' }}>
+                      <div style={{ fontSize: 10, fontStyle: 'italic', color: a(.45), lineHeight: 1.7 }}>"{n.analyst_quote}"</div>
+                    </div>
+                  )}
                   {/* Source details */}
-                  <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Source</div>
+                  <div style={{ paddingTop: 14, borderTop: `1px solid ${a(.04)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Source</div>
                     {n.source_org && <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 2 }}>{n.source_org}</div>}
-                    {n.type && <div style={{ fontSize: 9, color: 'rgba(255,255,255,.25)' }}>{n.type}{n.date ? ` · ${n.date}` : ''}</div>}
+                    {n.type && <div style={{ fontSize: 9, color: a(.25) }}>{n.type}{n.date ? ` · ${n.date}` : ''}</div>}
                     {n.url && <a href={n.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 9, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open source document ↗</a>}
                   </div>
                 </motion.div>
@@ -698,64 +881,67 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           const items = expanded.t === 'trend' ? trends : expanded.t === 'opportunity' ? opps : challenges;
           const item = items[expanded.i]; if (!item) return null;
           const accent = expanded.t === 'trend' ? '#A100FF' : expanded.t === 'opportunity' ? '#34d399' : '#f87171';
-          const relClients = CLIENTS.filter(c => c.s.toLowerCase().split(/[\s&,]+/).filter(w => w.length > 3).some(k => `${item.t} ${item.d}`.toLowerCase().includes(k)));
+          const findingIdx = expanded.i; // 0-indexed
+          const findingKey = expanded.t === 'trend' ? 'trends' : expanded.t === 'opportunity' ? 'opportunities' : 'challenges';
+          const relCompanies = topCompanies.filter(co => (co.linked_findings as Record<string, number[]>)[findingKey]?.includes(findingIdx));
           return (
             <motion.div key="panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setExpanded(null)}
               style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(4px)' }}>
               <div style={{ flex: 1 }} />
               <motion.div initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
                 onClick={e => e.stopPropagation()}
-                style={{ width: 480, background: '#0d0d0d', borderLeft: `2px solid ${accent}`, padding: '36px 32px', overflowY: 'auto' }}>
-                <button onClick={() => setExpanded(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: 'rgba(255,255,255,.25)', cursor: 'pointer', fontSize: 14 }}>✕</button>
+                style={{ width: 480, background: 'var(--panel)', borderLeft: `2px solid ${accent}`, padding: '36px 32px', overflowY: 'auto', color: 'var(--t1)' }}>
+                <button onClick={() => setExpanded(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 14 }}>✕</button>
                 <div style={{ width: 20, height: 2, background: accent, marginBottom: 16 }} />
                 <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.2em', color: accent, textTransform: 'uppercase', marginBottom: 6 }}>
                   {expanded.t === 'trend' ? 'Emerging Trend' : expanded.t === 'opportunity' ? 'Strategic Opportunity' : 'Key Challenge'}
                 </div>
                 <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: 14 }}>{item.t}</h2>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,.5)', lineHeight: 1.8 }}>{item.d}</p>
+                <p style={{ fontSize: 11, color: 'rgb(var(--ink) / .5)', lineHeight: 1.8 }}>{item.d}</p>
                 <div style={{ display: 'flex', gap: 6, marginTop: 14, flexWrap: 'wrap' }}>
                   {'severity' in item && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: `${sevColor(item.severity)}12`, color: sevColor(item.severity), textTransform: 'uppercase' }}>{item.severity}</span>}
-                  {'timeline' in item && item.timeline && <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: 'rgba(255,255,255,.03)', color: 'rgba(255,255,255,.3)' }}>{item.timeline}</span>}
+                  {'timeline' in item && item.timeline && <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: 'rgb(var(--ink) / .08)', color: 'rgb(var(--ink) / .3)' }}>{item.timeline}</span>}
                   {'tag' in item && <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: `${accent}08`, color: accent }}>{item.tag}</span>}
                 </div>
                 {item.source?.document_title && (
-                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 4 }}>Source</div>
-                    <div style={{ fontSize: 9, color: 'rgba(255,255,255,.35)' }}>{item.source.document_title}{item.source.organization ? ` — ${item.source.organization}` : ''}</div>
-                    {item.source.document_type && <div style={{ fontSize: 8, color: 'rgba(255,255,255,.2)', marginTop: 2 }}>{item.source.document_type}{item.source.date ? ` · ${item.source.date}` : ''}</div>}
+                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 4 }}>Source</div>
+                    <div style={{ fontSize: 9, color: 'rgb(var(--ink) / .35)' }}>{item.source.document_title}{item.source.organization ? ` — ${item.source.organization}` : ''}</div>
+                    {item.source.document_type && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .2)', marginTop: 2 }}>{item.source.document_type}{item.source.date ? ` · ${item.source.date}` : ''}</div>}
                     {item.source.url && <a href={item.source.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 3 }}>View source ↗</a>}
                   </div>
                 )}
                 {/* Company Impact from AlphaSense data */}
                 {item.affected_companies && item.affected_companies.length > 0 && (
-                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Company Impact</div>
+                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Company Impact</div>
                     {item.affected_companies.map((co, ci) => (
-                      <div key={ci} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,.02)' }}>
+                      <div key={ci} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '6px 0', borderBottom: '1px solid rgb(var(--ink) / .08)' }}>
                         <span style={{ fontSize: 10, marginTop: 1, flexShrink: 0, color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : '#fbbf24' }}>
                           {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'}
                         </span>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <span style={{ fontSize: 10, fontWeight: 800 }}>{co.name}</span>
-                            {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgba(255,255,255,.2)' }}>{co.ticker}</span>}
+                            {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .2)' }}>{co.ticker}</span>}
                           </div>
-                          <div style={{ fontSize: 8, color: 'rgba(255,255,255,.3)', lineHeight: 1.5, marginTop: 2 }}>{co.detail}</div>
+                          <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .3)', lineHeight: 1.5, marginTop: 2 }}>{co.detail}</div>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
-                {relClients.length > 0 && (
-                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,.04)' }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Accenture Clients</div>
-                    {relClients.map(c => (
-                      <div key={c.n} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,.02)' }}>
+                {relCompanies.length > 0 && (
+                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Companies</div>
+                    {relCompanies.map(c => (
+                      <div key={c.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgb(var(--ink) / .08)', cursor: 'pointer' }}
+                        onClick={(e) => { e.stopPropagation(); setExpanded(null); setSelCompany(topCompanies.indexOf(c)); }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 7, fontWeight: 900, color: accent }}>{c.init}</span>
-                          <span style={{ fontSize: 10, fontWeight: 700 }}>{c.n}</span>
+                          <span style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa' }}>{c.name.split(/\s+/).map(w => w[0]).join('').substring(0, 2)}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700 }}>{c.name}</span>
                         </div>
-                        <span style={{ fontSize: 9, fontWeight: 800, color: 'rgba(255,255,255,.25)' }}>{c.r}</span>
+                        <span style={{ fontSize: 9, fontWeight: 800, color: 'rgb(var(--ink) / .25)' }}>{c.revenue}</span>
                       </div>
                     ))}
                   </div>
@@ -766,60 +952,115 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         })()}
       </AnimatePresence>
 
-      {/* ═══ CLIENT MODAL ═══ */}
+      {/* ═══ COMPANY SIDE PANEL ═══ */}
       <AnimatePresence>
-        {selClient !== null && (() => {
-          const c = CLIENTS[selClient];
-          const sc = (s: string) => s === 'Active' ? '#34d399' : s === 'Planning' ? '#fbbf24' : 'rgba(255,255,255,.2)';
+        {selCompany !== null && (() => {
+          const co = topCompanies[selCompany];
+          if (!co) return null;
+          const linkedT = co.linked_findings.trends.map(id => trends[id]).filter(Boolean);
+          const linkedO = co.linked_findings.opportunities.map(id => opps[id]).filter(Boolean);
+          const linkedC = co.linked_findings.challenges.map(id => challenges[id]).filter(Boolean);
           return (
-            <motion.div key="cl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelClient(null)}
-              style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(4px)' }}>
-              <motion.div initial={{ scale: .97, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: .97, y: 10 }} transition={{ duration: .25, ease }}
+            <motion.div key="co-panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelCompany(null)}
+              style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(4px)' }}>
+              <div style={{ flex: 1 }} />
+              <motion.div initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
                 onClick={e => e.stopPropagation()}
-                style={{ width: 520, maxHeight: '70vh', overflowY: 'auto', background: '#0d0d0d', border: '2px solid #fff' }}>
-                <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255,255,255,.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                style={{ width: 500, background: 'var(--panel)', borderLeft: '2px solid #60a5fa', padding: '36px 32px', overflowY: 'auto', color: 'var(--t1)' }}>
+                <button onClick={() => setSelCompany(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 14 }}>✕</button>
+                <div style={{ width: 20, height: 2, background: '#60a5fa', marginBottom: 16 }} />
+
+                {/* Company header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
+                  <CompanyLogo name={co.name} logoUrl={co.logo_url} size={40} />
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 900, letterSpacing: '-.01em' }}>{c.n}</div>
-                    <div style={{ fontSize: 8, color: 'rgba(255,255,255,.3)', marginTop: 2 }}>{c.s} · {c.hq} · {c.ceo}</div>
-                  </div>
-                  <button onClick={() => setSelClient(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.2)', cursor: 'pointer', fontSize: 14 }}>✕</button>
-                </div>
-                <div style={{ padding: '16px 24px' }}>
-                  <div style={{ display: 'flex', gap: 0, marginBottom: 16 }}>
-                    {[{ l: 'Revenue', v: c.r }, { l: 'Growth', v: c.g }, { l: 'Score', v: String(c.score) }].map((m, i) => (
-                      <div key={m.l} style={{ flex: 1, padding: '10px 12px', borderRight: i < 2 ? '1px solid rgba(255,255,255,.04)' : 'none' }}>
-                        <div style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.2)', letterSpacing: '.12em', textTransform: 'uppercase' }}>{m.l}</div>
-                        <div style={{ fontSize: 20, fontWeight: 900, marginTop: 2, letterSpacing: '-.02em' }}>{m.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 7, fontWeight: 900, color: '#A100FF', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Projects</div>
-                  {c.projects.map(p => (
-                    <div key={p.t} style={{ display: 'flex', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,.02)' }}>
-                      <div style={{ width: 4, height: 4, marginTop: 4, background: sc(p.s), flexShrink: 0 }} />
-                      <div>
-                        <span style={{ fontSize: 10, fontWeight: 800 }}>{p.t}</span>
-                        <span style={{ fontSize: 7, fontWeight: 700, color: sc(p.s), marginLeft: 6, textTransform: 'uppercase' }}>{p.s}</span>
-                        <div style={{ fontSize: 8, color: 'rgba(255,255,255,.2)', marginTop: 1 }}>{p.d}</div>
-                      </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.02em' }}>{co.name}</h2>
+                      {co.ticker && <span style={{ fontSize: 8, fontWeight: 700, padding: '2px 6px', background: 'rgba(96,165,250,.08)', color: '#60a5fa' }}>{co.ticker}</span>}
                     </div>
-                  ))}
-                  <div style={{ fontSize: 7, fontWeight: 900, color: '#A100FF', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 14, marginBottom: 6 }}>Team</div>
-                  <div style={{ display: 'flex', gap: 0 }}>
-                    {c.team.map((t, i) => (
-                      <div key={t.n} style={{ flex: 1, padding: '6px 10px', borderRight: i < c.team.length - 1 ? '1px solid rgba(255,255,255,.03)' : 'none' }}>
-                        <span style={{ fontSize: 7, fontWeight: 900, color: '#A100FF' }}>{t.i}</span>
-                        <div style={{ fontSize: 9, fontWeight: 700, marginTop: 2 }}>{t.n}</div>
-                        <div style={{ fontSize: 7, color: 'rgba(255,255,255,.2)', textTransform: 'uppercase' }}>{t.r}</div>
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: a(.3), marginBottom: 16 }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}</div>
+
+                {/* Revenue */}
+                {co.revenue && (
+                  <div style={{ padding: '10px 0', borderTop: `1px solid ${a(.08)}`, borderBottom: `1px solid ${a(.08)}`, marginBottom: 16 }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: a(.2), letterSpacing: '.12em', textTransform: 'uppercase' }}>Revenue</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-.02em', marginTop: 2 }}>{co.revenue}</div>
+                  </div>
+                )}
+
+                {/* Key Initiatives */}
+                {co.key_initiatives.length > 0 && (
+                  <div style={{ marginBottom: 18 }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Key Initiatives</div>
+                    {co.key_initiatives.map((init, ii) => (
+                      <div key={ii} style={{ display: 'flex', gap: 8, padding: '4px 0' }}>
+                        <div style={{ width: 4, height: 4, marginTop: 5, background: '#60a5fa', flexShrink: 0 }} />
+                        <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{init}</span>
                       </div>
                     ))}
                   </div>
-                </div>
+                )}
+
+                {/* Linked Trends */}
+                {linkedT.length > 0 && (
+                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#A100FF', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Trends</div>
+                    {linkedT.map((t, ti) => (
+                      <div key={ti} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'trend', i: trends.indexOf(t) }); }}
+                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
+                        <div style={{ width: 5, height: 5, background: '#A100FF', marginTop: 4, flexShrink: 0 }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{t.t}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Linked Opportunities */}
+                {linkedO.length > 0 && (
+                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#34d399', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Opportunities</div>
+                    {linkedO.map((o, oi) => (
+                      <div key={oi} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'opportunity', i: opps.indexOf(o) }); }}
+                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#34d399'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
+                        <div style={{ width: 5, height: 5, background: '#34d399', marginTop: 4, flexShrink: 0 }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{o.t}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Linked Challenges */}
+                {linkedC.length > 0 && (
+                  <div style={{ paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#f87171', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Challenges</div>
+                    {linkedC.map((c, ci) => (
+                      <div key={ci} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'challenge', i: challenges.indexOf(c) }); }}
+                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
+                        <div style={{ width: 5, height: 5, background: '#f87171', marginTop: 4, flexShrink: 0 }} />
+                        <div>
+                          <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{c.t}</span>
+                          <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 4px', marginLeft: 6, background: `${sevColor(c.severity)}15`, color: sevColor(c.severity), textTransform: 'uppercase' }}>{c.severity}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           );
         })()}
       </AnimatePresence>
+
+      {/* ═══ ROBIN CHAT ═══ */}
+      <RobinChat data={activeData} focus={robinFocus} autoMessage={robinAutoMsg} />
     </div>
   );
 }
@@ -827,12 +1068,97 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 /* ══════════════════════════════════════════════
    SECTION RULE — editorial divider
    ══════════════════════════════════════════════ */
+function VisualIntelligenceSection({ images, onAskRobin }: { images: { src: string; caption?: string }[]; onAskRobin: (label: string) => void }) {
+  const [expandedImg, setExpandedImg] = useState<number | null>(null);
+  return (
+    <>
+      <section id="sec-3" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
+        <SectionRule label="Visual Intelligence" accent="#fbbf24" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10, marginTop: 20 }}>
+          {images.map((img, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .3, delay: i * .04, ease }}
+              style={{ cursor: 'pointer', overflow: 'hidden', background: 'rgb(var(--ink) / .03)', border: '1px solid rgb(var(--ink) / .08)', transition: 'border-color .2s', position: 'relative' }}
+              whileHover={{ borderColor: 'rgba(251,191,36,.2)' }}
+            >
+              <div onClick={() => setExpandedImg(i)} style={{ width: '100%', height: 130, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgb(var(--ink) / .02)' }}>
+                <img src={img.src} alt={img.caption || `Chart ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div style={{ padding: '5px 8px', borderTop: '1px solid rgb(var(--ink) / .06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .3)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{img.caption || `Chart ${i + 1}`}</span>
+                <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                  <button onClick={(e) => { e.stopPropagation(); onAskRobin(`Interpret chart: ${img.caption || `Chart ${i + 1}`} from the Visual Intelligence section. Describe what this chart likely shows based on the intelligence context.`); }}
+                    title="Ask Robin to interpret"
+                    style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(59,130,246,.08)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 4, padding: '2px 5px', cursor: 'pointer', transition: 'all .15s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.2)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,.08)'; }}
+                  >
+                    <span style={{ fontSize: 6, fontWeight: 800, color: '#60a5fa' }}>Ask Robin</span>
+                  </button>
+                  <span onClick={() => setExpandedImg(i)} className="ms" style={{ fontSize: 12, color: 'rgba(251,191,36,.3)', cursor: 'pointer' }}>zoom_in</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {expandedImg !== null && images[expandedImg] && (
+          <motion.div
+            key="lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setExpandedImg(null)}
+            style={{ position: 'fixed', inset: 0, zIndex: 250, background: 'rgba(0,0,0,.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: .25 }}
+              onClick={e => e.stopPropagation()}
+              style={{ maxWidth: '85vw', maxHeight: '85vh', position: 'relative' }}
+            >
+              <img src={images[expandedImg].src} alt={images[expandedImg].caption || ''} style={{ maxWidth: '100%', maxHeight: '75vh', display: 'block', border: '2px solid rgba(251,191,36,.2)' }} />
+              <div style={{ padding: '10px 0', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.5)' }}>{images[expandedImg].caption || `Chart ${expandedImg + 1}`}</span>
+                <button onClick={(e) => { e.stopPropagation(); setExpandedImg(null); onAskRobin(`Analyze and interpret this chart in detail: ${images[expandedImg].caption || `Chart ${expandedImg + 1}`}. What are the key takeaways, trends shown, and strategic implications?`); }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(59,130,246,.15)', border: '1px solid rgba(59,130,246,.3)', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', transition: 'all .15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,.3)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,.15)'; }}
+                >
+                  <span style={{ fontSize: 8, fontWeight: 800, color: '#60a5fa' }}>Ask Robin to interpret</span>
+                </button>
+              </div>
+              {images.length > 1 && (
+                <>
+                  <button onClick={(e) => { e.stopPropagation(); setExpandedImg(expandedImg > 0 ? expandedImg - 1 : images.length - 1); }}
+                    style={{ position: 'absolute', left: -48, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', fontSize: 28, cursor: 'pointer' }}>←</button>
+                  <button onClick={(e) => { e.stopPropagation(); setExpandedImg(expandedImg < images.length - 1 ? expandedImg + 1 : 0); }}
+                    style={{ position: 'absolute', right: -48, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', fontSize: 28, cursor: 'pointer' }}>→</button>
+                </>
+              )}
+              <button onClick={() => setExpandedImg(null)}
+                style={{ position: 'absolute', top: -36, right: 0, background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', fontSize: 18, cursor: 'pointer', fontWeight: 900 }}>✕</button>
+              <div style={{ textAlign: 'center', marginTop: 2 }}>
+                <span style={{ fontSize: 8, color: 'rgba(255,255,255,.2)' }}>{expandedImg + 1} / {images.length}</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
 function SectionRule({ label, accent }: { label: string; accent: string }) {
   return (
     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: .4, ease }}
-      style={{ display: 'flex', alignItems: 'baseline', gap: 12, borderBottom: '2px solid #fff', paddingBottom: 6, marginBottom: 24 }}>
+      style={{ display: 'flex', alignItems: 'baseline', gap: 12, borderBottom: '2px solid var(--rule)', paddingBottom: 6, marginBottom: 24 }}>
       <h2 style={{ fontSize: 24, fontWeight: 900, letterSpacing: '-.04em', textTransform: 'uppercase' }}>{label}</h2>
-      <div style={{ flex: 1, height: 1, background: '#fff' }} />
+      <div style={{ flex: 1, height: 1, background: 'var(--rule)' }} />
       <span style={{ fontSize: 8, fontWeight: 900, letterSpacing: '.2em', color: accent }}>VIEW ALL →</span>
     </motion.div>
   );
@@ -850,15 +1176,15 @@ function EditorialCard({ item, type, accent, index, onClick, isLast }: {
       initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
       transition={{ duration: .35, delay: index * .04, ease }}
       onClick={onClick}
-      style={{ paddingBottom: 14, marginBottom: 14, borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,.06)', cursor: 'pointer', transition: 'border-color .2s' }}
+      style={{ paddingBottom: 14, marginBottom: 14, borderBottom: isLast ? 'none' : '1px solid rgb(var(--ink) / .08)', cursor: 'pointer', transition: 'border-color .2s' }}
       onMouseEnter={e => { if (!isLast) e.currentTarget.style.borderBottomColor = `${accent}30`; }}
-      onMouseLeave={e => { if (!isLast) e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,.06)'; }}>
+      onMouseLeave={e => { if (!isLast) e.currentTarget.style.borderBottomColor = 'rgb(var(--ink) / .08)'; }}>
       <span style={{ fontSize: 8, fontWeight: 900, color: accent, textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 4, display: 'block' }}>
         {'tag' in item ? item.tag : type}
       </span>
       <h3 style={{ fontSize: 14, fontWeight: 900, letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: 4 }}>{item.t}</h3>
-      <p style={{ fontSize: 9, lineHeight: 1.6, color: 'rgba(255,255,255,.3)' }}>{item.d.substring(0, 100)}{item.d.length > 100 ? '...' : ''}</p>
-      <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.1em', color: 'rgba(255,255,255,.1)', marginTop: 6, textTransform: 'uppercase' }}>
+      <p style={{ fontSize: 9, lineHeight: 1.6, color: 'rgb(var(--ink) / .3)' }}>{item.d.substring(0, 100)}{item.d.length > 100 ? '...' : ''}</p>
+      <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.1em', color: 'rgb(var(--ink) / .1)', marginTop: 6, textTransform: 'uppercase' }}>
         {'severity' in item ? item.severity + ' severity' : ''}
         {'timeline' in item && item.timeline ? item.timeline : ''}
       </div>
@@ -889,6 +1215,7 @@ const REGION_IDS: Record<string, string[]> = {
    ══════════════════════════════════════════════ */
 function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[]; onExpand: (i: number) => void }) {
   const [page, setPage] = useState(0);
+  const light = useCompassStore(s => s.theme) === 'light';
   const perPage = 6;
   const totalPages = Math.ceil(newsItems.length / perPage);
   const pageItems = newsItems.slice(page * perPage, (page + 1) * perPage);
@@ -898,56 +1225,59 @@ function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[];
   return (
     <section id="sec-1" style={{
       margin: '0 -48px', marginBottom: 48, scrollMarginTop: 56,
-      background: 'linear-gradient(145deg, #0d1117 0%, #0a0a0a 40%, #0f0a18 100%)',
-      color: '#fff', position: 'relative', overflow: 'hidden',
+      background: light
+        ? 'linear-gradient(145deg, rgba(161,0,255,.04) 0%, rgba(161,0,255,.02) 40%, rgba(96,165,250,.03) 100%)'
+        : 'linear-gradient(145deg, #0d1117 0%, #0a0a0a 40%, #0f0a18 100%)',
+      color: 'var(--t1)', position: 'relative', overflow: 'hidden',
+      transition: 'background .4s',
     }}>
       {/* Border frame */}
-      <div style={{ position: 'absolute', inset: 12, border: '1px solid rgba(255,255,255,.03)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', inset: 12, border: `1px solid ${light ? 'rgba(161,0,255,.08)' : 'rgb(var(--ink) / .08)'}`, pointerEvents: 'none' }} />
 
       {/* ── Crest Masthead ── */}
-      <div style={{ padding: '32px 48px 24px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,.06)', position: 'relative' }}>
-        {/* Center spine line through crest */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgba(255,255,255,.04)', pointerEvents: 'none' }} />
+      <div style={{ padding: '32px 48px 24px', textAlign: 'center', borderBottom: '1px solid rgb(var(--ink) / .08)', position: 'relative' }}>
+        {/* Center spine line through crest — dark mode only */}
+        {!light && <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgb(var(--ink) / .08)', pointerEvents: 'none' }} />}
 
         <div style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
           {/* Top ornamental line */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, transparent, rgba(255,255,255,.15))' }} />
+            <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, transparent, rgb(var(--ink) / .15))' }} />
             <div style={{ width: 4, height: 4, background: 'rgba(161,0,255,.4)', transform: 'rotate(45deg)' }} />
-            <div style={{ width: 40, height: 1, background: 'linear-gradient(to left, transparent, rgba(255,255,255,.15))' }} />
+            <div style={{ width: 40, height: 1, background: 'linear-gradient(to left, transparent, rgb(var(--ink) / .15))' }} />
           </div>
 
           {/* > symbol */}
           <div style={{ fontSize: 32, fontWeight: 900, color: '#A100FF', lineHeight: .8, letterSpacing: '-.04em' }}>&gt;</div>
 
           {/* Brand text */}
-          <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.35em', color: 'rgba(255,255,255,.25)', marginTop: 6, textTransform: 'uppercase' }}>ACCSENSE</div>
+          <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.35em', color: 'rgb(var(--ink) / .25)', marginTop: 6, textTransform: 'uppercase' }}>ACCSENSE</div>
 
           {/* Middle ornamental line */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '6px 0' }}>
-            <div style={{ width: 25, height: 1, background: 'rgba(255,255,255,.1)' }} />
+            <div style={{ width: 25, height: 1, background: 'rgb(var(--ink) / .1)' }} />
             <div style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(161,0,255,.3)' }} />
-            <div style={{ width: 25, height: 1, background: 'rgba(255,255,255,.1)' }} />
+            <div style={{ width: 25, height: 1, background: 'rgb(var(--ink) / .1)' }} />
           </div>
 
           {/* Section title */}
-          <div style={{ fontSize: 14, fontWeight: 900, letterSpacing: '.08em', textTransform: 'uppercase', color: '#fff' }}>BROKER ANALYSIS & ARTICLES</div>
+          <div style={{ fontSize: 14, fontWeight: 900, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--t1)' }}>BROKER ANALYSIS & ARTICLES</div>
 
           {/* Bottom ornament */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
-            <div style={{ width: 30, height: 1, background: 'linear-gradient(to right, transparent, rgba(255,255,255,.1))' }} />
+            <div style={{ width: 30, height: 1, background: 'linear-gradient(to right, transparent, rgb(var(--ink) / .1))' }} />
             <span style={{ fontSize: 7, fontWeight: 700, color: 'rgba(96,165,250,.5)', letterSpacing: '.15em' }}>{newsItems.length} ARTICLES</span>
-            <div style={{ width: 30, height: 1, background: 'linear-gradient(to left, transparent, rgba(255,255,255,.1))' }} />
+            <div style={{ width: 30, height: 1, background: 'linear-gradient(to left, transparent, rgb(var(--ink) / .1))' }} />
           </div>
         </div>
       </div>
 
       {/* ── Articles Grid (paginated) ── */}
       <div style={{ padding: '28px 48px 20px', position: 'relative' }}>
-        {/* Center spine continues */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgba(255,255,255,.03)', pointerEvents: 'none' }} />
+        {/* Center spine continues — dark mode only */}
+        {!light && <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgb(var(--ink) / .08)', pointerEvents: 'none' }} />}
         {/* Spine shadow */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 20, height: '100%', background: 'linear-gradient(to right, transparent, rgba(0,0,0,.06) 45%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.06) 55%, transparent)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 20, height: '100%', background: light ? 'linear-gradient(to right, transparent, rgba(161,0,255,.02) 45%, rgba(161,0,255,.04) 50%, rgba(161,0,255,.02) 55%, transparent)' : 'linear-gradient(to right, transparent, rgba(0,0,0,.06) 45%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.06) 55%, transparent)', pointerEvents: 'none' }} />
 
         <AnimatePresence mode="wait">
           <motion.div
@@ -964,17 +1294,22 @@ function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[];
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .3, delay: i * .04 }}
                 onClick={() => onExpand(page * perPage + i)}
-                style={{ cursor: 'pointer', paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,.05)', transition: 'border-color .2s' }}
+                style={{ cursor: 'pointer', paddingBottom: 16, borderBottom: '1px solid rgb(var(--ink) / .08)', transition: 'border-color .2s' }}
                 onMouseEnter={e => (e.currentTarget.style.borderBottomColor = 'rgba(96,165,250,.2)')}
-                onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,.05)')}>
+                onMouseLeave={e => (e.currentTarget.style.borderBottomColor = 'rgb(var(--ink) / .08)')}>
                 <h3 style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.02em', lineHeight: 1.3, marginBottom: 6 }}>{n.headline}</h3>
                 {n.summary !== n.headline && (
-                  <p style={{ fontSize: 8, lineHeight: 1.6, color: 'rgba(255,255,255,.3)', marginBottom: 8 }}>{n.summary.substring(0, 100)}{n.summary.length > 100 ? '...' : ''}</p>
+                  <p style={{ fontSize: 8, lineHeight: 1.6, color: 'rgb(var(--ink) / .3)', marginBottom: 8 }}>{n.summary.substring(0, 100)}{n.summary.length > 100 ? '...' : ''}</p>
+                )}
+                {n.analyst_quote && (
+                  <div style={{ marginBottom: 8, paddingLeft: 8, borderLeft: '2px solid rgba(96,165,250,.2)' }}>
+                    <p style={{ fontSize: 7, fontStyle: 'italic', color: 'rgba(96,165,250,.5)', lineHeight: 1.6 }}>"{n.analyst_quote}"</p>
+                  </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap' }}>
                   {n.type && <span style={{ fontSize: 5, fontWeight: 900, padding: '2px 4px', background: '#60a5fa', color: '#fff', textTransform: 'uppercase', letterSpacing: '.03em' }}>{n.type}</span>}
-                  {n.source_org && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgba(255,255,255,.2)' }}>{n.source_org}</span>}
-                  {n.date && <span style={{ fontSize: 6, color: 'rgba(255,255,255,.12)' }}>· {n.date}</span>}
+                  {n.source_org && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .2)' }}>{n.source_org}</span>}
+                  {n.date && <span style={{ fontSize: 6, color: 'rgb(var(--ink) / .12)' }}>· {n.date}</span>}
                 </div>
               </motion.div>
             ))}
@@ -986,21 +1321,21 @@ function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[];
       {totalPages > 1 && (
         <div style={{ padding: '12px 48px 24px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16 }}>
           <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
-            style={{ background: 'none', border: 'none', cursor: page === 0 ? 'default' : 'pointer', color: page === 0 ? 'rgba(255,255,255,.08)' : 'rgba(255,255,255,.3)', fontSize: 16, transition: 'color .2s', padding: '4px 8px' }}
+            style={{ background: 'none', border: 'none', cursor: page === 0 ? 'default' : 'pointer', color: page === 0 ? 'rgb(var(--ink) / .08)' : 'rgb(var(--ink) / .3)', fontSize: 16, transition: 'color .2s', padding: '4px 8px' }}
             onMouseEnter={e => { if (page > 0) e.currentTarget.style.color = '#A100FF'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = page === 0 ? 'rgba(255,255,255,.08)' : 'rgba(255,255,255,.3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = page === 0 ? 'rgb(var(--ink) / .08)' : 'rgb(var(--ink) / .3)'; }}
           >←</button>
 
           {/* Page dots */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             {Array.from({ length: totalPages }).map((_, pi) => (
               <button key={pi} onClick={() => setPage(pi)}
-                style={{ width: pi === page ? 16 : 5, height: 5, border: 'none', cursor: 'pointer', background: pi === page ? '#A100FF' : 'rgba(255,255,255,.1)', transition: 'all .3s cubic-bezier(.4,0,.2,1)', padding: 0 }} />
+                style={{ width: pi === page ? 16 : 5, height: 5, border: 'none', cursor: 'pointer', background: pi === page ? '#A100FF' : 'rgb(var(--ink) / .1)', transition: 'all .3s cubic-bezier(.4,0,.2,1)', padding: 0 }} />
             ))}
           </div>
 
           <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page === totalPages - 1}
-            style={{ background: 'none', border: 'none', cursor: page === totalPages - 1 ? 'default' : 'pointer', color: page === totalPages - 1 ? 'rgba(255,255,255,.08)' : '#A100FF', fontSize: 16, transition: 'all .2s', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
+            style={{ background: 'none', border: 'none', cursor: page === totalPages - 1 ? 'default' : 'pointer', color: page === totalPages - 1 ? 'rgb(var(--ink) / .08)' : '#A100FF', fontSize: 16, transition: 'all .2s', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
             onMouseEnter={e => { if (page < totalPages - 1) e.currentTarget.style.transform = 'translateX(3px)'; }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}
           >
@@ -1009,75 +1344,6 @@ function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[];
         </div>
       )}
     </section>
-  );
-}
-
-function CompanyCard({ client: c, index: i, trends, opps, challenges, onSelect, isLast }: {
-  client: typeof CLIENTS[0]; index: number;
-  trends: TrendsTrend[]; opps: TrendsOpportunity[]; challenges: TrendsChallenge[];
-  onSelect: () => void; isLast: boolean;
-}) {
-  const [showDetails, setShowDetails] = useState(false);
-  const relT = findRelevant(c.s, trends);
-  const relO = findRelevant(c.s, opps);
-  const relC = findRelevant(c.s, challenges);
-  const hasFindings = relT.length + relO.length + relC.length > 0;
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .35, delay: i * .06, ease }}
-      style={{ padding: '14px 12px', cursor: 'pointer', borderRight: isLast ? 'none' : '1px solid rgba(255,255,255,.04)', borderBottom: '1px solid rgba(255,255,255,.04)', transition: 'background .2s' }}
-      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,.02)'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
-      <div onClick={onSelect}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-          <span style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa', letterSpacing: '.06em' }}>{c.init}</span>
-          <span style={{ fontSize: 7, fontWeight: 900, color: 'rgba(255,255,255,.05)' }}>0{i + 1}</span>
-        </div>
-        <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: '-.01em', marginBottom: 1, lineHeight: 1.2 }}>{c.n}</div>
-        <div style={{ fontSize: 7, color: 'rgba(255,255,255,.18)', marginBottom: 6 }}>{c.s}</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-          <span style={{ fontSize: 13, fontWeight: 900, letterSpacing: '-.02em' }}>{c.r}</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: '#34d399' }}>{c.g}</span>
-        </div>
-      </div>
-      {hasFindings && (
-        <div style={{ marginTop: 6 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 3, cursor: 'pointer' }}
-            onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}>
-            {relT.map(j => <div key={`t${j}`} style={{ width: 5, height: 5, borderRadius: 1, background: '#A100FF' }} />)}
-            {relO.map(j => <div key={`o${j}`} style={{ width: 5, height: 5, borderRadius: 1, background: '#34d399' }} />)}
-            {relC.map(j => <div key={`c${j}`} style={{ width: 5, height: 5, borderRadius: 1, background: '#f87171' }} />)}
-            <span style={{ fontSize: 7, color: showDetails ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.12)', marginLeft: 3, transition: 'color .2s' }}>{showDetails ? '▴' : '▾'}</span>
-          </div>
-          <AnimatePresence>
-            {showDetails && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: .2, ease: [.4, 0, .2, 1] }} style={{ overflow: 'hidden' }}>
-                <div style={{ paddingTop: 6, marginTop: 4, borderTop: '1px solid rgba(255,255,255,.03)' }}>
-                  {relT.map(j => (
-                    <div key={`t${j}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 4, marginBottom: 3 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: 1, background: '#A100FF', flexShrink: 0, marginTop: 3 }} />
-                      <span style={{ fontSize: 7, color: 'rgba(161,0,255,.5)', lineHeight: 1.3 }}>{trends[j]?.t}</span>
-                    </div>
-                  ))}
-                  {relO.map(j => (
-                    <div key={`o${j}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 4, marginBottom: 3 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: 1, background: '#34d399', flexShrink: 0, marginTop: 3 }} />
-                      <span style={{ fontSize: 7, color: 'rgba(52,211,153,.5)', lineHeight: 1.3 }}>{opps[j]?.t}</span>
-                    </div>
-                  ))}
-                  {relC.map(j => (
-                    <div key={`c${j}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 4, marginBottom: 3 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: 1, background: '#f87171', flexShrink: 0, marginTop: 3 }} />
-                      <span style={{ fontSize: 7, color: 'rgba(248,113,113,.5)', lineHeight: 1.3 }}>{challenges[j]?.t}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
-    </motion.div>
   );
 }
 
@@ -1129,8 +1395,8 @@ function MiniMap({ currentCountry, currentRegion }: { currentCountry: string; cu
           const isActiveRegion = activeRegionIds.has(id);
           const d = pathGen(f.geometry) || '';
 
-          let fill = 'rgba(255,255,255,.05)';
-          let stroke = 'rgba(255,255,255,.06)';
+          let fill = 'rgb(var(--ink) / .08)';
+          let stroke = 'rgb(var(--ink) / .08)';
           let sw = 0.25;
 
           if (isHighlighted) {
@@ -1147,11 +1413,11 @@ function MiniMap({ currentCountry, currentRegion }: { currentCountry: string; cu
             sw = 0.5;
           } else if (rc && !isWorld && activeRegionIds.size > 0) {
             // Other regions dimmed but still visible
-            fill = 'rgba(255,255,255,.04)';
-            stroke = 'rgba(255,255,255,.06)';
+            fill = 'rgb(var(--ink) / .08)';
+            stroke = 'rgb(var(--ink) / .08)';
           } else if (rc) {
             fill = rc.fill;
-            stroke = 'rgba(255,255,255,.06)';
+            stroke = 'rgb(var(--ink) / .08)';
           }
 
           return <path key={i} d={d} fill={fill} stroke={stroke} strokeWidth={sw} style={{ transition: 'all .5s' }} />;

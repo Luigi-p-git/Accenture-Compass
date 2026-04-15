@@ -100,6 +100,33 @@ KEY CHALLENGES
 Present 5-8 findings numbered sequentially continuing from above. Same EXACT format as Emerging Trends.
 
 ══════════════════════════════════
+TOP 10 COMPANIES
+══════════════════════════════════
+
+Based on all findings above, identify the 10 most significant companies in ${subject}'s ${industryCtx} landscape. These companies should be the ones MOST affected by or positioned for the trends, opportunities, and challenges you identified.
+
+For EACH company, present in this EXACT format:
+
+Company 1: [Company Name]
+Ticker: [Stock ticker symbol, or PRIVATE if not publicly traded]
+Sector: [Primary industry sector]
+Headquarters: [City, Country]
+Revenue: [Latest annual revenue with currency, e.g. CAD$52B]
+Key Initiatives: [2-3 major investments or strategic moves, separated by semicolons]
+Linked Findings:
+  - Trends: [Finding numbers from Emerging Trends that affect this company, e.g. 1, 3, 5]
+  - Opportunities: [Finding numbers from Strategic Opportunities this company is positioned for]
+  - Challenges: [Finding numbers from Key Challenges this company faces]
+
+CRITICAL RULES FOR TOP 10 COMPANIES:
+- Select companies based on RELEVANCE to the findings above — not just size
+- Every company MUST link to at least 2 findings by their exact sequential number
+- Finding numbers MUST match the numbering used in the sections above
+- Include a mix of sectors reflecting the industry/country focus
+- Prioritize companies with cross-category linkages (affected by trends AND opportunities AND challenges)
+- Include both public companies (with ticker) and major private/government entities
+
+══════════════════════════════════
 FINANCIAL HIGHLIGHTS
 ══════════════════════════════════
 
@@ -127,7 +154,8 @@ This section populates our Broker Analysis magazine spread. List 10-15 of the mo
 For EACH article, use this EXACT format:
 
 1. [Write a compelling, editorial-style headline summarizing the key finding] — [Source Organization], [Document Type], [Date]
-Summary: [2-3 sentence summary of the key insight, including specific data points and analyst quotes where available]
+Summary: [2-3 sentence summary of the key insight, including specific data points]
+Analyst Quote: ["Analyst Name, Title at Firm" — "Direct quotation from the report or transcript." Write NONE if no direct quote available.]
 URL: [FULL https:// URL to the source. This is CRITICAL — provide the direct hyperlink to the document, press release, filing page, earnings transcript, or news article. For company filings, link to the investor relations page. For government publications, link to the .gov or .gc.ca page. For broker research, provide the research portal URL if publicly accessible.]
 
 CRITICAL URL REQUIREMENTS:
@@ -159,7 +187,9 @@ STRICT FORMAT RULES — READ CAREFULLY
 7. Prioritize primary sources: earnings transcripts, analyst reports, SEC/SEDAR filings, official government publications
 8. Aim for 15-24 total findings across Trends + Opportunities + Challenges
 9. All URLs must be complete (start with https://)
-10. Do NOT embed URLs or domain names inside description text or metric values — put them ONLY on the Source URL: or URL: line`;
+10. Do NOT embed URLs or domain names inside description text or metric values — put them ONLY on the Source URL: or URL: line
+11. TOP 10 COMPANIES: every company MUST have Linked Findings with valid finding numbers from above
+12. BROKER ANALYSIS: include Analyst Quote for every article — direct quotes from analysts add editorial credibility`;
 }
 
 interface Job {
@@ -177,7 +207,7 @@ export default function AdminPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [parsedFile, setParsedFile] = useState<{ name: string; columns: string[]; rows: any[][]; preview: any[] } | null>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [columnMap, setColumnMap] = useState<Record<string, string>>({});
-  const [alphaMode, setAlphaMode] = useState(false);
+  const [alphaMode, setAlphaMode] = useState(true);
   const [alphaRegion, setAlphaRegion] = useState('');
   const [alphaCountry, setAlphaCountry] = useState('');
   const [alphaIndustry, setAlphaIndustry] = useState('');
@@ -270,6 +300,16 @@ export default function AdminPage() {
       </header>
 
       <div className="sec">
+        <div style={{ marginBottom: 16, display: 'flex', gap: 20 }}>
+          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'var(--t2)', fontSize: 9, fontWeight: 700, letterSpacing: '.04em', transition: 'color .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = ''; }}
+          ><span className="ms" style={{ fontSize: 14 }}>home</span>Compass Home</a>
+          <a href="/explore/world/intelligence" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: 'var(--t2)', fontSize: 9, fontWeight: 700, letterSpacing: '.04em', transition: 'color .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = ''; }}
+          ><span className="ms" style={{ fontSize: 14 }}>auto_stories</span>AccSense Magazine</a>
+        </div>
         <div className="fu sec-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <div className="tag">Data Management</div>
@@ -568,22 +608,84 @@ export default function AdminPage() {
 
                     {/* Paste JSON */}
                     {alphaInputMode === 'json' && (
-                      <textarea
-                        value={alphaJsonInput}
-                        onChange={e => { setAlphaJsonInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
-                        placeholder='Paste pre-converted JSON here...&#10;&#10;{&#10;  "subject": "Canada",&#10;  "findings": [ ... ],&#10;  "synthesis": "..."&#10;}'
-                        style={{
-                          width: '100%', height: 160, padding: '12px 14px', borderRadius: 10,
-                          background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
-                          fontSize: 10, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
-                          resize: 'vertical', outline: 'none',
-                        }}
-                      />
+                      <>
+                        <textarea
+                          value={alphaJsonInput}
+                          onChange={e => { setAlphaJsonInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
+                          placeholder='Paste JSON here — supports both formats:&#10;&#10;TrendsData: { "trends": [...], "opportunities": [...], "challenges": [...], "top_companies": [...] }&#10;&#10;AlphaSense: { "findings": [...], "synthesis": "..." }'
+                          style={{
+                            width: '100%', height: 160, padding: '12px 14px', borderRadius: 10,
+                            background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
+                            fontSize: 10, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
+                            resize: 'vertical', outline: 'none',
+                          }}
+                        />
+                        {/* Direct load button for JSON — skips conversion */}
+                        <button
+                          disabled={!alphaJsonInput.trim()}
+                          style={{
+                            width: '100%', padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
+                            background: alphaJsonInput.trim() ? '#34d399' : 'var(--s2)',
+                            color: '#fff', marginTop: 12,
+                            fontSize: 11, fontWeight: 800, letterSpacing: '.06em',
+                            boxShadow: alphaJsonInput.trim() ? '0 4px 16px rgba(52,211,153,.25)' : 'none',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                            transition: 'all .2s',
+                          }}
+                          onClick={() => {
+                            try {
+                              // Clean up common paste issues
+                              let raw = alphaJsonInput.trim();
+                              // Strip markdown fences
+                              const fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+                              if (fenceMatch) raw = fenceMatch[1].trim();
+                              // If starts with "trends" or "findings" without { wrapper, add it
+                              if (raw.startsWith('"') && !raw.startsWith('{')) raw = '{' + raw;
+                              if (!raw.endsWith('}')) {
+                                const lastBrace = raw.lastIndexOf('}');
+                                if (lastBrace > 0) raw = raw.substring(0, lastBrace + 1);
+                              }
+                              // Find the JSON object boundaries
+                              const startIdx = raw.indexOf('{');
+                              const endIdx = raw.lastIndexOf('}');
+                              if (startIdx !== -1 && endIdx > startIdx) raw = raw.substring(startIdx, endIdx + 1);
+
+                              const parsed = JSON.parse(raw);
+                              // TrendsData format (has trends array)
+                              if (parsed.trends && Array.isArray(parsed.trends)) {
+                                const trends = parsed;
+                                if (!trends.source) trends.source = { subject: 'Unknown', date_generated: new Date().toISOString().split('T')[0], total_findings: (trends.trends?.length || 0) + (trends.opportunities?.length || 0) + (trends.challenges?.length || 0) };
+                                setAlphaResult({ success: true, trends, alphasense: { subject: trends.source?.subject, findings: [], synthesis: trends.synthesis || '' } });
+                              }
+                              // AlphaSense format (has findings array)
+                              else if (parsed.findings && Array.isArray(parsed.findings)) {
+                                setAlphaResult({ success: true, alphasense: parsed, trends: null });
+                                // Still need to convert — trigger the API
+                                fetch('/api/alphasense', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ json: parsed }) })
+                                  .then(r => r.json()).then(data => { if (data.success) setAlphaResult(data); });
+                              } else {
+                                setAlphaError('JSON must have either "trends" or "findings" array');
+                                return;
+                              }
+                              setAlphaError('');
+                              // Auto-detect country
+                              const subject = (parsed.source?.subject || parsed.subject || '').toLowerCase();
+                              const allCountries = Object.values(ALPHA_REGIONS).flat();
+                              const match = allCountries.find((c: string) => subject.includes(c.toLowerCase()));
+                              if (match) setAlphaTargetCountry(match.toLowerCase().replace(/\s+/g, '-'));
+                            } catch (err) {
+                              setAlphaError(err instanceof Error ? err.message : 'Invalid JSON');
+                            }
+                          }}
+                        >
+                          <span className="ms" style={{ fontSize: 14 }}>check_circle</span>Load JSON
+                        </button>
+                      </>
                     )}
 
-                    {/* Convert button */}
-                    <button
-                      disabled={alphaProcessing || (alphaInputMode === 'paste' && !alphaInput.trim()) || (alphaInputMode === 'pdf' && !alphaPdfName) || (alphaInputMode === 'json' && !alphaJsonInput.trim())}
+                    {/* Convert button — for text and PDF only */}
+                    {alphaInputMode !== 'json' && <button
+                      disabled={alphaProcessing || (alphaInputMode === 'paste' && !alphaInput.trim()) || (alphaInputMode === 'pdf' && !alphaPdfName)}
                       style={{
                         width: '100%', padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
                         background: alphaProcessing ? 'var(--s2)' : 'linear-gradient(135deg, var(--p), #6b21a8)',
@@ -601,12 +703,6 @@ export default function AdminPage() {
                             const form = new FormData();
                             form.append('file', alphaPdfRef.current.files[0]);
                             res = await fetch('/api/alphasense', { method: 'POST', body: form });
-                          } else if (alphaInputMode === 'json') {
-                            const parsed = JSON.parse(alphaJsonInput);
-                            res = await fetch('/api/alphasense', {
-                              method: 'POST', headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ json: parsed }),
-                            });
                           } else {
                             res = await fetch('/api/alphasense', {
                               method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -629,8 +725,8 @@ export default function AdminPage() {
                         } finally { setAlphaProcessing(false); }
                       }}
                     >
-                      {alphaProcessing ? (<><span className="ms" style={{ fontSize: 14, animation: 'pulse 1s infinite' }}>sync</span>Converting...</>) : (<><span className="ms" style={{ fontSize: 14 }}>transform</span>Convert to JSON</>)}
-                    </button>
+                      {alphaProcessing ? (<><span className="ms" style={{ fontSize: 14, animation: 'pulse 1s infinite' }}>psychology</span>AI Structuring... (up to 3 min)</>) : (<><span className="ms" style={{ fontSize: 14 }}>transform</span>Convert to JSON</>)}
+                    </button>}
 
                     {/* Error */}
                     {alphaError && (

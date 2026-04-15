@@ -93,6 +93,76 @@ export async function POST(request: NextRequest) {
     // Ensure directory exists
     await fs.mkdir(path.dirname(filePath), { recursive: true });
 
+    // Sanitize trends data — fix common issues from AI-generated JSON
+    if (topic === 'trends') {
+      // Fix source.total_findings — must be a number
+      if (data.source) {
+        if (typeof data.source.total_findings === 'string') data.source.total_findings = parseInt(data.source.total_findings) || 0;
+        if (!data.source.total_findings) data.source.total_findings = (data.trends?.length || 0) + (data.opportunities?.length || 0) + (data.challenges?.length || 0);
+      }
+
+      // Fix linked_findings — detect if 1-based and convert to 0-based
+      if (data.top_companies?.length && data.trends?.length) {
+        for (const co of data.top_companies) {
+          if (!co.linked_findings) { co.linked_findings = { trends: [], opportunities: [], challenges: [] }; continue; }
+          // Detect 1-based: if any index equals the array length (would be out of bounds for 0-based)
+          const maxT = Math.max(0, ...(co.linked_findings.trends || []));
+          const maxO = Math.max(0, ...(co.linked_findings.opportunities || []));
+          const maxC = Math.max(0, ...(co.linked_findings.challenges || []));
+          const looksOneBased = (maxT >= (data.trends?.length || 0)) || (maxO >= (data.opportunities?.length || 0)) || (maxC >= (data.challenges?.length || 0));
+          if (looksOneBased) {
+            co.linked_findings.trends = (co.linked_findings.trends || []).map((n: number) => Math.max(0, n - 1));
+            co.linked_findings.opportunities = (co.linked_findings.opportunities || []).map((n: number) => Math.max(0, n - 1));
+            co.linked_findings.challenges = (co.linked_findings.challenges || []).map((n: number) => Math.max(0, n - 1));
+          }
+          // Ensure logo_url exists
+          if (!co.logo_url && co.name) {
+            const domain = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|group)\b/g, '').trim().split(/\s+/).pop()?.replace(/[^a-z]/g, '');
+            if (domain) co.logo_url = `https://www.google.com/s2/favicons?domain=${domain}.com&sz=128`;
+          }
+        }
+      }
+
+      // Fix news_items — ensure ids are numbers
+      if (data.news_items) {
+        data.news_items.forEach((n: { id: number | string }, i: number) => {
+          if (typeof n.id === 'string') n.id = parseInt(n.id as string) || (i + 1);
+        });
+      }
+
+      // Fix financial_highlights — ensure ids are numbers
+      if (data.financial_highlights) {
+        data.financial_highlights.forEach((f: { id: number | string }, i: number) => {
+          if (typeof f.id === 'string') f.id = parseInt(f.id as string) || (i + 1);
+        });
+      }
+
+      // Ensure all required arrays exist
+      if (!data.trends) data.trends = [];
+      if (!data.opportunities) data.opportunities = [];
+      if (!data.challenges) data.challenges = [];
+      if (!data.news_items) data.news_items = [];
+      if (!data.financial_highlights) data.financial_highlights = [];
+      if (!data.top_companies) data.top_companies = [];
+      if (!data.synthesis) data.synthesis = '';
+    }
+
+    // For trends: auto-detect extracted images for this country/industry
+    if (topic === 'trends' && !data.images?.length) {
+      const slug = industry ? industry.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : '';
+      const visualDir = path.join(process.cwd(), 'public', 'visuals', country, slug || '');
+      try {
+        const files = await fs.readdir(visualDir);
+        const imageFiles = files.filter(f => /\.(jpeg|jpg|png)$/i.test(f)).sort();
+        if (imageFiles.length > 0) {
+          data.images = imageFiles.map((f, i) => ({
+            src: `/visuals/${country}/${slug ? slug + '/' : ''}${f}`,
+            caption: `Chart ${i + 1} — Extracted from PDF`,
+          }));
+        }
+      } catch { /* no visuals dir — that's fine */ }
+    }
+
     // Write data
     await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 
