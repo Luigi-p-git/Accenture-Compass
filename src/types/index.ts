@@ -312,6 +312,9 @@ export interface NewsItem {
   url: string | null;
   related_finding_ids: number[];
   analyst_quote?: string;
+  companies_mentioned?: string[];
+  sector?: string;
+  linked_top_companies?: number[];
 }
 
 export interface TopCompany {
@@ -321,6 +324,8 @@ export interface TopCompany {
   hq: string;
   revenue: string;
   key_initiatives: string[];
+  investment_focus?: string;
+  recent_moves?: string[];
   logo_url?: string;
   linked_findings: {
     trends: number[];
@@ -388,6 +393,7 @@ export interface TrendsChallenge {
   source?: AlphaSenseFinding['source'];
   affected_companies?: AffectedCompany[];
   key_metrics?: KeyMetric[];
+  linked_top_companies?: number[];
 }
 
 export interface TrendsOpportunity {
@@ -400,6 +406,7 @@ export interface TrendsOpportunity {
   source?: AlphaSenseFinding['source'];
   affected_companies?: AffectedCompany[];
   key_metrics?: KeyMetric[];
+  linked_top_companies?: number[];
 }
 
 export interface TrendsTrend {
@@ -410,6 +417,7 @@ export interface TrendsTrend {
   source?: AlphaSenseFinding['source'];
   affected_companies?: AffectedCompany[];
   key_metrics?: KeyMetric[];
+  linked_top_companies?: number[];
 }
 
 export interface TrendsData {

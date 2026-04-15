@@ -14,6 +14,103 @@ import fs from 'fs/promises';
 
 const DATA_DIR = path.join(process.cwd(), 'src', 'data');
 
+// ── Cross-Linker: builds bidirectional links between findings, companies, and news ──
+
+function normalizeName(name: string): string {
+  return name.toLowerCase()
+    .replace(/\b(inc|corp|co|ltd|plc|group|holdings|nv|lp|llc|company|the|enterprises?|partners?)\b\.?/g, '')
+    .replace(/[.,&]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function fuzzyMatch(a: string, b: string): boolean {
+  const na = normalizeName(a);
+  const nb = normalizeName(b);
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  // Check if either contains the other (handles "Dow" matching "Dow Chemical")
+  if (na.length > 3 && nb.length > 3) {
+    if (na.includes(nb) || nb.includes(na)) return true;
+  }
+  // Check if the first significant word matches (handles "Exxon Mobil Corp" vs "Exxon")
+  const wa = na.split(' ').filter(w => w.length > 2);
+  const wb = nb.split(' ').filter(w => w.length > 2);
+  if (wa[0] && wb[0] && wa[0] === wb[0] && wa[0].length > 3) return true;
+  return false;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function crossLinkData(data: any) {
+  if (!data.top_companies?.length) return;
+  const tc = data.top_companies;
+
+  // Build bidirectional links for each finding category
+  for (const cat of ['trends', 'opportunities', 'challenges'] as const) {
+    const findings = data[cat];
+    if (!findings?.length) continue;
+
+    findings.forEach((finding: any, fIdx: number) => {
+      const matchedCompanyIndices = new Set<number>();
+
+      // Direction 1: finding's affected_companies → fuzzy match to top_companies
+      if (finding.affected_companies?.length) {
+        for (const ac of finding.affected_companies) {
+          tc.forEach((company: any, tcIdx: number) => {
+            if (fuzzyMatch(ac.name, company.name)) matchedCompanyIndices.add(tcIdx);
+          });
+        }
+      }
+
+      // Direction 2: top_company's linked_findings → check if this finding is referenced
+      tc.forEach((company: any, tcIdx: number) => {
+        if (company.linked_findings?.[cat]?.includes(fIdx)) matchedCompanyIndices.add(tcIdx);
+      });
+
+      // Store resolved links on the finding
+      finding.linked_top_companies = [...matchedCompanyIndices].sort((a, b) => a - b);
+
+      // Backfill: ensure each matched company's linked_findings includes this finding
+      matchedCompanyIndices.forEach((tcIdx: number) => {
+        const company = tc[tcIdx];
+        if (!company.linked_findings) company.linked_findings = { trends: [], opportunities: [], challenges: [] };
+        if (!company.linked_findings[cat]) company.linked_findings[cat] = [];
+        if (!company.linked_findings[cat].includes(fIdx)) {
+          company.linked_findings[cat].push(fIdx);
+          company.linked_findings[cat].sort((a: number, b: number) => a - b);
+        }
+      });
+    });
+  }
+
+  // Cross-link news items to top companies
+  if (data.news_items?.length) {
+    data.news_items.forEach((news: any) => {
+      const matchedIndices = new Set<number>();
+
+      // From companies_mentioned field
+      if (news.companies_mentioned?.length) {
+        for (const name of news.companies_mentioned) {
+          tc.forEach((company: any, tcIdx: number) => {
+            if (fuzzyMatch(name, company.name)) matchedIndices.add(tcIdx);
+          });
+        }
+      }
+
+      // Also scan headline + summary for company names
+      const text = `${news.headline} ${news.summary}`.toLowerCase();
+      tc.forEach((company: any, tcIdx: number) => {
+        const normalized = normalizeName(company.name);
+        const words = normalized.split(' ').filter((w: string) => w.length > 3);
+        if (words.some((w: string) => text.includes(w))) matchedIndices.add(tcIdx);
+      });
+
+      news.linked_top_companies = [...matchedIndices].sort((a, b) => a - b);
+    });
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 // Mapping of topic → file path pattern
 const TOPIC_PATHS: Record<string, (country: string) => string> = {
   overview: (country) => `countries/${country}.json`,
@@ -162,6 +259,9 @@ export async function POST(request: NextRequest) {
         }
       } catch { /* no visuals dir — that's fine */ }
     }
+
+    // Cross-link all data bidirectionally
+    if (topic === 'trends') crossLinkData(data);
 
     // Write data
     await fs.writeFile(filePath, JSON.stringify(data, null, 2));

@@ -37,9 +37,9 @@ const SCHEMA = `{
   "challenges": [{ "t": "title", "d": "description", "severity": "critical|high|medium|low" (based on how many companies affected: 4+=critical, 3=high, 2=medium, 0-1=low), "ic": "icon", "source": {...}, "affected_companies": [...], "key_metrics": [] }],
   "synthesis": "3-5 sentence cross-cutting summary",
   "source": { "subject": "Country + Industry", "date_generated": "YYYY-MM-DD", "total_findings": number },
-  "news_items": [{ "id": n, "headline": str, "summary": str, "source_org": str, "date": str|null, "type": str|null, "url": str|null, "related_finding_ids": [], "analyst_quote": "direct quote or omit" }],
+  "news_items": [{ "id": n, "headline": str, "summary": str, "source_org": str, "date": str|null, "type": str|null, "url": str|null, "related_finding_ids": [], "analyst_quote": "direct quote or omit", "companies_mentioned": ["company names from Top 10"], "sector": "sector name" }],
   "financial_highlights": [{ "id": n, "metric": str, "current_value": str, "previous_value": null, "change": str|null, "chart_type": "bar", "data_points": [] }],
-  "top_companies": [{ "name": str, "ticker": str|null, "sector": str, "hq": str, "revenue": str, "key_initiatives": [str], "logo_url": "https://www.google.com/s2/favicons?domain=REAL_DOMAIN&sz=128", "linked_findings": { "trends": [0-based indices], "opportunities": [0-based indices], "challenges": [0-based indices] } }]
+  "top_companies": [{ "name": str, "ticker": str|null, "sector": str, "hq": str, "revenue": str, "key_initiatives": [str], "investment_focus": "2-3 sentences on investment priorities", "recent_moves": ["M&A or capex with dollar figures"], "logo_url": "https://www.google.com/s2/favicons?domain=REAL_DOMAIN&sz=128", "linked_findings": { "trends": [0-based indices], "opportunities": [0-based indices], "challenges": [0-based indices] } }]
 }`;
 
 function runClaudeWithTools(prompt: string, timeoutMs = 300_000): Promise<void> {
@@ -112,7 +112,9 @@ Rules:
 - For top_companies: use Google favicon URL with the company's REAL website domain
 - linked_findings use 0-based indices into the trends/opportunities/challenges arrays
 - severity is based on company count: 4+ companies = "critical", 3 = "high", 2 = "medium", 0-1 = "low"
-- Extract analyst quotes from Broker Analysis articles
+- Extract analyst quotes, companies_mentioned, and sector from Broker Analysis articles
+- Use EXACT same company names in affected_companies as in top_companies
+- Impact: POSITIVE = revenue/margins up, well-positioned; NEGATIVE = cost/risk/disruption; NEUTRAL = uncertain
 - Write ONLY the JSON file — no other output needed`;
 
   try {
@@ -157,7 +159,9 @@ Rules:
 - For top_companies: use Google favicon URL with the company's REAL website domain
 - linked_findings use 0-based indices into the trends/opportunities/challenges arrays
 - severity is based on company count: 4+ companies = "critical", 3 = "high", 2 = "medium", 0-1 = "low"
-- Extract analyst quotes from Broker Analysis articles
+- Extract analyst quotes, companies_mentioned, and sector from Broker Analysis articles
+- Use EXACT same company names in affected_companies as in top_companies
+- Impact: POSITIVE = revenue/margins up, well-positioned; NEGATIVE = cost/risk/disruption; NEUTRAL = uncertain
 - Write ONLY the JSON file — no other output needed`;
 
   try {

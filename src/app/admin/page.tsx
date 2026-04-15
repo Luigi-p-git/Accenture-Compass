@@ -113,6 +113,8 @@ Sector: [Primary industry sector]
 Headquarters: [City, Country]
 Revenue: [Latest annual revenue with currency, e.g. CAD$52B]
 Key Initiatives: [2-3 major investments or strategic moves, separated by semicolons]
+Investment Focus: [2-3 sentences describing current investment priorities and capital allocation strategy]
+Recent Moves: [1-2 recent strategic moves — M&A, partnerships, or capex announcements with dollar figures, separated by semicolons]
 Linked Findings:
   - Trends: [Finding numbers from Emerging Trends that affect this company, e.g. 1, 3, 5]
   - Opportunities: [Finding numbers from Strategic Opportunities this company is positioned for]
@@ -120,11 +122,12 @@ Linked Findings:
 
 CRITICAL RULES FOR TOP 10 COMPANIES:
 - Select companies based on RELEVANCE to the findings above — not just size
-- Every company MUST link to at least 2 findings by their exact sequential number
+- Every company MUST link to at least 3 findings by their exact sequential number
 - Finding numbers MUST match the numbering used in the sections above
 - Include a mix of sectors reflecting the industry/country focus
 - Prioritize companies with cross-category linkages (affected by trends AND opportunities AND challenges)
 - Include both public companies (with ticker) and major private/government entities
+- Company names MUST be used CONSISTENTLY — use the exact same name in Companies Affected fields throughout
 
 ══════════════════════════════════
 FINANCIAL HIGHLIGHTS
@@ -156,6 +159,8 @@ For EACH article, use this EXACT format:
 1. [Write a compelling, editorial-style headline summarizing the key finding] — [Source Organization], [Document Type], [Date]
 Summary: [2-3 sentence summary of the key insight, including specific data points]
 Analyst Quote: ["Analyst Name, Title at Firm" — "Direct quotation from the report or transcript." Write NONE if no direct quote available.]
+Companies Mentioned: [Exact company names from the Top 10 list that this article discusses, comma-separated. Write NONE if no Top 10 company is referenced.]
+Sector: [Primary sector this article covers, e.g. Chemicals, Energy, Technology]
 URL: [FULL https:// URL to the source. This is CRITICAL — provide the direct hyperlink to the document, press release, filing page, earnings transcript, or news article. For company filings, link to the investor relations page. For government publications, link to the .gov or .gc.ca page. For broker research, provide the research portal URL if publicly accessible.]
 
 CRITICAL URL REQUIREMENTS:
@@ -189,7 +194,10 @@ STRICT FORMAT RULES — READ CAREFULLY
 9. All URLs must be complete (start with https://)
 10. Do NOT embed URLs or domain names inside description text or metric values — put them ONLY on the Source URL: or URL: line
 11. TOP 10 COMPANIES: every company MUST have Linked Findings with valid finding numbers from above
-12. BROKER ANALYSIS: include Analyst Quote for every article — direct quotes from analysts add editorial credibility`;
+12. BROKER ANALYSIS: include Analyst Quote, Companies Mentioned, and Sector for every article
+13. Companies Affected in findings MUST use the EXACT same company names as in the Top 10 Companies section
+14. Each Top 10 Company MUST appear in the Companies Affected field of at least 3 different findings
+15. Impact rating criteria: POSITIVE = revenue/margins/market share expected to increase or company well-positioned; NEGATIVE = cost increases, regulatory risk, market share loss, operational disruption; NEUTRAL = affected but outcome uncertain or balanced`;
 }
 
 interface Job {

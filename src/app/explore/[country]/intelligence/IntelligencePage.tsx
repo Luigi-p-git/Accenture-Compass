@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
-import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany } from '@/types';
+import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany, AffectedCompany } from '@/types';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { parseChartValue } from '@/lib/alphasenseParser';
 import { generateIntelligenceReport } from '@/lib/intelligenceReport';
@@ -55,6 +55,66 @@ function CompanyLogo({ name, logoUrl, size = 36 }: { name: string; logoUrl?: str
     return <span style={{ width: size, height: size, display: 'grid', placeItems: 'center', fontSize: size * 0.28, fontWeight: 900, color: '#60a5fa', background: 'rgba(96,165,250,.08)', border: '1px solid rgba(96,165,250,.12)', flexShrink: 0, borderRadius: 4 }}>{initials}</span>;
   }
   return <img src={logoUrl} alt={name} onError={() => setFailed(true)} style={{ width: size, height: size, objectFit: 'contain', flexShrink: 0, borderRadius: 4, background: 'rgb(var(--ink) / .03)', padding: 2 }} />;
+}
+
+/** Generate AlphaSense search URL for source documents */
+function getSourceUrl(source: { document_title?: string | null; organization?: string | null; url?: string | null } | undefined): string | null {
+  if (!source) return null;
+  if (source.url?.includes('alphasense.com')) return source.url;
+  const query = [source.document_title, source.organization].filter(Boolean).join(' ');
+  if (!query) return source.url || null;
+  return `https://research.alphasense.com/search?query=${encodeURIComponent(query)}`;
+}
+
+/** Show linked top companies for a finding with impact details */
+function LinkedCompanyChips({ finding, topCompanies, onSelectCompany }: {
+  finding: { linked_top_companies?: number[]; affected_companies?: AffectedCompany[] };
+  topCompanies: TopCompany[];
+  onSelectCompany: (idx: number) => void;
+}) {
+  if (!finding.linked_top_companies?.length && !finding.affected_companies?.length) return null;
+
+  // Build display list from linked_top_companies with impact from affected_companies
+  const items = (finding.linked_top_companies || []).map(tcIdx => {
+    const co = topCompanies[tcIdx];
+    if (!co) return null;
+    // Find impact detail from affected_companies via fuzzy match
+    const ac = finding.affected_companies?.find(a => {
+      const na = a.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+      const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+      return na === nc || na.includes(nc) || nc.includes(na);
+    });
+    return { co, tcIdx, impact: ac?.impact || 'neutral' as const, detail: ac?.detail || '' };
+  }).filter(Boolean) as { co: TopCompany; tcIdx: number; impact: string; detail: string }[];
+
+  if (items.length === 0) return null;
+
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 8 }}>Related Companies</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {items.map(({ co, tcIdx, impact, detail }) => (
+          <div key={tcIdx} onClick={() => onSelectCompany(tcIdx)}
+            style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer', padding: '8px 10px', background: 'rgb(var(--ink) / .02)', border: '1px solid rgb(var(--ink) / .06)', transition: 'all .15s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgb(var(--ink) / .05)'; e.currentTarget.style.borderColor = 'rgba(96,165,250,.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgb(var(--ink) / .02)'; e.currentTarget.style.borderColor = 'rgb(var(--ink) / .06)'; }}
+          >
+            <CompanyLogo name={co.name} logoUrl={co.logo_url} size={28} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 800 }}>{co.name}</span>
+                <span style={{ fontSize: 7, color: 'rgb(var(--ink) / .2)' }}>{co.revenue}</span>
+                <span style={{ fontSize: 10, color: impact === 'positive' ? '#34d399' : impact === 'negative' ? '#f87171' : '#fbbf24' }}>
+                  {impact === 'positive' ? '↑' : impact === 'negative' ? '↓' : '→'}
+                </span>
+              </div>
+              {detail && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .35)', lineHeight: 1.5, marginTop: 2 }}>{detail}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function IntelligencePage({ data, country, countrySlug }: {
@@ -432,30 +492,23 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
                       <DescriptionBullets text={trends[activeTrend].d} accent="#A100FF" />
 
-                      {/* Companies affected */}
-                      {trends[activeTrend].affected_companies && trends[activeTrend].affected_companies!.length > 0 && (
-                        <div style={{ marginBottom: 14 }}>
-                          <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 6 }}>Companies Affected</div>
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {trends[activeTrend].affected_companies!.map((co, ci) => (
-                              <span key={ci} style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', background: co.impact === 'positive' ? 'rgba(52,211,153,.06)' : co.impact === 'negative' ? 'rgba(248,113,113,.06)' : a(.03), color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : a(.3), border: `1px solid ${co.impact === 'positive' ? 'rgba(52,211,153,.12)' : co.impact === 'negative' ? 'rgba(248,113,113,.12)' : a(.06)}` }}>
-                                {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'} {co.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      {/* Linked companies with impact */}
+                      <LinkedCompanyChips finding={trends[activeTrend]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} />
 
-                      {/* Source */}
-                      {trends[activeTrend].source?.document_title && (
-                        <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.04)}` }}>
-                          <div style={{ fontSize: 8, color: a(.25) }}>
-                            {trends[activeTrend].source!.document_title}
-                            {trends[activeTrend].source!.organization ? ` — ${trends[activeTrend].source!.organization}` : ''}
-                            {trends[activeTrend].source!.date ? ` · ${trends[activeTrend].source!.date}` : ''}
+                      {/* Source via AlphaSense */}
+                      {trends[activeTrend].source?.document_title && (() => {
+                        const url = getSourceUrl(trends[activeTrend].source);
+                        return (
+                          <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.08)}` }}>
+                            <div style={{ fontSize: 8, color: a(.25) }}>
+                              {trends[activeTrend].source!.document_title}
+                              {trends[activeTrend].source!.organization ? ` — ${trends[activeTrend].source!.organization}` : ''}
+                              {trends[activeTrend].source!.date ? ` · ${trends[activeTrend].source!.date}` : ''}
+                            </div>
+                            {url && <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
 
                       <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: 8, fontWeight: 800, color: '#A100FF', letterSpacing: '.08em' }}>CLICK FOR FULL DETAIL →</span>
@@ -582,27 +635,20 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
                       <DescriptionBullets text={challenges[activeChallenge].d} accent="#f87171" />
 
-                      {challenges[activeChallenge].affected_companies && challenges[activeChallenge].affected_companies!.length > 0 && (
-                        <div style={{ marginBottom: 14 }}>
-                          <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 6 }}>Companies Affected</div>
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {challenges[activeChallenge].affected_companies!.map((co, ci) => (
-                              <span key={ci} style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', background: co.impact === 'positive' ? 'rgba(52,211,153,.06)' : co.impact === 'negative' ? 'rgba(248,113,113,.06)' : a(.03), color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : a(.3) }}>
-                                {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'} {co.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      <LinkedCompanyChips finding={challenges[activeChallenge]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} />
 
-                      {challenges[activeChallenge].source?.document_title && (
-                        <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.08)}` }}>
-                          <div style={{ fontSize: 8, color: a(.25) }}>
-                            {challenges[activeChallenge].source!.document_title}
-                            {challenges[activeChallenge].source!.organization ? ` — ${challenges[activeChallenge].source!.organization}` : ''}
+                      {challenges[activeChallenge].source?.document_title && (() => {
+                        const url = getSourceUrl(challenges[activeChallenge].source);
+                        return (
+                          <div style={{ paddingTop: 10, borderTop: `1px solid ${a(.08)}` }}>
+                            <div style={{ fontSize: 8, color: a(.25) }}>
+                              {challenges[activeChallenge].source!.document_title}
+                              {challenges[activeChallenge].source!.organization ? ` — ${challenges[activeChallenge].source!.organization}` : ''}
+                            </div>
+                            {url && <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
 
                       <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: 8, fontWeight: 800, color: '#f87171', letterSpacing: '.08em' }}>CLICK FOR FULL DETAIL →</span>
