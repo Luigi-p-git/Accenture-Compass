@@ -1,373 +1,451 @@
 {
   "trends": [
     {
-      "t": "AI-Powered Content Personalization Reshaping Media Consumption",
-      "tag": "Technology",
-      "d": "Major US media companies are deploying generative AI at scale to personalize content feeds, automate ad placement, and generate localized news summaries. Netflix reported a 14% increase in viewer retention after implementing its AI recommendation engine overhaul in Q1 2026. Disney+ has followed with a similar system across Hulu and ESPN+, driving $340M in incremental ad revenue. The shift is forcing traditional broadcasters to invest heavily or risk losing audiences to algorithmically-curated platforms. Warner Bros. Discovery allocated $280M to AI content tools in its 2026 budget.",
-      "ic": "psychology",
+      "t": "Explosive Growth of Ad-Supported Streaming Tiers",
+      "tag": "Market",
+      "d": "The industry-wide shift toward hybrid advertising and subscription models has effectively ended the era of ad-free streaming dominance. Major platforms like Netflix, Disney+, and Amazon Prime Video are seeing double-digit gains in ad-supported viewers as they pivot away from pure subscription models. Netflix's ad-supported tier reached approximately 190 million global monthly active users by late 2025. Amazon Prime Video's shift to an ad-supported default in early 2024 further transformed connected television from a niche channel into mainstream premium video inventory. United States connected television advertising spending is projected to reach $46.9 billion by 2028, officially surpassing traditional television ad spending.",
+      "ic": "show_chart",
       "source": {
-        "document_title": "AI in Media: 2026 Outlook",
-        "organization": "Morgan Stanley",
+        "document_title": "Verve Group extensive report: Eyes on execution and cash flows",
+        "organization": "Inderes Oyj Sponsored Research",
         "document_type": "Broker Research",
-        "date": "March 2026",
-        "url": "https://www.morganstanley.com/ideas/ai-media-2026",
+        "date": "2026-04-08",
+        "url": "https://research.alpha-sense.com/?docid=ASR-INSR-3c749e5e0f22543f93b3cf1676bcae3f&scope=ANYWHERE&stmt=fse50243&hl=fse50243&page=19",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "Netflix",
+          "name": "Netflix Inc",
           "ticker": "NFLX",
           "impact": "positive",
-          "detail": "14% viewer retention increase from AI recommendation overhaul"
+          "detail": "Reached 190 million global monthly active users on its ad-supported tier by late 2025, driving substantial new advertising revenue streams."
         },
         {
-          "name": "Walt Disney Co",
-          "ticker": "DIS",
-          "impact": "positive",
-          "detail": "$340M incremental ad revenue from AI-driven personalization across streaming"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "AI Media Investment",
-          "value": "$4.2B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "5G Fixed Wireless Accelerating Cord-Cutting in Rural Markets",
-      "tag": "Technology",
-      "d": "T-Mobile and Verizon have aggressively expanded 5G fixed wireless access (FWA) to 12 million US households, directly competing with cable broadband in underserved markets. T-Mobile added 1.6M FWA subscribers in Q4 2025 alone, while Verizon's FWA base reached 4.2M. Charter Communications reported a net loss of 180,000 broadband subscribers in Q1 2026, its first quarterly decline in five years. The FCC's Broadband Equity program has channeled $2.8B into rural wireless infrastructure, further accelerating this shift away from legacy cable.",
-      "ic": "cloud",
-      "source": {
-        "document_title": "US Broadband Competition Report",
-        "organization": "Goldman Sachs",
-        "document_type": "Broker Research",
-        "date": "February 2026",
-        "url": "https://www.goldmansachs.com/insights/broadband-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "T-Mobile US",
-          "ticker": "TMUS",
-          "impact": "positive",
-          "detail": "1.6M FWA net adds in Q4 2025, total base approaching 8M"
-        },
-        {
-          "name": "Charter Communications",
-          "ticker": "CHTR",
-          "impact": "negative",
-          "detail": "First quarterly broadband subscriber decline in 5 years, losing 180K subs"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "FWA Subscribers",
-          "value": "12M",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Streaming Ad-Tier Surge Creating New Revenue Models",
-      "tag": "Market",
-      "d": "Ad-supported streaming tiers have become the fastest-growing segment in US media. Amazon Prime Video's ad tier, launched January 2025, now reaches 115M US viewers generating $3.1B in annual ad revenue. Netflix's Standard with Ads tier grew 48% YoY to 52M global subscribers, with 60% of new US signups choosing the ad tier. This shift is reshaping the $85B US TV advertising market as brands redirect budgets from linear TV to connected TV (CTV) programmatic. GroupM projects CTV ad spend will surpass traditional TV for the first time in 2026 at $42B.",
-      "ic": "bar_chart",
-      "source": {
-        "document_title": "CTV Advertising Outlook",
-        "organization": "GroupM",
-        "document_type": "Industry Report",
-        "date": "January 2026",
-        "url": "https://www.groupm.com/this-year-next-year-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Amazon.com",
+          "name": "Amazon.com Inc",
           "ticker": "AMZN",
           "impact": "positive",
-          "detail": "$3.1B annual ad revenue from Prime Video ad tier reaching 115M US viewers"
+          "detail": "Shifted Prime Video to an ad-supported default in 2024 to aggressively capitalize on the growing connected television advertising market."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "US CTV Ad Spending (2028E)",
+          "value": "$46.9B",
+          "change": "Surpassing Linear TV"
         },
+        {
+          "metric": "Netflix Ad-Tier MAUs",
+          "value": "190M",
+          "change": null
+        }
+      ],
+      "linked_top_companies": [
+        0,
+        1,
+        5,
+        8,
+        9
+      ]
+    },
+    {
+      "t": "Unrelenting Acceleration of Linear Television Cord-Cutting",
+      "tag": "Market",
+      "d": "As of early 2025, 56 million United States internet households, representing 46 percent of the market, were categorized as cord-cutters. An additional 12 percent of households are cord-nevers, meaning they have never subscribed to any form of traditional pay television. Cable and wireline companies are expanding their service offerings to include faster broadband internet to offset the fact that consumers are abandoning legacy video packages. In the fourth quarter of 2025, total industry traditional pay-television subscribers declined by approximately 7 percent year-over-year. Consequently, linear affiliate revenues for the industry declined roughly 4 percent year-over-year in the fourth quarter, directly reflecting these ongoing subscriber losses.",
+      "ic": "trending_up",
+      "source": {
+        "document_title": "State of the Media Industry (4Q25): Margin pressure on deck",
+        "organization": "Bernstein Research",
+        "document_type": "Broker Research",
+        "date": "2026-03-04",
+        "url": "https://research.alpha-sense.com/?docid=ASR-BERN-c9e06555c76dcb08ce33d91b83d72814&scope=ANYWHERE&stmt=fse27154&hl=fse27154&page=14",
+        "headline": null
+      },
+      "affected_companies": [
         {
           "name": "Comcast Corp",
           "ticker": "CMCSA",
           "impact": "negative",
-          "detail": "Peacock ad revenue growth slowing as Amazon and Netflix dominate CTV share"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "CTV Ad Spend 2026",
-          "value": "$42B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Telecom Consolidation Wave Driven by Spectrum Economics",
-      "tag": "Market",
-      "d": "The FCC's 3.1 GHz spectrum auction in Q1 2026 raised $22.4B, with T-Mobile and AT&T collectively spending $16.8B. The escalating cost of spectrum and network buildout is driving a new wave of consolidation. Dish Network completed its merger with EchoStar and is actively seeking a strategic partner for its 5G network. Lumen Technologies is evaluating a sale of its consumer fiber business to private equity. Analysts expect 2-3 major M&A transactions in the US telecom sector by year-end, fundamentally reshaping the competitive landscape.",
-      "ic": "show_chart",
-      "source": {
-        "document_title": "Telecom M&A Outlook 2026",
-        "organization": "J.P. Morgan",
-        "document_type": "Broker Research",
-        "date": "March 2026",
-        "url": "https://www.jpmorgan.com/insights/telecom-ma-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Dish Network",
-          "ticker": "DISH",
-          "impact": "neutral",
-          "detail": "Seeking strategic partner after EchoStar merger; 5G buildout requires $8-10B"
+          "detail": "Faces continued pressure in linear distribution lines reflecting ongoing declines in traditional pay-television subscribers."
         },
         {
-          "name": "Lumen Technologies",
-          "ticker": "LUMN",
+          "name": "Charter Communications Inc",
+          "ticker": "CHTR",
           "impact": "negative",
-          "detail": "Evaluating sale of consumer fiber business amid debt restructuring"
+          "detail": "Suffers from structural subscriber attrition as internet households increasingly abandon traditional cable bundles."
         }
       ],
       "key_metrics": [
         {
-          "label": "Spectrum Auction Total",
-          "value": "$22.4B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Generative AI Disrupting Advertising Creative Workflows",
-      "tag": "Technology",
-      "d": "US advertising agencies and in-house creative teams are rapidly adopting generative AI tools, with 78% of major agencies using AI for at least one production workflow. WPP reported a 22% reduction in creative production costs through its partnership with NVIDIA for AI-generated ad variations. Omnicom's AI platform now produces 60% of its programmatic ad creative. However, the Screen Actors Guild (SAG-AFTRA) has filed multiple grievances over AI-generated likenesses, and proposed federal legislation would require disclosure of AI-generated advertising content.",
-      "ic": "psychology",
-      "source": {
-        "document_title": "Future of Advertising Report",
-        "organization": "Dentsu",
-        "document_type": "Industry Report",
-        "date": "February 2026",
-        "url": "https://www.dentsu.com/reports/advertising-ai-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "WPP plc",
-          "ticker": "WPP",
-          "impact": "positive",
-          "detail": "22% reduction in creative production costs through NVIDIA AI partnership"
+          "metric": "US Cord-Cutter Households",
+          "value": "56M",
+          "change": "46% of market"
         },
         {
-          "name": "Omnicom Group",
-          "ticker": "OMC",
-          "impact": "positive",
-          "detail": "AI platform producing 60% of programmatic creative, improving margins by 3.2pp"
+          "metric": "Traditional Pay-TV Q4 2025 Sub Decline",
+          "value": "-7%",
+          "change": "YoY"
         }
       ],
-      "key_metrics": [
-        {
-          "label": "Agency AI Adoption",
-          "value": "78%",
-          "trend": "up"
-        }
+      "linked_top_companies": [
+        4
       ]
     },
     {
-      "t": "Sports Rights Inflation Driving Media Sector Realignment",
+      "t": "Aggressive Migration of Live Sports Rights to Streaming",
       "tag": "Market",
-      "d": "Live sports rights have become the single most expensive content category, with the NBA's new 11-year deal valued at $76B across Disney, Amazon, and NBC. The NFL's Sunday Ticket on YouTube generated 2.8M paid subscribers at $349/season. ESPN is preparing its standalone streaming launch in fall 2026, priced at $24.99/month, which Disney projects will reach 30M subscribers within 18 months. The escalating cost of sports rights is forcing smaller players like Paramount and Warner Bros. Discovery to exit bidding, accelerating industry consolidation.",
-      "ic": "trending_up",
+      "d": "Live sports remain one of the last forms of appointment-based viewing, making them uniquely valuable to advertisers and streaming platforms in a fragmented media landscape. Streaming services are projected to spend $14.2 billion on live sports rights in 2026, which is more than double the $6.5 billion spent in 2022. Amazon Prime Video is forecast to replace DAZN as the largest investor in streaming sports rights, contributing 27 percent of the total spend with an estimated $3.8 billion allocation. Netflix has also entered the live sports arena aggressively, paying approximately $75 million per game for a three-year package of National Football League Christmas Day games. Connected television advertisements delivered during live sports have been shown to outperform cable and broadcast equivalents by as much as 66 percent in performance outcomes.",
+      "ic": "bolt",
       "source": {
-        "document_title": "Sports Media Economics 2026",
-        "organization": "Bank of America",
-        "document_type": "Broker Research",
-        "date": "March 2026",
-        "url": "https://www.bankofamerica.com/sports-media-2026",
+        "document_title": "Connected TV Advertising and the Biggest Sports Moments of 2026",
+        "organization": "Teads Holding Co",
+        "document_type": "Investor Presentations & Other Company Publications",
+        "date": "2026-04-07",
+        "url": "https://research.alpha-sense.com/?docid=GDS-69d5a02c62a0383423c561c0&scope=ANYWHERE&stmt=fse2011&hl=fse2011&page=1",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "Walt Disney Co",
+          "name": "Amazon.com Inc",
+          "ticker": "AMZN",
+          "impact": "positive",
+          "detail": "Forecasted to spend $3.8 billion on sports rights in 2026, making it the largest streaming sports investor globally."
+        },
+        {
+          "name": "Fox Corp",
+          "ticker": "FOXA",
+          "impact": "negative",
+          "detail": "Faces intense bidding competition and escalating costs for premium sports rights from deep-pocketed technology platforms."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "Streaming Live Sports Spend (2026E)",
+          "value": "$14.2B",
+          "change": "+118% since 2022"
+        },
+        {
+          "metric": "Amazon Prime Sports Spend (2026E)",
+          "value": "$3.8B",
+          "change": null
+        }
+      ],
+      "linked_top_companies": [
+        1,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "t": "Strategic Pivot Toward Streaming Profitability and Consolidation",
+      "tag": "Market",
+      "d": "The production business for high-end drama series has declined globally due to multiple factors, including streamers shifting their primary focus from pure subscriber growth to profitability. Most streaming video-on-demand businesses are currently being realigned to drive this profitability through controlled programming content costs and higher subscription rates. Streaming services are actively consolidating their offerings commercially by creating bundled packages that combine multiple media services at a lower combined price for longer subscription periods. In January 2026, RTL+ became the exclusive bundle partner for the German launch of HBO Max, illustrating this consolidation trend. To further support margins, platforms are implementing strict crackdowns on password sharing alongside regular subscription price hikes.",
+      "ic": "account_balance",
+      "source": {
+        "document_title": "RTL Group Annual Report 2025",
+        "organization": "RTL Group SA",
+        "document_type": "Annual and Interim Reports",
+        "date": "2026-03-24",
+        "url": "https://research.alpha-sense.com/?docid=GDS-69c697a141d0c51ee4eb02ea&scope=ANYWHERE&stmt=fse93827&hl=fse93827.fse94016&page=47",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "The Walt Disney Co",
           "ticker": "DIS",
           "impact": "positive",
-          "detail": "ESPN standalone streaming targeting 30M subs; NBA deal secures content through 2036"
+          "detail": "Realigning its direct-to-consumer business to focus on profitability through cost control, price increases, and bundled offerings."
         },
         {
-          "name": "Paramount Global",
-          "ticker": "PARA",
-          "impact": "negative",
-          "detail": "Priced out of NBA and major sports bidding; exploring strategic alternatives"
+          "name": "Warner Bros Discovery Inc",
+          "ticker": "WBD",
+          "impact": "positive",
+          "detail": "Benefiting from industry consolidation and commercial bundling partnerships to aggressively improve streaming margins."
         }
       ],
       "key_metrics": [
         {
-          "label": "NBA Rights Deal",
-          "value": "$76B",
-          "trend": "up"
+          "metric": "TV Production Costs",
+          "value": "Decreasing",
+          "change": "Focus on profitability"
+        },
+        {
+          "metric": "Subscription Bundle Adoption",
+          "value": "Increasing",
+          "change": null
         }
+      ],
+      "linked_top_companies": [
+        0,
+        2,
+        3
+      ]
+    },
+    {
+      "t": "Expansion of Programmatic Buying and Measurement in CTV",
+      "tag": "Technology",
+      "d": "The programmatic share of connected television is growing rapidly, currently estimated at 90 percent of total connected television ad spend in the United States. As streaming platforms like Roku and Amazon build their own first-party advertising ecosystems, they are offering advertisers direct access to audiences with improved data integration and transparency. To support this growth, advertisers are increasingly demanding independent verification and measurement across these fragmented streaming environments. DoubleVerify reported that its connected television measurement volumes grew by 33 percent in the full year of 2025, reflecting this heightened demand for transparent tracking. Publishers are modernizing their ad stacks through programmatic activation to meet the surging demand for biddable inventory, which reached an estimated 47 percent of the market in 2025.",
+      "ic": "bar_chart",
+      "source": {
+        "document_title": "2025 Annual Report",
+        "organization": "DoubleVerify Holdings Inc",
+        "document_type": "Annual and Interim Reports",
+        "date": "2026-04-08",
+        "url": "https://research.alpha-sense.com/?docid=GDS-69dbc6967f44a87564bc35af&scope=ANYWHERE&stmt=fse16276&hl=fse16276&page=6",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "The Trade Desk Inc",
+          "ticker": "TTD",
+          "impact": "positive",
+          "detail": "Positioned to benefit from the massive shift of programmatic advertising dollars into the connected television ecosystem."
+        },
+        {
+          "name": "DoubleVerify Holdings Inc",
+          "ticker": "DV",
+          "impact": "positive",
+          "detail": "Experienced 33 percent growth in connected television measurement volumes in 2025 due to strong advertiser transparency demands."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "Programmatic Share of US CTV Spend",
+          "value": "90%",
+          "change": null
+        },
+        {
+          "metric": "DoubleVerify CTV Measurement Volume Growth",
+          "value": "+33%",
+          "change": "FY2025"
+        }
+      ],
+      "linked_top_companies": [
+        8,
+        9
       ]
     }
   ],
   "opportunities": [
     {
-      "t": "Connected TV Programmatic Advertising Ecosystem",
-      "p": "$42B market",
-      "timeline": "Near-term (0-12mo)",
-      "d": "CTV programmatic advertising is projected to surpass linear TV spending for the first time in 2026 at $42B. The fragmentation of streaming services creates opportunity for unified ad platforms. The Trade Desk, Roku, and Amazon DSP are competing to become the dominant CTV ad exchange. Brands are reallocating 30-40% of traditional TV budgets to CTV, creating a massive greenfield opportunity for consultancies with data and measurement capabilities.",
-      "ic": "bar_chart",
+      "t": "Mega-Mergers Reshaping the Global Studio Landscape",
+      "p": "$110.9B deal value",
+      "timeline": "Medium-term (1-3yr)",
+      "d": "Paramount Skydance Corporation entered into a definitive agreement to acquire Warner Bros. Discovery for $110.9 billion, significantly altering the global media hierarchy. The transaction includes a $31 per share all-cash offer, representing a massive premium aimed at accelerating streaming profitability and operational scale. This consolidation creates a combined entity capable of generating roughly $69 billion in annual revenue while merging the Paramount+ and Max streaming platforms to rival dominant technology giants. By outbidding a competing $68.8 billion offer from Netflix, Paramount Skydance secures a vital content library and linear networks that can be leveraged to dominate global distribution.",
+      "ic": "account_balance",
+      "priority": 2,
       "source": {
-        "document_title": "Programmatic CTV Report",
-        "organization": "eMarketer",
-        "document_type": "Industry Report",
-        "date": "January 2026",
-        "url": "https://www.emarketer.com/ctv-2026",
+        "document_title": "M&A Deals",
+        "organization": "FinData",
+        "document_type": "Financial Data",
+        "date": "2026-04-15",
+        "url": "https://research.alpha-sense.com/?docid=PR-77b54cb4cb7b5a13705ab53bfceb06067b2c8a90&scope=ANYWHERE&stmt=fse1883&hl=fse1883&page=1",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "The Trade Desk",
-          "ticker": "TTD",
+          "name": "Paramount Skydance Corp",
+          "ticker": "PSKY",
           "impact": "positive",
-          "detail": "CTV revenue grew 44% YoY; capturing largest share of programmatic CTV spend"
+          "detail": "Secures massive global scale and premium intellectual property to merge streaming platforms and target $69 billion in combined annual revenue."
+        },
+        {
+          "name": "Warner Bros Discovery Inc",
+          "ticker": "WBD",
+          "impact": "positive",
+          "detail": "Shareholders receive $31 per share in cash, delivering immediate premium value while solving the company's aggressive debt leverage challenges."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "Paramount-WBD Deal Value",
+          "value": "$110.9B",
+          "change": "Premium Offer"
+        },
+        {
+          "metric": "Cash Consideration Per Share",
+          "value": "$31.00",
+          "change": null
+        }
+      ],
+      "linked_top_companies": [
+        2,
+        3
+      ]
+    },
+    {
+      "t": "Emergence of High-Value Streaming Super-Bundles",
+      "p": "$18/mo bundle market",
+      "timeline": "Near-term (0-12mo)",
+      "d": "The streaming industry is aggressively shifting from individual subscriber acquisition to collaborative bundling strategies that reduce consumer churn and stabilize monthly revenues. Major platforms are partnering to offer discounted aggregated services, such as the comprehensive Disney+, Hulu, and Max bundle launched to maximize household retention. Telecommunications and cable providers are acting as central distribution hubs, with Comcast Xfinity offering the StreamSaver bundle containing Netflix, Peacock, and Apple TV+ for $18 per month. Internationally, strategic alliances are accelerating, highlighted by RTL+ becoming the exclusive bundle partner for the German launch of HBO Max in January 2026.",
+      "ic": "psychology",
+      "priority": 5,
+      "source": {
+        "document_title": "RTL Group Annual Report 2025",
+        "organization": "RTL Group SA",
+        "document_type": "Annual and Interim Reports",
+        "date": "2026-03-24",
+        "url": "https://research.alpha-sense.com/?docid=GDS-69c697a141d0c51ee4eb02ea&scope=ANYWHERE&stmt=fse93827&hl=fse93827.fse94016&page=47",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "The Walt Disney Co",
+          "ticker": "DIS",
+          "impact": "positive",
+          "detail": "Achieves approximately 80 percent retention rates on its bundled offerings with Max, securing long-term subscriber loyalty and reducing marketing spend."
+        },
+        {
+          "name": "Comcast Corp",
+          "ticker": "CMCSA",
+          "impact": "positive",
+          "detail": "Strengthens its position as a central wholesale aggregator by distributing the $18 per month StreamSaver package to its massive broadband customer base."
+        },
+        {
+          "name": "Netflix Inc",
+          "ticker": "NFLX",
+          "impact": "positive",
+          "detail": "Benefits from inclusion in Comcast's StreamSaver bundle, expanding distribution reach to broadband-only households."
+        },
+        {
+          "name": "Apple Inc",
+          "ticker": "AAPL",
+          "impact": "positive",
+          "detail": "Apple TV+ gains incremental subscribers through bundled distribution partnerships with major cable operators."
         },
         {
           "name": "Roku Inc",
           "ticker": "ROKU",
           "impact": "positive",
-          "detail": "Platform revenue up 28%, 85M active accounts driving ad inventory growth"
+          "detail": "Benefits as a hardware aggregator for premium wholesale subscription bundles, driving platform engagement and monetization."
         }
       ],
       "key_metrics": [
         {
-          "label": "CTV Ad Market 2026",
-          "value": "$42B",
-          "trend": "up"
+          "metric": "Bundle Retention Rate",
+          "value": "80%",
+          "change": "Significant improvement"
+        },
+        {
+          "metric": "Xfinity StreamSaver Price",
+          "value": "$18/month",
+          "change": null
         }
+      ],
+      "linked_top_companies": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        9
       ]
     },
     {
-      "t": "Private 5G Networks for Enterprise Media Production",
-      "p": "$8.5B by 2028",
+      "t": "Transformation of Connected TV into a Performance Channel",
+      "p": "$33.35B CTV ad market",
       "timeline": "Medium-term (1-3yr)",
-      "d": "Major studios and live event venues are deploying private 5G networks for real-time content production, AR/VR experiences, and remote collaboration. NBCUniversal installed private 5G across all Universal Studios theme parks for immersive guest experiences. Live Nation is piloting 5G-powered augmented reality concert experiences at 50 venues. The enterprise private 5G market for media is projected to reach $8.5B by 2028, with significant consulting and integration opportunities.",
-      "ic": "cloud",
+      "d": "Connected television advertising is evolving from a pure brand awareness tool into a highly measurable, return-on-investment-driven performance marketing channel. The integration of retail media network data enables advertisers to deploy shoppable advertisements and track closed-loop performance directly from the living room screen. Amazon is successfully capturing a disproportionate share of incremental connected television budgets by seamlessly connecting video viewers directly to its mobile commerce ecosystem. By 2026, interactive and shoppable ad formats are projected to account for 10 percent of all connected television advertisements, driving significantly higher engagement than standard video spots.",
+      "ic": "show_chart",
+      "priority": 3,
       "source": {
-        "document_title": "Private 5G in Entertainment",
-        "organization": "Deloitte",
-        "document_type": "Industry Report",
-        "date": "February 2026",
-        "url": "https://www.deloitte.com/private-5g-media",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Comcast Corp",
-          "ticker": "CMCSA",
-          "impact": "positive",
-          "detail": "NBCUniversal deploying private 5G across theme parks and production facilities"
-        },
-        {
-          "name": "Live Nation Entertainment",
-          "ticker": "LYV",
-          "impact": "positive",
-          "detail": "Piloting 5G AR concert experiences at 50 venues, targeting premium pricing"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "Private 5G Media Market",
-          "value": "$8.5B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "AI-Driven Content Localization at Scale",
-      "p": "$6.2B market",
-      "timeline": "Near-term (0-12mo)",
-      "d": "AI dubbing and localization technology has reached production quality, enabling US media companies to cost-effectively localize content for 40+ languages simultaneously. Netflix's AI dubbing reduced localization costs by 65% while increasing international content availability by 3x. Disney is deploying similar technology across its entire library. The global content localization market is projected at $6.2B in 2026, with AI tools capturing 40% of new spending.",
-      "ic": "psychology",
-      "source": {
-        "document_title": "Content Localization AI",
-        "organization": "PwC",
-        "document_type": "Industry Report",
-        "date": "March 2026",
-        "url": "https://www.pwc.com/entertainment-ai-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Netflix",
-          "ticker": "NFLX",
-          "impact": "positive",
-          "detail": "65% reduction in localization costs; 3x increase in international content availability"
-        },
-        {
-          "name": "Walt Disney Co",
-          "ticker": "DIS",
-          "impact": "positive",
-          "detail": "Deploying AI dubbing across entire content library; $180M annual savings projected"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "Localization Market",
-          "value": "$6.2B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Fiber-to-the-Home Expansion in Underserved Markets",
-      "p": "$65B BEAD program",
-      "timeline": "Medium-term (1-3yr)",
-      "d": "The NTIA's $42.5B BEAD program is funding fiber buildouts to 15M unserved US locations. AT&T committed to passing 30M+ fiber locations by 2027, up from 24M today. Frontier Communications, post-bankruptcy, is investing $3.5B to expand fiber to 3M additional homes. This creates a massive systems integration and digital transformation opportunity as ISPs modernize their entire technology stacks to support fiber operations.",
-      "ic": "cloud",
-      "source": {
-        "document_title": "BEAD Program Analysis",
-        "organization": "NTIA",
-        "document_type": "Government Publication",
-        "date": "January 2026",
-        "url": "https://broadbandusa.ntia.gov/bead",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "AT&T Inc",
-          "ticker": "T",
-          "impact": "positive",
-          "detail": "Targeting 30M+ fiber locations by 2027; BEAD subsidies offsetting rural buildout costs"
-        },
-        {
-          "name": "Frontier Communications",
-          "ticker": "FYBR",
-          "impact": "positive",
-          "detail": "$3.5B fiber expansion to 3M additional homes post-bankruptcy restructuring"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "BEAD Funding",
-          "value": "$42.5B",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Immersive Media and Spatial Computing Platforms",
-      "p": "$18B by 2028",
-      "timeline": "Long-term (3-5yr+)",
-      "d": "Apple Vision Pro, Meta Quest, and emerging spatial computing platforms are creating new content distribution channels. Apple reported 1.2M Vision Pro units sold, with 15,000 spatial apps. Meta's Horizon Worlds monthly active users grew to 8M. Disney is developing spatial entertainment experiences, and the NBA launched immersive courtside viewing. The US immersive media market is projected to reach $18B by 2028.",
-      "ic": "memory",
-      "source": {
-        "document_title": "Spatial Computing in Media",
-        "organization": "Citi",
+        "document_title": "CTV Advertising Shift to ROI Optimization Restructures Competitive Field",
+        "organization": "Wedbush",
         "document_type": "Broker Research",
-        "date": "March 2026",
-        "url": "https://www.citi.com/spatial-media-2026",
+        "date": "2026-04-08",
+        "url": "https://research.alpha-sense.com/?docid=ASR-INSR-3c749e5e0f22543f93b3cf1676bcae3f&scope=ANYWHERE&stmt=fse50243&hl=fse50243&page=19",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "Amazon.com Inc",
+          "ticker": "AMZN",
+          "impact": "positive",
+          "detail": "Leverages its massive retail data infrastructure to dominate the performance video market and bridge the gap between streaming viewership and immediate commerce."
+        },
+        {
+          "name": "The Trade Desk Inc",
+          "ticker": "TTD",
+          "impact": "positive",
+          "detail": "Positioned to capture incremental performance advertising budgets migrating from search and social to connected television inventory."
+        },
+        {
+          "name": "Roku Inc",
+          "ticker": "ROKU",
+          "impact": "positive",
+          "detail": "Monetizes its home screen and platform data to enable shoppable ad formats, driving higher CPMs and platform revenue growth."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "Shoppable Ad Share (2026E)",
+          "value": "10%",
+          "change": "Rapid growth"
+        },
+        {
+          "metric": "US CTV Ad Spend (2025E)",
+          "value": "$33.35B",
+          "change": null
+        }
+      ],
+      "linked_top_companies": [
+        5,
+        8,
+        9
+      ]
+    },
+    {
+      "t": "Generative AI Revolutionizing Ad Tech and Creative Optimization",
+      "p": "$203B programmatic market",
+      "timeline": "Near-term (0-12mo)",
+      "d": "The deployment of generative artificial intelligence is radically optimizing the digital advertising supply chain by lowering creative costs and enhancing real-time targeting precision. Platforms are launching AI-powered solutions that bring mobile-grade measurement and hyper-personalization to the connected television environment, yielding up to 1.5 times higher return on investment for app marketers. Generative AI tools are projected to be utilized in approximately 40 percent of all digital video advertisements by the end of 2026. This technology allows independent supply-side and demand-side platforms to execute dynamic creative optimization at scale, serving customized advertisement variations based on real-time household data.",
+      "ic": "psychology",
+      "priority": 1,
+      "source": {
+        "document_title": "Moloco Launches AI-Powered Performance CTV",
+        "organization": "Moloco",
+        "document_type": "Press Releases",
+        "date": "2026-04-15",
+        "url": "https://research.alpha-sense.com/?docid=PR-77b54cb4cb7b5a13705ab53bfceb06067b2c8a90&scope=ANYWHERE&stmt=fse1883&hl=fse1883&page=1",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "The Trade Desk Inc",
+          "ticker": "TTD",
+          "impact": "positive",
+          "detail": "Benefits from the proliferation of AI-driven programmatic buying tools that enhance advertiser return on ad spend across the open internet."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "AI Video Ad Penetration (2026E)",
+          "value": "40%",
+          "change": "Massive adoption"
+        },
+        {
+          "metric": "AI CTV Campaign ROI",
+          "value": "1.5x",
+          "change": "+50% vs mobile"
+        }
+      ],
+      "linked_top_companies": [
+        8
+      ]
+    },
+    {
+      "t": "Live Sports Broadcasting Securing Premium Advertising Valuations",
+      "p": "$14.2B sports rights market",
+      "timeline": "Medium-term (1-3yr)",
+      "d": "Media companies are aggressively acquiring exclusive live sports rights to anchor their streaming platforms and attract premium, appointment-viewing audiences. Streaming services are projected to spend over $14.2 billion on live sports rights in 2026 as the industry shifts away from traditional broadcast television models. Apple secured exclusive United States broadcasting rights for Formula One for the 2026-2030 cycle at roughly $140 million per season, representing a 70 percent premium over previous legacy network deals. Netflix has expanded its live events strategy significantly by acquiring exclusive commercial distribution rights to major boxing matches and continuing its massive investments in WWE and NFL programming.",
+      "ic": "bolt",
+      "priority": 3,
+      "source": {
+        "document_title": "Scuderia Ferrari Overview",
+        "organization": "The Gabelli Global Small and Mid Cap Value Trust",
+        "document_type": "Investor Presentations & Other Company Publications",
+        "date": "2026-04-01",
+        "url": "https://research.alpha-sense.com/?docid=GDS-69cd877bcfa4f7497d64dc0f&scope=ANYWHERE&stmt=fse16597&hl=fse16597&page=8",
         "headline": null
       },
       "affected_companies": [
@@ -375,658 +453,1184 @@
           "name": "Apple Inc",
           "ticker": "AAPL",
           "impact": "positive",
-          "detail": "1.2M Vision Pro units; building spatial computing content ecosystem"
+          "detail": "Secures a highly engaged motorsport audience by investing $140 million annually in exclusive Formula One broadcasting rights through 2030."
         },
         {
-          "name": "Meta Platforms",
-          "ticker": "META",
+          "name": "Netflix Inc",
+          "ticker": "NFLX",
           "impact": "positive",
-          "detail": "Horizon Worlds at 8M MAU; Quest platform leading in affordable XR"
+          "detail": "Leverages exclusive global sports rights like WWE and boxing to drive rapid adoption of its advertising tier and boost commercial venue distribution."
+        },
+        {
+          "name": "Fox Corp",
+          "ticker": "FOXA",
+          "impact": "positive",
+          "detail": "Positioned to capture massive advertising inflows from the upcoming 2026 FIFA Men's World Cup broadcast rights."
         }
       ],
       "key_metrics": [
         {
-          "label": "Immersive Media 2028",
-          "value": "$18B",
-          "trend": "up"
+          "metric": "Apple F1 Broadcasting Rights",
+          "value": "$140M/season",
+          "change": "+70% premium"
+        },
+        {
+          "metric": "Streaming Sports Spend (2026E)",
+          "value": "$14.2B",
+          "change": null
         }
+      ],
+      "linked_top_companies": [
+        1,
+        6,
+        7
       ]
     }
   ],
   "challenges": [
     {
-      "t": "Regulatory Crackdown on Big Tech Media Dominance",
-      "d": "The DOJ's antitrust case against Google's advertising monopoly is expected to reach a verdict by mid-2026, with potential remedies including forced divestiture of Google's ad exchange. The FTC is also investigating Amazon's bundling of Prime Video with Prime membership as potentially anti-competitive. New legislation requiring algorithmic transparency in content recommendation could cost platforms $2-4B annually in compliance. These regulatory actions threaten the business models of the largest US media and tech companies.",
-      "severity": "critical",
-      "ic": "shield",
+      "t": "High Debt Leverage Constraining Legacy Media Consolidation",
+      "d": "The impending merger between Paramount Skydance and Warner Bros. Discovery highlights severe debt leverage risks facing legacy media conglomerates. The $110 billion proposed acquisition creates a combined entity laden with substantial financial burdens. Fitch Ratings noted that Paramount reported net debt of $12.7 billion at mid-2025, while Warner Bros. Discovery carried $32.2 billion at the end of 2025. This massive debt load results in a pro forma leverage ratio of up to 6.0x, pushing the combined group deeply into high-yield, speculative credit territory. Such elevated leverage severely constrains financial flexibility and limits future investments in necessary technological upgrades.",
+      "severity": "medium",
+      "ic": "warning",
       "source": {
-        "document_title": "Tech Antitrust Outlook",
-        "organization": "Jefferies",
+        "document_title": "Conviction Thinking - Clouds gathering over the credit markets (18p)",
+        "organization": "Societe Generale",
         "document_type": "Broker Research",
-        "date": "February 2026",
-        "url": "https://www.jefferies.com/tech-antitrust-2026",
+        "date": "2026-03-31",
+        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-9deb30b5fcb37f6b7170d1b7322ee683&scope=ANYWHERE&page=15",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "Alphabet Inc",
-          "ticker": "GOOGL",
+          "name": "Paramount Skydance Corp",
+          "ticker": "PSKY",
           "impact": "negative",
-          "detail": "Facing potential forced divestiture of ad exchange business; $224B ad revenue at risk"
+          "detail": "Faces a pro forma leverage ratio of 6.0x following its acquisition of Warner Bros. Discovery, driving credit ratings into high-yield territory."
         },
         {
-          "name": "Amazon.com",
+          "name": "Warner Bros Discovery Inc",
+          "ticker": "WBD",
+          "impact": "negative",
+          "detail": "Enters the merger burdened with $32.2 billion in net debt, severely limiting the combined entity's financial maneuverability."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "Pro Forma Leverage Ratio",
+          "value": "6.0x",
+          "change": "Significant risk"
+        },
+        {
+          "metric": "Warner Bros. Net Debt",
+          "value": "$32.2B",
+          "change": null
+        }
+      ],
+      "linked_top_companies": [
+        2,
+        3
+      ]
+    },
+    {
+      "t": "Prolonged Box Office Struggles Threaten Theatrical Exhibition",
+      "d": "The domestic theatrical box office continues to suffer from a lack of sustained recovery, remaining significantly below historical pre-pandemic norms. In 2025, the calendar domestic box office reached just $8.66 billion, representing a meager 1 percent year-over-year increase. This figure remains a staggering 24 percent below the 2017-2019 pre-pandemic average, despite a 10 percent increase in the number of wide film releases. The structural shift in consumer behavior toward home viewing and direct-to-streaming platforms has permanently reduced theatrical attendance. Major exhibitors are consequently facing severe liquidity challenges and are struggling to service their existing indebtedness amid this depressed demand.",
+      "severity": "medium",
+      "ic": "warning",
+      "source": {
+        "document_title": "Memo to Hollywood: Pushing on a String",
+        "organization": "TD Cowen",
+        "document_type": "Broker Research",
+        "date": "2026-03-30",
+        "url": "https://research.alpha-sense.com/?docid=ASR-CWNR-229db36bcef860fd247870d11eaa7249&scope=ANYWHERE&stmt=fse8554&hl=fse8554&page=3",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "AMC Entertainment Holdings Inc",
+          "ticker": "AMC",
+          "impact": "negative",
+          "detail": "Struggles to generate sufficient operating cash flows due to structurally lower theater attendance, risking future debt service capabilities."
+        },
+        {
+          "name": "The Walt Disney Co",
+          "ticker": "DIS",
+          "impact": "negative",
+          "detail": "Faces reduced theatrical profitability as overall box office revenues remain 24 percent below pre-pandemic averages despite releasing higher quantities of films."
+        }
+      ],
+      "key_metrics": [
+        {
+          "metric": "2025 Domestic Box Office",
+          "value": "$8.66B",
+          "change": "+1% YoY"
+        },
+        {
+          "metric": "Box Office vs Pre-Pandemic",
+          "value": "-24%",
+          "change": "vs 2017-2019 average"
+        }
+      ],
+      "linked_top_companies": [
+        0
+      ]
+    },
+    {
+      "t": "Escalating Content Costs Severely Compress Operating Margins",
+      "d": "Media and telecommunications companies are facing intense margin compression as the cost of producing and acquiring premium programming continues to escalate rapidly. Throughout 2025, industry content spending growth began to aggressively outpace revenue growth, ending a brief period of cost discipline. Major streaming platforms are guiding for massive investments in 2026, with Disney projecting $24 billion and Netflix expecting over $19.5 billion in content amortization. The rising costs of sports rights, particularly the upcoming National Football League contract renegotiations, threaten to completely derail the industry's recent EBITDA margin recovery. Consequently, traditional media divisions have seen their profitability swing negative as these expenses outweigh modest advertising gains.",
+      "severity": "critical",
+      "ic": "bar_chart",
+      "source": {
+        "document_title": "State of the Media Industry (4Q25): Margin pressure on deck",
+        "organization": "Bernstein Research",
+        "document_type": "Broker Research",
+        "date": "2026-03-04",
+        "url": "https://research.alpha-sense.com/?docid=ASR-BERN-c9e06555c76dcb08ce33d91b83d72814&scope=ANYWHERE&stmt=fse27154&hl=fse27154&page=14",
+        "headline": null
+      },
+      "affected_companies": [
+        {
+          "name": "The Walt Disney Co",
+          "ticker": "DIS",
+          "impact": "negative",
+          "detail": "Guided to a massive $24 billion in content spending for 2026, putting intense pressure on the profitability of its direct-to-consumer segments."
+        },
+        {
+          "name": "Netflix Inc",
+          "ticker": "NFLX",
+          "impact": "negative",
+          "detail": "Projects over $19.5 billion in content amortization for 2026 as it competes aggressively for premium sports and entertainment programming."
+        },
+        {
+          "name": "Comcast Corp",
+          "ticker": "CMCSA",
+          "impact": "negative",
+          "detail": "Experienced negative EBITDA swings in its media division due to elevated sports rights and Peacock programming costs."
+        },
+        {
+          "name": "Amazon.com Inc",
           "ticker": "AMZN",
           "impact": "negative",
-          "detail": "FTC investigating Prime Video bundling; potential unbundling could reduce Prime subscribers"
+          "detail": "Faces rising content cost burdens as it commits $3.8 billion to live sports rights and continues expanding Prime Video programming globally."
+        },
+        {
+          "name": "Apple Inc",
+          "ticker": "AAPL",
+          "impact": "negative",
+          "detail": "Incurs substantial content costs from $140 million annual Formula One rights and ongoing Apple TV+ original programming investments."
+        },
+        {
+          "name": "Fox Corp",
+          "ticker": "FOXA",
+          "impact": "negative",
+          "detail": "Faces escalating sports rights costs to maintain its premium live sports portfolio in an increasingly competitive bidding environment."
         }
       ],
       "key_metrics": [
         {
-          "label": "Compliance Cost",
-          "value": "$2-4B",
-          "trend": "up"
+          "metric": "Disney 2026 Content Spend",
+          "value": "$24B",
+          "change": "Significant increase"
+        },
+        {
+          "metric": "Netflix 2026 Content Spend",
+          "value": "$19.5B",
+          "change": null
         }
+      ],
+      "linked_top_companies": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        7
       ]
     },
     {
-      "t": "AI Copyright and IP Litigation Threatening Content Models",
-      "d": "Over 30 active federal lawsuits challenge AI companies' use of copyrighted media content for training. The New York Times v. OpenAI case could set precedent for whether AI training constitutes fair use. Major publishers including News Corp and the AP have signed licensing deals totaling $680M, but many creators remain uncompensated. If courts rule against fair use, AI companies could face billions in retroactive licensing fees, disrupting the entire generative AI media ecosystem.",
-      "severity": "high",
-      "ic": "warning",
+      "t": "Intense Regulatory Scrutiny Plagues Mega-Merger Ambitions",
+      "d": "The massive wave of consolidation sweeping the media sector is encountering formidable regulatory and political hurdles that threaten deal execution. The proposed acquisition of Warner Bros. Discovery by Paramount Skydance has drawn intense scrutiny from antitrust regulators concerned about market concentration. Legal advisors have actively lobbied investors, arguing that Paramount's bid faces less regulatory opposition compared to a competing offer from streaming giant Netflix. Regulators are increasingly skeptical of deals that could diminish competition in content production and reduce consumer choices in the streaming market. This hostile political environment significantly extends deal timelines and introduces substantial execution risk for any major media combinations.",
+      "severity": "medium",
+      "ic": "shield",
       "source": {
-        "document_title": "AI Copyright Landscape",
-        "organization": "Reuters Legal",
-        "document_type": "News",
-        "date": "March 2026",
-        "url": "https://www.reuters.com/legal/ai-copyright-2026",
+        "document_title": "MIC Ride Home: YouTube TV Launching Genre-Specific Plans, Including Sports; Meta Pivots to Monetizable AI Model; Reddit Tests Verified Profiles; Waymo Delivers 14M Trips in 2025",
+        "organization": "Guggenheim Securities",
+        "document_type": "Broker Research",
+        "date": "2025-12-10",
+        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-e09fba5ac2f33078a315a3145c60c6e0&scope=ANYWHERE&stmt=fse6137&hl=fse6137&page=2",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "News Corp",
-          "ticker": "NWSA",
+          "name": "Paramount Skydance Corp",
+          "ticker": "PSKY",
           "impact": "neutral",
-          "detail": "Signed $250M AI licensing deal with OpenAI; positioned to benefit from precedent"
+          "detail": "Must navigate complex political and regulatory landscapes to successfully close its proposed acquisition of Warner Bros. Discovery."
         },
         {
-          "name": "OpenAI",
-          "ticker": null,
-          "impact": "negative",
-          "detail": "Facing NYT lawsuit and 30+ copyright claims; potential billions in retroactive licensing"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "Active AI Lawsuits",
-          "value": "30+",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Subscriber Fatigue Driving Streaming Churn Crisis",
-      "d": "Average US household streaming spend reached $92/month in Q1 2026, up from $61 in 2024. Churn rates have climbed to 6.2% monthly across major platforms, with 47% of subscribers reporting they rotate services quarterly. Paramount+ and Peacock face existential pressure with churn above 8%. Price increases across all major platforms (Netflix +$2, Disney+ +$3, Max +$2) are exacerbating the problem. Antenna Research projects net subscriber growth for the US streaming market will turn negative by Q3 2026.",
-      "severity": "high",
-      "ic": "show_chart",
-      "source": {
-        "document_title": "Streaming Churn Analysis",
-        "organization": "Antenna Research",
-        "document_type": "Industry Report",
-        "date": "March 2026",
-        "url": "https://www.antenna.live/streaming-churn-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Paramount Global",
-          "ticker": "PARA",
-          "impact": "negative",
-          "detail": "Paramount+ churn exceeding 8%; exploring merger or sale of streaming business"
-        },
-        {
-          "name": "Netflix",
+          "name": "Netflix Inc",
           "ticker": "NFLX",
-          "impact": "neutral",
-          "detail": "Lowest churn at 3.1% but facing margin pressure from content cost inflation"
-        }
-      ],
-      "key_metrics": [
-        {
-          "label": "Avg Monthly Spend",
-          "value": "$92",
-          "trend": "up"
-        }
-      ]
-    },
-    {
-      "t": "Workforce Displacement from AI Automation in Media",
-      "d": "The Writers Guild of America estimates 18% of traditional media writing jobs have been eliminated or significantly reduced since 2024 due to AI tools. Local news organizations have cut 12,000 positions, with AI generating routine stories. The Bureau of Labor Statistics projects a 15% decline in journalism, editing, and content production roles by 2028. Simultaneously, demand for AI prompt engineers and media technologists is surging, creating a severe skills mismatch in the industry.",
-      "severity": "medium",
-      "ic": "school",
-      "source": {
-        "document_title": "Media Workforce Impact Study",
-        "organization": "Bureau of Labor Statistics",
-        "document_type": "Government Publication",
-        "date": "January 2026",
-        "url": "https://www.bls.gov/media-workforce-2026",
-        "headline": null
-      },
-      "affected_companies": [
-        {
-          "name": "Gannett Co",
-          "ticker": "GCI",
           "impact": "negative",
-          "detail": "Eliminated 400 newsroom positions in 2025; replacing with AI-generated local content"
+          "detail": "Faces severe antitrust opposition to potential studio acquisitions due to its existing dominant position in the global streaming market."
         },
         {
-          "name": "WPP plc",
-          "ticker": "WPP",
-          "impact": "neutral",
-          "detail": "Retraining 15,000 employees in AI tools; offsetting layoffs with new AI specialist roles"
+          "name": "Warner Bros Discovery Inc",
+          "ticker": "WBD",
+          "impact": "negative",
+          "detail": "Deal execution uncertainty prolongs strategic limbo, constraining investment and operational decision-making during the regulatory review period."
         }
       ],
       "key_metrics": [
         {
-          "label": "Media Jobs Lost",
-          "value": "12,000",
-          "trend": "up"
+          "metric": "Paramount-WBD Deal Value",
+          "value": "$110B",
+          "change": "Premium"
+        },
+        {
+          "metric": "Regulatory Approval Timeline",
+          "value": "12-18 months",
+          "change": null
         }
+      ],
+      "linked_top_companies": [
+        1,
+        2,
+        3
       ]
     },
     {
-      "t": "Deepfake and Misinformation Eroding Platform Trust",
-      "d": "AI-generated deepfake content increased 900% in 2025, with 68% of Americans reporting reduced trust in online media. Meta, Google, and X spent a combined $4.8B on content moderation in 2025, yet independent audits found AI-generated misinformation reached 2.3B impressions during the 2025 election cycle. The EU's Digital Services Act fines and proposed US PROTECT Act could impose $50M+ penalties per violation. Advertisers are pulling $6.2B from platforms perceived as brand-unsafe.",
-      "severity": "medium",
+      "t": "Structural Decline of Traditional Linear Television Economics",
+      "d": "The traditional linear television business model is deteriorating rapidly as consumers abandon pay-television packages for digital alternatives. Cable providers are experiencing structural subscriber attrition, forcing them to pivot away from video services toward higher-margin broadband data offerings. Programmers are simultaneously demanding higher retransmission fees for content that is suffering from declining viewership. This dynamic forces distributors to either absorb the cost increases, destroying their profit margins, or pass the costs to consumers, which only accelerates cord-cutting. As a result, companies like Cable One are actively reducing their focus on residential video products in response to these insurmountable industry-wide headwinds.",
+      "severity": "critical",
       "ic": "warning",
       "source": {
-        "document_title": "Digital Trust Report 2026",
-        "organization": "Edelman",
-        "document_type": "Industry Report",
-        "date": "February 2026",
-        "url": "https://www.edelman.com/trust/2026",
+        "document_title": "Annual Report FY 2025",
+        "organization": "Cable One Inc",
+        "document_type": "Major SEC Filings",
+        "date": "2026-02-26",
+        "url": "https://research.alpha-sense.com/?docid=0001632127-26-000005&scope=ANYWHERE&stmt=fse45616&hl=fse45616&page=2",
         "headline": null
       },
       "affected_companies": [
         {
-          "name": "Meta Platforms",
-          "ticker": "META",
+          "name": "Cable One Inc",
+          "ticker": "CABO",
           "impact": "negative",
-          "detail": "$2.1B spent on content moderation; facing EU DSA fines and advertiser pullbacks"
+          "detail": "Forced to abandon its traditional video product lines due to exorbitant programming costs and the rapid expansion of over-the-top streaming alternatives."
         },
         {
-          "name": "Alphabet Inc",
-          "ticker": "GOOGL",
+          "name": "Comcast Corp",
+          "ticker": "CMCSA",
           "impact": "negative",
-          "detail": "YouTube deepfake detection flagging 4M videos/month; $1.8B moderation spend"
+          "detail": "Faces persistent declines in its legacy cable television subscriber base as viewers migrate to digital platforms."
+        },
+        {
+          "name": "Fox Corp",
+          "ticker": "FOXA",
+          "impact": "negative",
+          "detail": "Experiences secular decline in linear broadcast viewership, compressing affiliate fee revenues and accelerating the pivot to Tubi and digital assets."
+        },
+        {
+          "name": "The Trade Desk Inc",
+          "ticker": "TTD",
+          "impact": "positive",
+          "detail": "Benefits as linear TV advertising budgets migrate to programmatic connected television channels where it holds a dominant independent position."
+        },
+        {
+          "name": "Roku Inc",
+          "ticker": "ROKU",
+          "impact": "positive",
+          "detail": "Gains platform users and advertising revenue as displaced linear viewers migrate to its connected television ecosystem."
         }
       ],
       "key_metrics": [
         {
-          "label": "Deepfake Growth",
-          "value": "+900%",
-          "trend": "up"
+          "metric": "Traditional Pay-TV Profitability",
+          "value": "Declining",
+          "change": "Structural shift"
+        },
+        {
+          "metric": "Retransmission Fees",
+          "value": "Increasing",
+          "change": "+Margin pressure"
         }
+      ],
+      "linked_top_companies": [
+        4,
+        7,
+        8,
+        9
       ]
     }
   ],
-  "synthesis": "The US Communications & Media sector is experiencing a fundamental structural transformation driven by AI adoption, streaming economics, and regulatory pressure. The most critical development is the convergence of AI-powered personalization with the shift to ad-supported streaming, creating a $42B CTV advertising market that will surpass traditional TV for the first time in 2026. However, regulatory challenges around antitrust, AI copyright, and content moderation threaten to constrain the growth trajectories of the sector's largest players. Companies that successfully navigate the AI transition while managing regulatory risk — particularly Disney, Netflix, and Amazon — are best positioned for the next growth cycle.",
+  "synthesis": "The explosive growth of ad-supported streaming tiers (Trend 1) represents the single most transformative development for decision-makers, as Netflix's ad tier reached 190 million global monthly active users by late 2025 and US connected television advertising spending is projected to reach $46.9 billion by 2028, officially surpassing traditional linear television. This advertising revolution is directly accelerated by unrelenting cord-cutting (Trend 2), with 56 million US households now classified as cord-cutters and traditional pay-television subscribers declining 7 percent year-over-year in Q4 2025. The industry's response centers on unprecedented consolidation, epitomized by Paramount Skydance's $110.9 billion acquisition of Warner Bros. Discovery (Opportunity 1), which seeks to create the scale necessary to compete with technology giants in both content production and streaming distribution. However, this consolidation wave faces severe headwinds from excessive debt leverage (Challenge 1), with the combined Paramount-WBD entity carrying a pro forma leverage ratio of 6.0x and over $44 billion in net debt, fundamentally constraining financial flexibility. Simultaneously, escalating content costs (Challenge 3) are compressing operating margins across the sector, as Disney projects $24 billion and Netflix expects $19.5 billion in content spending for 2026, forcing platforms into an unsustainable cycle of subscription price increases that may ultimately accelerate consumer defection to free ad-supported alternatives.",
   "source": {
     "subject": "United States Communications & Media",
     "date_generated": "2026-04-15",
-    "total_findings": 16
+    "total_findings": 15
   },
   "news_items": [
     {
       "id": 1,
-      "headline": "Netflix AI Recommendation Overhaul Drives Record Retention Gains",
-      "summary": "Netflix reported a 14% increase in viewer retention following its Q1 2026 AI recommendation engine upgrade, which uses large language models to analyze viewing patterns across 260M subscribers.",
-      "source_org": "Morgan Stanley",
-      "date": "March 2026",
+      "headline": "Linear Margins Compress as Content and Sports Rights Costs Accelerate",
+      "summary": "Linear television margins deteriorated significantly in the fourth quarter of 2025 due to escalating programming and sports rights inflation. While streaming ad revenues continued to rise, they were insufficient to offset the structural erosion of traditional affiliate fees across major media conglomerates.",
+      "source_org": "Bernstein Research",
+      "date": "2026-03-04",
       "type": "Broker Research",
-      "url": "https://www.morganstanley.com/ideas/ai-media-2026",
+      "url": "https://research.alpha-sense.com/?docid=ASR-BERN-c9e06555c76dcb08ce33d91b83d72814&scope=ANYWHERE&stmt=fse27154&hl=fse27154&page=14",
       "related_finding_ids": [
-        1
+        "trend_2",
+        "challenge_3",
+        "challenge_5"
       ],
-      "analyst_quote": "Greg Peters, Netflix Co-CEO — 'Our AI systems now understand narrative preferences at a level that was impossible two years ago. This is the single biggest driver of engagement we've ever deployed.'"
+      "analyst_quote": "Laurent Yoon, Analyst at Bernstein Research — 'Across the industry, Linear margins deteriorated again in Q4, and modestly accelerated at some peers - on rising programming/production costs and sports rights inflation.'",
+      "linked_top_companies": []
     },
     {
       "id": 2,
-      "headline": "T-Mobile FWA Subscriber Growth Threatens Cable Industry Model",
-      "summary": "T-Mobile's fixed wireless access service added 1.6M subscribers in Q4 2025, accelerating the structural decline of cable broadband and prompting Charter to explore wholesale fiber partnerships.",
-      "source_org": "Goldman Sachs",
-      "date": "February 2026",
+      "headline": "Disney's Proprietary Data and Omniverse Flywheel Offer Massive GenAI Upside",
+      "summary": "Disney's unique blend of physical parks and digital streaming assets generates vast amounts of proprietary first-party data that will be highly valuable in a generative AI future. Analysts argue that monetizing this data could create a new high-margin revenue stream while defending against artificial intelligence disruption.",
+      "source_org": "Needham & Co.",
+      "date": "2026-03-31",
       "type": "Broker Research",
-      "url": "https://www.goldmansachs.com/insights/broadband-2026",
+      "url": "https://research.alpha-sense.com/?docid=ASR-NCO-c2611007f5d26704c738202854424cd5&scope=ANYWHERE&stmt=fse4451&hl=fse4451&page=2",
       "related_finding_ids": [
-        2
+        "opportunity_4",
+        "trend_4"
       ],
-      "analyst_quote": "Brett Feldman, Goldman Sachs — 'FWA is no longer a niche product. It's a legitimate broadband substitute that will capture 15-20% of the US market by 2028.'"
+      "linked_top_companies": [
+        0
+      ]
     },
     {
       "id": 3,
-      "headline": "Amazon Prime Video Ad Tier Reaches 115M Viewers in First Year",
-      "summary": "Amazon's ad-supported Prime Video tier has become the largest ad-supported streaming platform in the US, generating $3.1B in annual revenue and reshaping the CTV advertising landscape.",
-      "source_org": "eMarketer",
-      "date": "January 2026",
-      "type": "Industry Report",
-      "url": "https://www.emarketer.com/ctv-2026",
+      "headline": "Netflix Exerts Unprecedented Pricing Power Ahead of Historical Cadence",
+      "summary": "Recent survey data across the United States and Japan highlights Netflix's continued pricing power, supported by resilient churn dynamics and strong viewer engagement. The platform successfully implemented price hikes early in the year, demonstrating confidence in its content slate and its premium market positioning.",
+      "source_org": "Evercore ISI Research",
+      "date": "2026-03-26",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-ECOR-bd54bf21013c47df7e03aa83913063e4&scope=ANYWHERE&stmt=fse1798&hl=fse1798&page=1",
       "related_finding_ids": [
-        3
+        "trend_1",
+        "trend_4"
       ],
-      "analyst_quote": "Eric Haggstrom, eMarketer — 'Amazon didn't just enter the CTV ad market — they immediately became the dominant player. Their commerce data gives them an unfair advantage in ad targeting.'"
+      "linked_top_companies": [
+        1
+      ]
     },
     {
       "id": 4,
-      "headline": "DOJ Google Ad Monopoly Trial Could Reshape Digital Advertising",
-      "summary": "The Department of Justice's antitrust case against Google's advertising technology monopoly is approaching a critical phase, with potential remedies including forced divestiture of the ad exchange.",
-      "source_org": "Jefferies",
-      "date": "February 2026",
-      "type": "Broker Research",
-      "url": "https://www.jefferies.com/tech-antitrust-2026",
+      "headline": "Paramount Skydance Escalates Bidding War with $31 All-Cash Offer for WBD",
+      "summary": "Paramount Skydance significantly enhanced its acquisition proposal for Warner Bros. Discovery to a $31 per share all-cash offer. The company argued that its bid provides superior value and certainty compared to Netflix's competing offer, which it claims is weighed down by a proposed debt spin-off.",
+      "source_org": "Paramount Skydance Corp",
+      "date": "2026-02-10",
+      "type": "News",
+      "url": "https://research.alpha-sense.com/?docid=PR-4d078467751fdec97f3854f0c7e2597f357ecd0b&scope=ANYWHERE&stmt=fse6563&hl=fse6563&page=1",
       "related_finding_ids": [
-        11
+        "opportunity_1",
+        "challenge_1",
+        "challenge_4"
       ],
-      "analyst_quote": "Brent Thill, Jefferies — 'A forced divestiture of Google's ad exchange would be the most significant antitrust remedy in tech since the AT&T breakup. It would fundamentally reshape digital advertising.'"
+      "analyst_quote": "David Ellison, Chairman and CEO of Paramount — 'The additional benefits of our superior $30 per share, all-cash offer clearly underscore our strong and unwavering commitment to delivering the full value WBD shareholders deserve for their investment.'",
+      "linked_top_companies": [
+        1,
+        2,
+        3
+      ]
     },
     {
       "id": 5,
-      "headline": "ESPN Standalone Streaming Launch Set to Disrupt Sports Media",
-      "summary": "Disney's ESPN standalone streaming service, launching fall 2026 at $24.99/month, is projected to reach 30M subscribers within 18 months and could generate $8B in direct-to-consumer revenue.",
-      "source_org": "Bank of America",
-      "date": "March 2026",
+      "headline": "Consumer Survey Reveals Netflix Dominance Amid Stagnant Cable Engagement",
+      "summary": "A comprehensive first-quarter survey showed that Netflix maintains its leadership position in penetration and engagement, fueled by an expanding content slate and new ad-supported tiers. Conversely, traditional cable providers faced negative satisfaction scores and continued pricing pressure from alternative broadband and fixed wireless access solutions.",
+      "source_org": "KeyBanc",
+      "date": "2026-03-31",
       "type": "Broker Research",
-      "url": "https://www.bankofamerica.com/sports-media-2026",
+      "url": "https://research.alpha-sense.com/?docid=ASR-INSR-3c749e5e0f22543f93b3cf1676bcae3f&scope=ANYWHERE&stmt=fse50354&hl=fse50354&page=19",
       "related_finding_ids": [
-        6
+        "trend_1",
+        "trend_2",
+        "challenge_5"
       ],
-      "analyst_quote": "Jessica Reif Ehrlich, Bank of America — 'ESPN streaming is Disney's single most important strategic initiative. At $25/month with live sports, it fills a gap no other streamer can match.'"
+      "analyst_quote": "Brandon Nispel, Analyst at KeyBanc — 'Netflix remains the core streaming service, which we attribute to an improving content slate, consolidation, and a broader range of price points.'",
+      "linked_top_companies": [
+        1
+      ]
     },
     {
       "id": 6,
-      "headline": "FCC 3.1 GHz Spectrum Auction Raises Record $22.4 Billion",
-      "summary": "The FCC's 3.1 GHz spectrum auction concluded with $22.4B in total bids, with T-Mobile and AT&T accounting for 75% of spending, reinforcing the duopoly dynamics in US wireless.",
-      "source_org": "J.P. Morgan",
-      "date": "March 2026",
+      "headline": "Comcast Media Revenues Masked by Secular Cable Declines Post-Versant Spinoff",
+      "summary": "Following the spin-off of its legacy cable networks into Versant, Comcast faces an unprecedented media revenue boost from a convergence of major sports rights in 2026. However, its core cable and broadband operations continue to suffer from aggressive fixed wireless and fiber competition.",
+      "source_org": "Oppenheimer",
+      "date": "2026-03-29",
       "type": "Broker Research",
-      "url": "https://www.jpmorgan.com/insights/telecom-ma-2026",
+      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-4ebc9cc3f6acba83b8c555d15c9c001c&scope=ANYWHERE&stmt=fse1715&hl=fse1715.fse2027&page=1",
       "related_finding_ids": [
-        4
+        "trend_2",
+        "challenge_5",
+        "opportunity_2"
       ],
-      "analyst_quote": "Philip Cusick, J.P. Morgan — 'The spectrum auction results confirm that meaningful 5G competition requires massive capital. This effectively locks out smaller players and accelerates consolidation.'"
+      "linked_top_companies": [
+        4
+      ]
     },
     {
       "id": 7,
-      "headline": "AI Copyright Lawsuits Reach Critical Mass as NYT Trial Nears",
-      "summary": "Over 30 federal lawsuits challenging AI training on copyrighted content are progressing, with the landmark New York Times v. OpenAI case expected to set precedent for the entire industry.",
-      "source_org": "Reuters Legal",
-      "date": "March 2026",
+      "headline": "Netflix Walks Away from Warner Bros. Bidding War, Citing Price Discipline",
+      "summary": "Netflix officially withdrew from the intense bidding process for Warner Bros. Discovery after determining the acquisition was no longer financially attractive at the escalated price points. The streaming giant affirmed its commitment to organic growth, pledging to invest approximately $20 billion in quality content while resuming its share repurchase program.",
+      "source_org": "Netflix Inc",
+      "date": "2026-02-26",
       "type": "News",
-      "url": "https://www.reuters.com/legal/ai-copyright-2026",
+      "url": "https://research.alpha-sense.com/?docid=PR-67b4a3b0dbfeba9e4c26371e3d0105d22e83f476&scope=ANYWHERE&stmt=fse1144&hl=fse1144&page=1",
       "related_finding_ids": [
-        12
+        "opportunity_1",
+        "challenge_4",
+        "challenge_3"
       ],
-      "analyst_quote": "Judge Sid Stein, US District Court — 'The question of whether AI training constitutes transformative fair use is the most consequential copyright question of this generation.'"
+      "linked_top_companies": [
+        1,
+        2
+      ]
     },
     {
       "id": 8,
-      "headline": "Streaming Subscriber Fatigue: Average US Household Hits $92/Month",
-      "summary": "US households now spend an average of $92/month on streaming services, up 51% from 2024. Monthly churn has risen to 6.2%, with nearly half of subscribers rotating services quarterly.",
-      "source_org": "Antenna Research",
-      "date": "March 2026",
-      "type": "Industry Report",
-      "url": "https://www.antenna.live/streaming-churn-2026",
+      "headline": "Opacity in Disney's Entertainment Segment Masks Streaming Profitability Trajectory",
+      "summary": "Analysts are calling for greater transparency regarding Disney's Entertainment segment to better understand how streaming growth offsets ongoing linear television declines. Without granular disclosure on studio economics and SVOD operating income, it remains difficult to accurately assess the company's long-term return on content investments.",
+      "source_org": "Guggenheim Securities",
+      "date": "2026-03-18",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-a77b52f533a3db6947ca4751aec856b5&scope=ANYWHERE&stmt=fse12513&hl=fse12513.fse12782&page=4",
       "related_finding_ids": [
-        13
+        "trend_4",
+        "challenge_3",
+        "challenge_2"
       ],
-      "analyst_quote": "Jonathan Carson, Antenna Research — 'We've crossed the affordability threshold. Consumers are now actively managing their streaming spend the way they manage other subscriptions — with ruthless efficiency.'"
+      "linked_top_companies": [
+        0
+      ]
     },
     {
       "id": 9,
-      "headline": "WPP Achieves 22% Cost Reduction Through AI Creative Tools",
-      "summary": "WPP's partnership with NVIDIA for AI-generated advertising creative has reduced production costs by 22% while enabling real-time personalization of ad variations across markets.",
-      "source_org": "WPP",
-      "date": "February 2026",
-      "type": "Earnings Call",
-      "url": "https://www.wpp.com/investors/q4-2025-results",
+      "headline": "Ad-Supported Tiers Transform Connected TV into a Scale Marketplace",
+      "summary": "The rapid rollout of ad-supported tiers by major streaming platforms has injected massive liquidity into the programmatic advertising ecosystem. Connected television is no longer a niche channel, with programmatic buying now representing an estimated 90 percent of total CTV advertising spend in the United States.",
+      "source_org": "Inderes Oyj Sponsored Research",
+      "date": "2026-04-08",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-INSR-3c749e5e0f22543f93b3cf1676bcae3f&scope=ANYWHERE&stmt=fse50243&hl=fse50243&page=19",
       "related_finding_ids": [
-        5
+        "trend_1",
+        "trend_5",
+        "opportunity_3"
       ],
-      "analyst_quote": "Mark Read, WPP CEO — 'AI isn't replacing creativity — it's amplifying it. Our teams now produce 10x more creative variations at 78% of the previous cost.'"
+      "linked_top_companies": []
     },
     {
       "id": 10,
-      "headline": "BEAD Program Allocates $42.5B for Rural Broadband Fiber Buildout",
-      "summary": "The NTIA's Broadband Equity, Access, and Deployment program has finalized state allocations totaling $42.5B to connect 15M unserved US locations with high-speed fiber internet.",
-      "source_org": "NTIA",
-      "date": "January 2026",
-      "type": "Government Publication",
-      "url": "https://broadbandusa.ntia.gov/bead",
+      "headline": "Comcast Highlights Theme Parks and Peacock as Primary Growth Engines",
+      "summary": "Management reported that Theme Parks, Peacock, and domestic wireless successfully drove overall company revenue growth in the final quarter of 2025. The company is strategically aligning its broadcast business with streaming to push Peacock toward sustained profitability.",
+      "source_org": "Comcast Corp",
+      "date": "2026-01-29",
+      "type": "Earnings Call",
+      "url": "https://research.alpha-sense.com/?docid=ET-173341-1974593750&scope=ANYWHERE&stmt=fse13398&hl=fse13398&page=1",
       "related_finding_ids": [
-        9
+        "trend_4",
+        "opportunity_2",
+        "challenge_5"
       ],
-      "analyst_quote": "Alan Davidson, NTIA Administrator — 'BEAD represents the largest investment in broadband infrastructure in American history. Every state now has a funded plan to close the digital divide.'"
+      "analyst_quote": "Jason S. Armstrong, Chief Financial Officer — 'Total company revenue grew 1% in the fourth quarter, benefiting from strength across our 6 growth businesses, which collectively represents 60% of our revenue and grew at a mid-single-digit rate.'",
+      "linked_top_companies": [
+        4
+      ]
+    },
+    {
+      "id": 11,
+      "headline": "Roku Reaches 90 Million Households as Platform Revenue Momentum Accelerates",
+      "summary": "Roku reported reaching 90 million global streaming households while launching the Roku Ads Manager platform to target self-serve advertising for small businesses. The company reorganized its financial reporting into distinct Subscriptions and Advertising segments to better reflect its evolving monetization strategy.",
+      "source_org": "Guggenheim Securities",
+      "date": "2025-12-04",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-GUGG-d715ea577278c5f0efdf9a3e5144a265&scope=ANYWHERE&stmt=fse16560&hl=fse16560&page=4",
+      "related_finding_ids": [
+        "trend_5",
+        "opportunity_3",
+        "challenge_5"
+      ],
+      "linked_top_companies": [
+        9
+      ]
+    },
+    {
+      "id": 12,
+      "headline": "Apple Locks Up Formula One Exclusivity in $140M Annual Broadcast Deal Through 2030",
+      "summary": "Apple secured exclusive United States broadcasting rights for Formula One for the 2026-2030 seasons at approximately $140 million per season, representing a 70 percent premium over previous legacy network deals. The investment signals Apple's aggressive push to use premium live sports to anchor Apple TV+ subscriber growth and services revenue.",
+      "source_org": "The Gabelli Global Small and Mid Cap Value Trust",
+      "date": "2026-04-01",
+      "type": "News",
+      "url": "https://research.alpha-sense.com/?docid=GDS-69cd877bcfa4f7497d64dc0f&scope=ANYWHERE&stmt=fse16597&hl=fse16597&page=8",
+      "related_finding_ids": [
+        "opportunity_5",
+        "trend_3",
+        "challenge_3"
+      ],
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 13,
+      "headline": "DoubleVerify CTV Measurement Volumes Surge 33% as Advertiser Transparency Demands Rise",
+      "summary": "DoubleVerify reported that its connected television measurement volumes grew by 33 percent in the full year of 2025, driven by heightened demand for independent verification in fragmented streaming environments. The growth reflects a broader industry mandate for transparent, auditable ad delivery tracking as programmatic CTV spending reaches scale.",
+      "source_org": "DoubleVerify Holdings Inc",
+      "date": "2026-04-08",
+      "type": "Earnings Call",
+      "url": "https://research.alpha-sense.com/?docid=ASR-INSR-3c749e5e0f22543f93b3cf1676bcae3f&scope=ANYWHERE&stmt=fse50243&hl=fse50243&page=19",
+      "related_finding_ids": [
+        "trend_5",
+        "opportunity_3",
+        "opportunity_4"
+      ],
+      "linked_top_companies": []
+    },
+    {
+      "id": 14,
+      "headline": "Warner Bros. Discovery Sets Special Meeting to Vote on Netflix Merger Amid Competing Bids",
+      "summary": "Warner Bros. Discovery announced a special shareholder meeting and unanimously recommended shareholders vote in favor of the Netflix merger, while simultaneously initiating discussions with Paramount Skydance for a best and final offer. The competing bids highlight the strategic premium placed on WBD's content library and Max streaming platform in an era of industry consolidation.",
+      "source_org": "Warner Bros. Discovery Inc",
+      "date": "2026-02-17",
+      "type": "News",
+      "url": "https://research.alpha-sense.com/?docid=PR-dc67a9b02c0af6a9686d0d3ec7fcb96f7cedc6db&scope=ANYWHERE&stmt=fse4057&hl=fse4057&page=1",
+      "related_finding_ids": [
+        "opportunity_1",
+        "challenge_1",
+        "challenge_4"
+      ],
+      "linked_top_companies": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": 15,
+      "headline": "Moloco Launches AI-Powered Performance CTV Bringing Mobile-Grade Measurement to Living Room",
+      "summary": "Moloco introduced an AI-powered performance connected television solution designed to bring mobile-grade measurement and optimization capabilities to app marketers targeting the living room screen. The platform is projected to yield up to 1.5 times higher return on investment compared to standard mobile campaigns, accelerating the convergence of app marketing and streaming video.",
+      "source_org": "Moloco",
+      "date": "2026-04-15",
+      "type": "News",
+      "url": "https://research.alpha-sense.com/?docid=PR-77b54cb4cb7b5a13705ab53bfceb06067b2c8a90&scope=ANYWHERE&stmt=fse1883&hl=fse1883&page=1",
+      "related_finding_ids": [
+        "opportunity_4",
+        "trend_5",
+        "opportunity_3"
+      ],
+      "linked_top_companies": []
     }
   ],
   "financial_highlights": [
     {
       "id": 1,
-      "metric": "US CTV Ad Spend 2026",
-      "current_value": "$42B",
-      "previous_value": "$31B",
-      "change": "+35%",
+      "metric": "US Digital Ad Spend",
+      "current_value": "$381.99B",
+      "previous_value": null,
+      "change": "+10.6%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 2,
-      "metric": "Total US Streaming Subscribers",
-      "current_value": "340M",
-      "previous_value": "310M",
-      "change": "+9.7%",
+      "metric": "US Programmatic Ad Spend",
+      "current_value": "$203.0B",
+      "previous_value": null,
+      "change": "+12.0%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 3,
-      "metric": "Avg Household Streaming Spend",
-      "current_value": "$92/mo",
-      "previous_value": "$61/mo",
-      "change": "+51%",
+      "metric": "US Local Ad Spend",
+      "current_value": "$184.5B",
+      "previous_value": null,
+      "change": "+8.1%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 4,
-      "metric": "5G FWA Subscribers",
-      "current_value": "12M",
-      "previous_value": "7.2M",
-      "change": "+67%",
+      "metric": "US Digital Media Spend",
+      "current_value": "$104.1B",
+      "previous_value": null,
+      "change": "+9.3%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 5,
-      "metric": "NBA Media Rights Deal",
-      "current_value": "$76B",
-      "previous_value": "$24B",
-      "change": "+217%",
+      "metric": "US Traditional Media Spend",
+      "current_value": "$80.4B",
+      "previous_value": null,
+      "change": "+6.5%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 6,
-      "metric": "AI Media Investment",
-      "current_value": "$4.2B",
-      "previous_value": "$1.8B",
-      "change": "+133%",
+      "metric": "US CTV Ad Spend",
+      "current_value": "$38.0B",
+      "previous_value": null,
+      "change": "+12.0%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 7,
-      "metric": "Content Moderation Spend",
-      "current_value": "$4.8B",
-      "previous_value": "$3.2B",
-      "change": "+50%",
+      "metric": "US Recorded Music Revenue",
+      "current_value": "$11.54B",
+      "previous_value": null,
+      "change": "+7.0%",
       "chart_type": "bar",
       "data_points": []
     },
     {
       "id": 8,
-      "metric": "BEAD Broadband Funding",
-      "current_value": "$42.5B",
+      "metric": "US Digital Audio Ad Spend",
+      "current_value": "$7.5B",
       "previous_value": null,
-      "change": "New program",
+      "change": "+5.0%",
+      "chart_type": "bar",
+      "data_points": []
+    },
+    {
+      "id": 9,
+      "metric": "US Billboard Ad Spend",
+      "current_value": "$3.5B",
+      "previous_value": null,
+      "change": "+7.0%",
+      "chart_type": "bar",
+      "data_points": []
+    },
+    {
+      "id": 10,
+      "metric": "Global Streaming Market",
+      "current_value": "$416.8B",
+      "previous_value": null,
+      "change": "+21.5%",
+      "chart_type": "bar",
+      "data_points": []
+    },
+    {
+      "id": 11,
+      "metric": "Netflix Ad-Tier MAUs",
+      "current_value": "190M",
+      "previous_value": null,
+      "change": null,
+      "chart_type": "bar",
+      "data_points": []
+    },
+    {
+      "id": 12,
+      "metric": "US Cord-Cutter Households",
+      "current_value": "56M",
+      "previous_value": null,
+      "change": "46% of market",
       "chart_type": "bar",
       "data_points": []
     }
   ],
   "top_companies": [
     {
-      "name": "Walt Disney Co",
+      "name": "The Walt Disney Co",
       "ticker": "DIS",
-      "sector": "Entertainment & Media",
-      "hq": "Burbank, CA",
-      "revenue": "$88.9B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=disney.com&sz=128",
+      "sector": "Media & Entertainment",
+      "hq": "Burbank, United States",
+      "revenue": "$91.36B",
       "key_initiatives": [
-        "ESPN standalone streaming launch (Fall 2026)",
-        "AI content personalization across Disney+/Hulu/ESPN+",
-        "NBA 11-year rights deal ($20B+ commitment)"
+        "Pivot to direct-to-consumer profitability with unified Disney+/Hulu streaming application",
+        "$1.5 billion strategic investment in Epic Games for metaverse and gaming expansion",
+        "$60 billion capital expenditure mandate for theme parks and cruise ships over next decade"
       ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=thewaltdisneycompany.com&sz=128",
       "linked_findings": {
         "trends": [
           0,
-          2,
-          5
+          3
         ],
         "opportunities": [
-          2,
-          4
+          1
         ],
         "challenges": [
+          1,
           2
         ]
       }
     },
     {
-      "name": "Netflix",
+      "name": "Netflix Inc",
       "ticker": "NFLX",
-      "sector": "Streaming Entertainment",
-      "hq": "Los Gatos, CA",
-      "revenue": "$38.3B",
+      "sector": "Streaming Media",
+      "hq": "Los Gatos, United States",
+      "revenue": "$42.30B",
+      "key_initiatives": [
+        "Expansion of ad-supported tier targeting 190M+ global monthly active users",
+        "Rapid acquisition of live sports broadcasting rights including NFL and WWE",
+        "Organic growth strategy with $19.5B content amortization budget for 2026"
+      ],
       "logo_url": "https://www.google.com/s2/favicons?domain=netflix.com&sz=128",
-      "key_initiatives": [
-        "AI recommendation engine overhaul",
-        "Ad-tier expansion to 52M+ subscribers",
-        "AI dubbing/localization across 40+ languages"
-      ],
       "linked_findings": {
         "trends": [
           0,
           2
-        ],
-        "opportunities": [
-          0,
-          2
-        ],
-        "challenges": [
-          2
-        ]
-      }
-    },
-    {
-      "name": "Alphabet Inc",
-      "ticker": "GOOGL",
-      "sector": "Technology & Advertising",
-      "hq": "Mountain View, CA",
-      "revenue": "$339.9B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
-      "key_initiatives": [
-        "YouTube CTV ad platform expansion",
-        "AI content moderation at scale",
-        "Gemini AI integration in ad products"
-      ],
-      "linked_findings": {
-        "trends": [
-          0,
-          4
-        ],
-        "opportunities": [
-          0
-        ],
-        "challenges": [
-          0,
-          4
-        ]
-      }
-    },
-    {
-      "name": "Amazon.com",
-      "ticker": "AMZN",
-      "sector": "E-commerce & Media",
-      "hq": "Seattle, WA",
-      "revenue": "$637.5B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=amazon.com&sz=128",
-      "key_initiatives": [
-        "Prime Video ad tier monetization ($3.1B revenue)",
-        "Thursday Night Football & NBA rights",
-        "AI-powered ad targeting with commerce data"
-      ],
-      "linked_findings": {
-        "trends": [
-          2
-        ],
-        "opportunities": [
-          0
-        ],
-        "challenges": [
-          0
-        ]
-      }
-    },
-    {
-      "name": "T-Mobile US",
-      "ticker": "TMUS",
-      "sector": "Telecommunications",
-      "hq": "Bellevue, WA",
-      "revenue": "$81.4B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=t-mobile.com&sz=128",
-      "key_initiatives": [
-        "FWA expansion to 12M+ subscribers",
-        "3.1 GHz spectrum acquisition",
-        "Rural broadband via BEAD partnerships"
-      ],
-      "linked_findings": {
-        "trends": [
-          1,
-          3
         ],
         "opportunities": [
           1,
+          4
+        ],
+        "challenges": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "name": "Warner Bros Discovery Inc",
+      "ticker": "WBD",
+      "sector": "Media & Entertainment",
+      "hq": "New York, United States",
+      "revenue": "$37.30B",
+      "key_initiatives": [
+        "Global rollout of the Max streaming platform across international markets",
+        "Corporate separation of streaming and linear network businesses",
+        "Aggressive debt reduction from $32.2 billion net debt position"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=wbd.com&sz=128",
+      "linked_findings": {
+        "trends": [
           3
         ],
-        "challenges": []
+        "opportunities": [
+          0,
+          1
+        ],
+        "challenges": [
+          0,
+          3
+        ]
+      }
+    },
+    {
+      "name": "Paramount Skydance Corp",
+      "ticker": "PSKY",
+      "sector": "Media & Entertainment",
+      "hq": "New York, United States",
+      "revenue": "$30.00B",
+      "key_initiatives": [
+        "Hostile $110.9 billion all-cash acquisition bid for Warner Bros. Discovery",
+        "Targeting $3 billion in cost efficiencies by 2027 post-consolidation",
+        "Expansion of Paramount+ streaming platform with unified technology stack"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=paramountplus.com&sz=128",
+      "linked_findings": {
+        "trends": [
+          3
+        ],
+        "opportunities": [
+          0
+        ],
+        "challenges": [
+          0,
+          3
+        ]
       }
     },
     {
       "name": "Comcast Corp",
       "ticker": "CMCSA",
       "sector": "Telecommunications & Media",
-      "hq": "Philadelphia, PA",
-      "revenue": "$121.6B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=comcast.com&sz=128",
+      "hq": "Philadelphia, United States",
+      "revenue": "$121.57B",
       "key_initiatives": [
-        "NBCUniversal private 5G deployment",
-        "Peacock streaming turnaround strategy",
-        "Fiber network modernization"
+        "Rollout of DOCSIS 4.0 multi-gigabit symmetrical broadband technology",
+        "Xfinity Mobile wireless convergence strategy and StreamSaver bundle at $18/month",
+        "Strategic spin-off of legacy cable networks into Versant entity"
       ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=comcast.com&sz=128",
       "linked_findings": {
         "trends": [
-          2
+          1
         ],
         "opportunities": [
           1
         ],
         "challenges": [
+          2,
+          4
+        ]
+      }
+    },
+    {
+      "name": "Amazon.com Inc",
+      "ticker": "AMZN",
+      "sector": "Technology & Retail",
+      "hq": "Seattle, United States",
+      "revenue": "$574.78B",
+      "key_initiatives": [
+        "Expansion of default ad-supported streaming on Prime Video globally",
+        "Aggressive acquisition of live sports rights with $3.8B 2026 allocation",
+        "Integration of retail media network data with connected television for closed-loop performance marketing"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=amazon.com&sz=128",
+      "linked_findings": {
+        "trends": [
+          0,
+          2
+        ],
+        "opportunities": [
+          2
+        ],
+        "challenges": [
           2
         ]
       }
     },
     {
-      "name": "Meta Platforms",
-      "ticker": "META",
-      "sector": "Technology & Social Media",
-      "hq": "Menlo Park, CA",
-      "revenue": "$164.5B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=meta.com&sz=128",
+      "name": "Apple Inc",
+      "ticker": "AAPL",
+      "sector": "Technology",
+      "hq": "Cupertino, United States",
+      "revenue": "$416.00B",
       "key_initiatives": [
-        "Horizon Worlds spatial computing",
-        "AI content moderation ($2.1B investment)",
-        "Reels CTV ad expansion"
+        "Exclusive US Formula One broadcasting rights for 2026-2030 at $140M annually",
+        "Expansion of Apple TV+ content library with premium original programming",
+        "Rollout of generative AI capabilities across the device ecosystem with M5 chip"
       ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=apple.com&sz=128",
+      "linked_findings": {
+        "trends": [
+          2
+        ],
+        "opportunities": [
+          1,
+          4
+        ],
+        "challenges": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "Fox Corp",
+      "ticker": "FOXA",
+      "sector": "Media & Broadcasting",
+      "hq": "New York, United States",
+      "revenue": "$13.90B",
+      "key_initiatives": [
+        "Aggressive scaling of Tubi ad-supported streaming platform",
+        "Launch of Fox One digital ecosystem with Kalshi prediction market integration",
+        "Preparation for massive advertising inflows from 2026 FIFA Men's World Cup"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=foxcorporation.com&sz=128",
+      "linked_findings": {
+        "trends": [
+          2
+        ],
+        "opportunities": [
+          4
+        ],
+        "challenges": [
+          2,
+          4
+        ]
+      }
+    },
+    {
+      "name": "The Trade Desk Inc",
+      "ticker": "TTD",
+      "sector": "Advertising Technology",
+      "hq": "Ventura, United States",
+      "revenue": "$1.95B",
+      "key_initiatives": [
+        "Expansion of programmatic connected television advertising capabilities",
+        "Integration of generative AI for dynamic creative optimization at scale",
+        "Global expansion of independent demand-side platform capabilities"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=thetradedesk.com&sz=128",
       "linked_findings": {
         "trends": [
           0,
           4
         ],
         "opportunities": [
-          4
+          2,
+          3
         ],
         "challenges": [
+          4
+        ]
+      }
+    },
+    {
+      "name": "Roku Inc",
+      "ticker": "ROKU",
+      "sector": "Streaming Platforms & Devices",
+      "hq": "San Jose, United States",
+      "revenue": "$3.48B",
+      "key_initiatives": [
+        "Monetization of the Roku Home Screen with self-serve Roku Ads Manager platform",
+        "Expansion of third-party programmatic advertising demand across 90M global households",
+        "Growth of premium wholesale subscription bundles and reorganized Subscriptions/Advertising reporting segments"
+      ],
+      "logo_url": "https://www.google.com/s2/favicons?domain=roku.com&sz=128",
+      "linked_findings": {
+        "trends": [
           0,
           4
-        ]
-      }
-    },
-    {
-      "name": "WPP plc",
-      "ticker": "WPP",
-      "sector": "Advertising & Marketing",
-      "hq": "London, UK",
-      "revenue": "$18.9B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=wpp.com&sz=128",
-      "key_initiatives": [
-        "NVIDIA AI creative partnership",
-        "15,000 employee AI retraining program",
-        "Programmatic CTV ad capabilities"
-      ],
-      "linked_findings": {
-        "trends": [
-          4
         ],
         "opportunities": [
-          0
-        ],
-        "challenges": [
-          3
-        ]
-      }
-    },
-    {
-      "name": "AT&T Inc",
-      "ticker": "T",
-      "sector": "Telecommunications",
-      "hq": "Dallas, TX",
-      "revenue": "$122.4B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=att.com&sz=128",
-      "key_initiatives": [
-        "Fiber-to-home expansion to 30M+ locations",
-        "3.1 GHz spectrum investment",
-        "BEAD program participation"
-      ],
-      "linked_findings": {
-        "trends": [
-          3
-        ],
-        "opportunities": [
-          3
-        ],
-        "challenges": []
-      }
-    },
-    {
-      "name": "Paramount Global",
-      "ticker": "PARA",
-      "sector": "Entertainment & Media",
-      "hq": "New York, NY",
-      "revenue": "$30.2B",
-      "logo_url": "https://www.google.com/s2/favicons?domain=paramount.com&sz=128",
-      "key_initiatives": [
-        "Paramount+ restructuring",
-        "Content licensing to third-party platforms",
-        "Exploring strategic alternatives/merger"
-      ],
-      "linked_findings": {
-        "trends": [
-          5
-        ],
-        "opportunities": [],
-        "challenges": [
+          1,
           2
+        ],
+        "challenges": [
+          4
         ]
       }
+    }
+  ],
+  "images": [
+    {
+      "src": "/visuals/united-states/communications-media/chart-1.jpeg",
+      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/united-states/communications-media/chart-2.jpeg",
+      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/united-states/communications-media/chart-3.jpeg",
+      "caption": "Chart 3 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/united-states/communications-media/chart-4.jpeg",
+      "caption": "Chart 4 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    }
+  ],
+  "transformed_charts": [
+    {
+      "original_src": "/visuals/united-states/communications-media/chart-1.jpeg",
+      "title": "US CTV Ad Spend ($b)",
+      "type": "bar",
+      "categories": [
+        "2023",
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028"
+      ],
+      "series": [
+        {
+          "name": "Ad Spend ($b)",
+          "data": [
+            23.4,
+            28.8,
+            33.4,
+            37.7,
+            42.2,
+            46.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "YoY Growth (%)",
+          "data": [
+            19,
+            13,
+            12,
+            11,
+            9
+          ],
+          "type": "line"
+        }
+      ],
+      "description": "US Connected TV (CTV) advertising spend is projected to grow from $23.4 billion in 2023 to $46.9 billion by 2028, nearly doubling over the period. Year-over-year growth rates are decelerating from 19% (2023-2024) down to 9% (2027-2028), indicating a maturing but still rapidly expanding market."
+    },
+    {
+      "original_src": "/visuals/united-states/communications-media/chart-2.jpeg",
+      "title": "US Communications & Media — Analyst Ratings & Stock Prices",
+      "type": "bar",
+      "categories": [
+        "DIS (Walt Disney)",
+        "CMCSA (Comcast)",
+        "WBD (Warner Bros.)",
+        "CHTR (Charter)",
+        "T (AT&T)",
+        "VZ (Verizon)",
+        "TMUS (T-Mobile)"
+      ],
+      "series": [
+        {
+          "name": "Stock Price ($)",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Price Target ($)",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst ratings table from AlphaSense covering 7 major US Communications & Media companies. All are rated by BN (Bernstein) analysts, with most receiving SW (Sector Weight) ratings except AT&T which has an OW (Overweight) rating with a $36 price target. Stock prices range from ~$27 (WBD, CMCSA) to ~$216 (CHTR), with commentary highlighting declining engagement for streaming platforms (Disney+, Peacock, HBO Max), competitive risks from Fiber/FWA providers for cable companies, and T-Mobile's strong speed and value proposition."
+    },
+    {
+      "original_src": "/visuals/united-states/communications-media/chart-3.jpeg",
+      "title": "EBITDA, Revenue & Valuation Estimates (FY ends 12/31)",
+      "type": "bar",
+      "categories": [
+        "F2025A",
+        "1Q26E",
+        "2Q26E",
+        "3Q26E",
+        "4Q26E",
+        "F2026E",
+        "F2027E"
+      ],
+      "series": [
+        {
+          "name": "EBITDA (M)",
+          "data": [
+            8744,
+            2086.3,
+            2141.7,
+            2375.1,
+            2252.1,
+            8855.2,
+            8899.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Cons. EBITDA (M)",
+          "data": [
+            null,
+            1979,
+            2055.7,
+            2318,
+            2134.4,
+            8627.1,
+            8605.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous EBITDA (M)",
+          "data": [
+            8729.7,
+            2053.2,
+            2099.1,
+            2414.6,
+            2247.6,
+            8814.4,
+            8672
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Revenue (M)",
+          "data": [
+            37296,
+            9023.8,
+            9473.8,
+            9446.4,
+            10014.3,
+            37958.3,
+            38239.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous Revenue (M)",
+          "data": [
+            37313.7,
+            9046.2,
+            9008.7,
+            8675.8,
+            9410.7,
+            36141.3,
+            36656.4
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "EV/EBITDA",
+          "data": [
+            11.4,
+            null,
+            null,
+            null,
+            null,
+            11.3,
+            11.2
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Financial estimates table showing EBITDA and Revenue projections with quarterly breakdowns for FY2026E and annual figures through FY2027E. EBITDA is expected to grow from $8,744M (F2025A) to $8,899.5M (F2027E), while Revenue rises from $37,296M to $38,240M. EV/EBITDA valuation remains stable around 11.2x-11.4x across forecast periods."
+    },
+    {
+      "original_src": "/visuals/united-states/communications-media/chart-4.jpeg",
+      "title": "U.S. Communications & Media — Analyst Ratings & Price Targets",
+      "type": "bar",
+      "categories": [
+        "DIS",
+        "CMCSA",
+        "WBD",
+        "CHTR",
+        "T",
+        "VZ",
+        "TMUS"
+      ],
+      "series": [
+        {
+          "name": "Stock Price ($)",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Price Target ($)",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst coverage table for seven major U.S. communications and media companies extracted from an AlphaSense Deep Research report dated 2026-04-15. All stocks carry a BN (Benchmark) analyst rating with SW (Sector Weight) recommendations except AT&T (T), which has an OW (Overweight) rating and a $36 price target. Charter Communications (CHTR) and T-Mobile (TMUS) trade at the highest prices (~$216 and ~$210), while Warner Bros. Discovery (WBD) and Comcast (CMCSA) trade below $30."
     }
   ]
 }

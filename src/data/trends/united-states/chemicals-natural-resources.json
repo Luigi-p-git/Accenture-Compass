@@ -37,6 +37,11 @@
           "metric": "Global Propylene Capacity Impacted",
           "value": "9%"
         }
+      ],
+      "linked_top_companies": [
+        5,
+        6,
+        11
       ]
     },
     {
@@ -76,6 +81,14 @@
           "metric": "NA Natural Gas Demand Growth",
           "value": "45Bcf/d"
         }
+      ],
+      "linked_top_companies": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        7
       ]
     },
     {
@@ -114,6 +127,9 @@
           "metric": "U.S. Lithium Demand",
           "value": "400,000 tonnes"
         }
+      ],
+      "linked_top_companies": [
+        0
       ]
     },
     {
@@ -153,6 +169,13 @@
           "metric": "Advanced Recycling Capacity",
           "value": "450M lbs"
         }
+      ],
+      "linked_top_companies": [
+        3,
+        6,
+        8,
+        9,
+        10
       ]
     },
     {
@@ -192,7 +215,8 @@
           "value": "10,000 units/month",
           "change": "+25%"
         }
-      ]
+      ],
+      "linked_top_companies": []
     }
   ],
   "opportunities": [
@@ -234,6 +258,11 @@
           "metric": "CD&R/Sealed Air Deal Value",
           "value": "$10.19B"
         }
+      ],
+      "linked_top_companies": [
+        1,
+        4,
+        8
       ]
     },
     {
@@ -274,6 +303,10 @@
           "metric": "Blue Point Capacity",
           "value": "1.40M metric tons"
         }
+      ],
+      "linked_top_companies": [
+        7,
+        11
       ]
     },
     {
@@ -314,6 +347,11 @@
           "metric": "Texas Nearshoring Job Creation",
           "value": "100,000 jobs"
         }
+      ],
+      "linked_top_companies": [
+        4,
+        5,
+        6
       ]
     },
     {
@@ -354,6 +392,11 @@
           "metric": "Sustainability Capital Allocation",
           "value": "15%"
         }
+      ],
+      "linked_top_companies": [
+        6,
+        9,
+        10
       ]
     },
     {
@@ -394,6 +437,11 @@
           "metric": "DOE Critical Minerals Funding",
           "value": "$1.00B"
         }
+      ],
+      "linked_top_companies": [
+        0,
+        2,
+        3
       ]
     }
   ],
@@ -435,6 +483,17 @@
           "value": "35%",
           "change": "-65%"
         }
+      ],
+      "linked_top_companies": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11
       ]
     },
     {
@@ -473,7 +532,8 @@
           "metric": "EPA PFAS Limit",
           "value": "4 ppt"
         }
-      ]
+      ],
+      "linked_top_companies": []
     },
     {
       "t": "Acute Skilled Labor Shortages Constrain Domestic Industrial Reshoring",
@@ -511,6 +571,11 @@
           "metric": "Hourly Wage Costs",
           "value": "increasing"
         }
+      ],
+      "linked_top_companies": [
+        2,
+        4,
+        5
       ]
     },
     {
@@ -549,6 +614,16 @@
           "metric": "Supply Chain Costs",
           "value": "increasing"
         }
+      ],
+      "linked_top_companies": [
+        0,
+        1,
+        3,
+        4,
+        6,
+        8,
+        9,
+        11
       ]
     },
     {
@@ -587,6 +662,9 @@
           "metric": "Scope 3 Reporting Requirements",
           "value": "increasing"
         }
+      ],
+      "linked_top_companies": [
+        10
       ]
     }
   ],
@@ -606,7 +684,8 @@
       "type": "Broker Research",
       "url": "https://javatar.bluematrix.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'The chemical industry functions as the second-order epicenter of the oil shock, transmitting feedstock constraints throughout the manufacturing economy.'"
+      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'The chemical industry functions as the second-order epicenter of the oil shock, transmitting feedstock constraints throughout the manufacturing economy.'",
+      "linked_top_companies": []
     },
     {
       "id": 2,
@@ -617,7 +696,8 @@
       "type": "Broker Research",
       "url": "https://javatar.bluematrix.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'The intersection of humanoid robots and the chemicals sector presents a significant growth opportunity driven by specialized material requirements and emerging demand dynamics.'"
+      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'The intersection of humanoid robots and the chemicals sector presents a significant growth opportunity driven by specialized material requirements and emerging demand dynamics.'",
+      "linked_top_companies": []
     },
     {
       "id": 3,
@@ -628,7 +708,8 @@
       "type": "Broker Research",
       "url": "https://research.db.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Virginie Boucher-Ferte, Research Analyst at Deutsche Bank — 'With oil & gas derivatives inputs representing ~20-30% of company sales, and lower pricing power vs. '22, we are concerned that the more downstream chemical businesses are going to face a significant cost squeeze coupled with weaker demand.'"
+      "analyst_quote": "Virginie Boucher-Ferte, Research Analyst at Deutsche Bank — 'With oil & gas derivatives inputs representing ~20-30% of company sales, and lower pricing power vs. '22, we are concerned that the more downstream chemical businesses are going to face a significant cost squeeze coupled with weaker demand.'",
+      "linked_top_companies": []
     },
     {
       "id": 4,
@@ -639,7 +720,8 @@
       "type": "Broker Research",
       "url": "https://www.rbccm.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Trung Huynh, Analyst at RBC Capital Markets — 'Nitrogen in particular has been impacted, with significantly higher prices due to restricted supply and higher LNG prices pushing up global marginal costs.'"
+      "analyst_quote": "Trung Huynh, Analyst at RBC Capital Markets — 'Nitrogen in particular has been impacted, with significantly higher prices due to restricted supply and higher LNG prices pushing up global marginal costs.'",
+      "linked_top_companies": []
     },
     {
       "id": 5,
@@ -650,7 +732,8 @@
       "type": "Broker Research",
       "url": "https://javatar.bluematrix.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'We expect US chemical sector M&A to accelerate, with 5 themes: SMID downstream chemicals chasing scale and reducing volatility; consolidation in fragmented markets where digitalization amplifies economies of scale; larger companies pruning lower-margin businesses...'"
+      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'We expect US chemical sector M&A to accelerate, with 5 themes: SMID downstream chemicals chasing scale and reducing volatility; consolidation in fragmented markets where digitalization amplifies economies of scale; larger companies pruning lower-margin businesses...'",
+      "linked_top_companies": []
     },
     {
       "id": 6,
@@ -661,7 +744,8 @@
       "type": "Broker Research",
       "url": null,
       "related_finding_ids": [],
-      "analyst_quote": "John Roberts, Managing Director at Mizuho Securities USA — 'Electronic chemical sales are the fastest growth & among largest specialty areas... S&P forecasts a 5% industry-wide organic sales CAGR, almost twice the average growth in specialty chemicals.'"
+      "analyst_quote": "John Roberts, Managing Director at Mizuho Securities USA — 'Electronic chemical sales are the fastest growth & among largest specialty areas... S&P forecasts a 5% industry-wide organic sales CAGR, almost twice the average growth in specialty chemicals.'",
+      "linked_top_companies": []
     },
     {
       "id": 7,
@@ -672,7 +756,8 @@
       "type": "Broker Research",
       "url": "https://research.db.com/",
       "related_finding_ids": [],
-      "analyst_quote": "David Begleiter, Research Analyst at Deutsche Bank — 'US polyethylene contract prices are now forecasted to increase 20 c/lb in April due to the impact of the US-Iran military conflict.'"
+      "analyst_quote": "David Begleiter, Research Analyst at Deutsche Bank — 'US polyethylene contract prices are now forecasted to increase 20 c/lb in April due to the impact of the US-Iran military conflict.'",
+      "linked_top_companies": []
     },
     {
       "id": 8,
@@ -683,7 +768,8 @@
       "type": "Broker Research",
       "url": null,
       "related_finding_ids": [],
-      "analyst_quote": "Stephen Richardson, Analyst at Evercore ISI — 'US refiners remain well positioned to capture volatility given crude availability, resilient distillate demand, and limited capacity additions.'"
+      "analyst_quote": "Stephen Richardson, Analyst at Evercore ISI — 'US refiners remain well positioned to capture volatility given crude availability, resilient distillate demand, and limited capacity additions.'",
+      "linked_top_companies": []
     },
     {
       "id": 9,
@@ -694,7 +780,8 @@
       "type": "Broker Research",
       "url": null,
       "related_finding_ids": [],
-      "analyst_quote": "Michael J. Harrison, CFA, Senior Analyst at Seaport Research Partners — 'Companies appear to be executing well on price vs. cost and productivity improvements, suggesting good leverage to a potential recovery.'"
+      "analyst_quote": "Michael J. Harrison, CFA, Senior Analyst at Seaport Research Partners — 'Companies appear to be executing well on price vs. cost and productivity improvements, suggesting good leverage to a potential recovery.'",
+      "linked_top_companies": []
     },
     {
       "id": 10,
@@ -705,7 +792,8 @@
       "type": "Broker Research",
       "url": "https://www.rbccm.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Scott Hanold, Analyst at RBC Capital Markets — 'While there is significant uncertainty with the ultimate path, the supply-demand fundamentals, particularly oil and global LNG, have tightened over the next couple of years.'"
+      "analyst_quote": "Scott Hanold, Analyst at RBC Capital Markets — 'While there is significant uncertainty with the ultimate path, the supply-demand fundamentals, particularly oil and global LNG, have tightened over the next couple of years.'",
+      "linked_top_companies": []
     },
     {
       "id": 11,
@@ -716,7 +804,8 @@
       "type": "Broker Research",
       "url": "https://www.allianz.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Ludovic Subran, Chief Economist at Allianz SE — 'The Middle East's central role in supplying critical inputs such as LNG, fertilizers, aluminum, helium and sulfur is also pushing up costs across global value chains, from agrifood to manufacturing, healthcare and technology.'"
+      "analyst_quote": "Ludovic Subran, Chief Economist at Allianz SE — 'The Middle East's central role in supplying critical inputs such as LNG, fertilizers, aluminum, helium and sulfur is also pushing up costs across global value chains, from agrifood to manufacturing, healthcare and technology.'",
+      "linked_top_companies": []
     },
     {
       "id": 12,
@@ -726,7 +815,10 @@
       "date": "2026-04-09",
       "type": "Earnings Call",
       "url": "https://www.lyondellbasell.com/investors",
-      "related_finding_ids": []
+      "related_finding_ids": [],
+      "linked_top_companies": [
+        10
+      ]
     },
     {
       "id": 13,
@@ -737,7 +829,8 @@
       "type": "Broker Research",
       "url": null,
       "related_finding_ids": [],
-      "analyst_quote": "Jan Stuart, Analyst at PiperSandler — 'Energy and chemical sub-sectors face bifurcated fortunes as war scenarios play out, with LNG and nitrogen producers capturing outsized near-term gains while downstream players absorb rising input costs.'"
+      "analyst_quote": "Jan Stuart, Analyst at PiperSandler — 'Energy and chemical sub-sectors face bifurcated fortunes as war scenarios play out, with LNG and nitrogen producers capturing outsized near-term gains while downstream players absorb rising input costs.'",
+      "linked_top_companies": []
     },
     {
       "id": 14,
@@ -748,7 +841,10 @@
       "type": "Broker Research",
       "url": "https://javatar.bluematrix.com/",
       "related_finding_ids": [],
-      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'National security investment vehicles are effectively subsidizing the enormous capital expenditures needed to establish independent U.S. critical mineral and clean energy networks at scale.'"
+      "analyst_quote": "Laurence Alexander, Equity Analyst at Jefferies — 'National security investment vehicles are effectively subsidizing the enormous capital expenditures needed to establish independent U.S. critical mineral and clean energy networks at scale.'",
+      "linked_top_companies": [
+        0
+      ]
     },
     {
       "id": 15,
@@ -759,7 +855,8 @@
       "type": "Government Publication",
       "url": null,
       "related_finding_ids": [],
-      "analyst_quote": "2026 Economic Report of the President — 'Structural labor deficits in trades such as plant operations, metallurgy, and heavy machinery technician roles are directly threatening the timeline and viability of domestic manufacturing expansion across the industrial landscape.'"
+      "analyst_quote": "2026 Economic Report of the President — 'Structural labor deficits in trades such as plant operations, metallurgy, and heavy machinery technician roles are directly threatening the timeline and viability of domestic manufacturing expansion across the industrial landscape.'",
+      "linked_top_companies": []
     }
   ],
   "financial_highlights": [

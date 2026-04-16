@@ -6,8 +6,8 @@ Accenture Compass is an interactive strategic intelligence platform with two mai
 - **Compass Dashboard** — World map → Region → Country → Topics (Talent, Industries, Financials, Macro, Trends)
 - **AccSense Magazine** — Interactive editorial intelligence report powered by AlphaSense data
 
-**Current version:** 0.3.0 (Phase 1 complete + AccSense Magazine + AlphaSense Pipeline)
-**Stack:** Next.js 16 (App Router) + Tailwind v4 + Framer Motion 12.38 + D3-geo + Recharts + jsPDF + pdf-parse + clsx + tailwind-merge
+**Current version:** 0.4.1 (Phase 1 complete + AccSense Magazine + AlphaSense Pipeline + Robin AI + AI Structuring + Cross-Reference System)
+**Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4 + Framer Motion 12.38 + D3-geo + Zustand + Recharts + jsPDF + clsx + tailwind-merge
 **Design system:** Stitch (Accenture dark theme) + Editorial broadsheet (Magazine)
 
 ## Running the App
@@ -25,24 +25,29 @@ npm run start     # Start production server
 | `src/app/page.tsx` | Landing — World map + 13 industry pill selectors |
 | `src/app/explore/canada/page.tsx` | Canada dashboard (6 tabs, DrumPicker, bento grid) |
 | `src/app/explore/[country]/intelligence/` | **AccSense Magazine** — editorial intelligence report |
+| `src/app/explore/[country]/intelligence/IntelligencePage.tsx` | Main magazine component (1400+ lines) |
 | `src/app/industries/` | Industry Lens — sector intelligence |
-| `src/app/admin/` | Admin — pipeline + manual upload + AlphaSense Mode |
-| `src/app/api/data/` | Data API — CRUD (topics: overview, talent, industries, financials, macro, trends) |
-| `src/app/api/alphasense/` | AlphaSense conversion API — text/PDF/JSON → structured findings |
+| `src/app/admin/` | Admin — pipeline + manual upload + AlphaSense Mode + Paste JSON tab |
+| `src/app/api/data/` | Data API — CRUD + cross-linker + data sanitizer |
+| `src/app/api/alphasense/` | AlphaSense conversion — text/PDF/JSON → structured findings (regex + AI fallback) |
+| `src/app/api/robin-chat/` | Robin AI chat proxy — Claude CLI file-based backend |
+| `src/app/api/ai-structure/` | AI structuring endpoint — Claude CLI PDF/text → JSON |
 | `src/app/api/extract-images/` | PDF image extractor — chart images for Visual Intelligence |
 | `src/app/api/pipeline/` | AI pipeline API — document processing (simulated) |
-| `src/components/intelligence/` | HeadlineSelector (3-cascade slot-machine spinner) |
+| `src/components/intelligence/HeadlineSelector.tsx` | 3-cascade slot-machine spinner (Region › Country › Industry) |
+| `src/components/intelligence/RobinChat.tsx` | Robin AI floating chat — context-aware, auto-sends from "Ask Robin" buttons |
 | `src/components/ui/` | StatCard, GlassCard, DrumPicker |
 | `src/components/charts/` | BarChart, DonutChart, Sparkline, ProgressRing |
 | `src/components/layout/` | Header, Sidebar, PageTransition |
-| `src/lib/alphasenseParser.ts` | Dual-mode parser: block + legacy + lenient (no AI needed) |
+| `src/lib/alphasenseParser.ts` | Tri-mode parser: block + legacy + lenient; `preProcessText()`, `transformToTrendsData()` |
+| `src/lib/aiStructure.ts` | File-based Claude CLI proxy: saves input to `.tmp/`, spawns `claude -p` with Read/Write/Bash |
 | `src/lib/intelligenceReport.ts` | PDF report generator (jsPDF, dark theme) |
 | `src/lib/utils.ts` | cn() utility (clsx + tailwind-merge) |
 | `src/lib/store.ts` | Zustand state (lens, sidebar, theme) |
 | `src/lib/pdfExport.ts` | Branded Accenture PDF generator (older) |
 | `src/data/` | Static JSON data files |
 | `src/data/trends/{country}/{industry}.json` | AlphaSense-generated intelligence data per country+industry |
-| `src/types/` | Full TypeScript interfaces (AlphaSense, Trends, News, Financials, etc.) |
+| `src/types/index.ts` | Full TypeScript interfaces (TopCompany, TrendsData, AlphaSensePayload, etc.) |
 
 ## Design System — Stitch (DO NOT deviate)
 
@@ -63,14 +68,23 @@ Font:          Inter (300-900)
 - NO drop shadows — use Ambient Bloom
 - Glass morphism for floating elements
 - Purple used surgically as high-intent highlight
-- Dark mode is default
+- Dark mode is default; light mode via `data-theme="light"` attribute
 - NO boxy card layouts — use editorial structural lines, asymmetric grids
+
+### Theme System — `--ink` CSS Variable
+
+All theme-aware colors use the `--ink` variable pattern:
+- Dark mode: `--ink: 255 255 255` (white ink on dark bg)
+- Light mode: `--ink: 0 0 0` (black ink on light bg)
+- Usage: `rgb(var(--ink) / opacity)` e.g. `rgb(var(--ink) / .5)` for 50% opacity text
+- Helper in IntelligencePage: `const a = (o: number) => \`rgb(var(--ink) / \${o})\``
+- Toggle: `useCompassStore(s => s.toggleTheme)`, renders sun/moon icon in magazine header
 
 **AccSense Magazine design dialect:**
 - Editorial broadsheet style (NEWGAZINE-inspired)
 - Structural white 2px lines, asymmetric grids (5/7, 7/5, 2/1)
 - Ghost watermark text (> symbol, section names)
-- Master-detail layout for Trends (hover left → detail expands right)
+- Master-detail layout for Trends and Challenges (hover left → detail expands right)
 - Horizontal scroll cards for Opportunities
 - Magazine crest + spine for Broker Analysis section
 - Newspaper texture for News section (newsprint grain, double rules)
@@ -83,9 +97,11 @@ Font:          Inter (300-900)
 /explore/canada                      → Canada dashboard (6 tabs + DrumPicker)
 /explore/[country]/intelligence      → AccSense Magazine (dynamic report)
 /industries                          → Industry Lens (all sectors)
-/admin                               → Data management + AlphaSense Mode
-/api/data                            → Data CRUD API (supports ?industry= for trends)
-/api/alphasense                      → AlphaSense text/PDF/JSON conversion
+/admin                               → Data management + AlphaSense Mode + Paste JSON
+/api/data                            → Data CRUD API (supports ?industry= for trends) + cross-linker
+/api/alphasense                      → AlphaSense text/PDF/JSON conversion (regex + AI fallback)
+/api/robin-chat                      → Robin AI chat proxy (Claude CLI)
+/api/ai-structure                    → AI structuring (Claude CLI → JSON)
 /api/extract-images                  → PDF chart image extraction
 /api/pipeline                        → Document processing pipeline
 ```
@@ -100,18 +116,55 @@ Font:          Inter (300-900)
 
 ```
 GET  /api/data?country=canada&topic=trends&industry=banking-capital-markets
-POST /api/data { country, topic, data, industry }
+POST /api/data { country, topic, data, industry }  ← triggers crossLinkData() + sanitizer
 POST /api/alphasense (FormData PDF or JSON { text } or { json })
+POST /api/robin-chat { messages, context }
 POST /api/extract-images (FormData PDF + country + industry)
 ```
 
 ### Data Storage Pattern
 ```
 src/data/trends/{country}/{industry-slug}.json
-src/data/trends/canada/all-industries.json
 src/data/trends/canada/banking-capital-markets.json
+src/data/trends/united-states/chemicals-natural-resources.json
 public/visuals/{country}/{industry}/chart-1.jpeg
 ```
+
+## Cross-Reference System (v0.4.1)
+
+`crossLinkData()` in `/api/data/route.ts` runs on every "Update Website" POST:
+
+1. **Finding → Company**: fuzzy-matches `affected_companies[].name` against `top_companies[].name`, populates `finding.linked_top_companies[]` (indices into top_companies)
+2. **Company → Finding**: backfills `company.linked_findings.{trends,opportunities,challenges}[]` with finding indices
+3. **News → Company**: scans `companies_mentioned[]` + headline/summary text, populates `news.linked_top_companies[]`
+
+**UI Components:**
+- `LinkedCompanyChips` — shows related companies with impact arrows on trend/challenge detail panels
+- `getSourceUrl()` — generates AlphaSense search URL from source metadata
+- "Open in AlphaSense ↗" links on source sections
+
+## Robin AI Assistant
+
+`src/components/intelligence/RobinChat.tsx` — floating blue button with Batman sidekick domino mask SVG.
+
+- Semi-transparent chat panel (backdrop-blur 24px)
+- Context-aware: receives `RobinFocus` from "Ask Robin" buttons on companies, trends, challenges, charts
+- Auto-sends prompts from Visual Intelligence "Ask Robin" buttons
+- Rich text rendering: **bold**, [links](url), bare URLs, numbered lists, bullet points with ▸, section headers, $dollar and %percentage highlighting in emerald
+- Backend: `/api/robin-chat` → Claude CLI proxy via file-based approach (no API key needed)
+
+## AI Structuring Pipeline
+
+`src/lib/aiStructure.ts` — file-based Claude CLI proxy:
+
+1. Saves input to `.tmp/` file
+2. Spawns `claude -p --allowedTools "Read,Write,Bash" --dangerously-skip-permissions`
+3. Claude reads input file, writes JSON to output file (avoids stdout buffer timeout)
+4. Two functions: `structurePDFWithClaude(buffer)` and `structureTextWithClaude(rawText)`
+5. Fallback in `/api/alphasense`: regex parser tries first → if 0 findings → AI structuring
+6. Timeout: 300s (5 min) for large documents
+
+**Important:** Do NOT pipe large text through stdin on Windows — use the file-based approach.
 
 ## AlphaSense Pipeline (No API Keys Required)
 
@@ -120,33 +173,60 @@ public/visuals/{country}/{industry}/chart-1.jpeg
 3. Copy prompt → run in AlphaSense Deep Research
 4. Paste output (text/PDF/JSON) → Convert to JSON
 5. Parser: block format → legacy numbered → lenient (3 fallback levels)
-6. Extracts: findings, financial highlights, news items, companies affected
-7. Select country + industry → Update Website
+6. Extracts: findings, financial highlights, news items, companies affected, top companies
+7. Select country + industry → Update Website (triggers cross-linker + sanitizer)
 8. Optional: Upload PDF for chart image extraction (Visual Intelligence)
 9. Magazine reads data and renders all sections
+
+**AlphaSense Prompt features:**
+- "Top 10 Companies" section with linked findings, ticker, sector, HQ, revenue, key initiatives
+- "Analyst Quote" field in Broker Analysis articles
+- Cross-reference rules (13-15): impact criteria, broker Companies Mentioned + Sector, company Investment Focus + Recent Moves
 
 ## AccSense Magazine Sections
 
 | Section | Description | Data Source |
 |---------|-------------|------------|
-| Hero | THE {COUNTRY} OUTLOOK headline, map, key metrics, synthesis | TrendsData |
-| Emerging Trends | Master-detail: hover list → expanded card | trends[] |
-| Broker Analysis | Magazine crest, paginated article cards, page-turn animation | news_items[] |
-| Opportunities | Horizontal scroll vertical cards | opportunities[] |
-| Visual Intelligence | Extracted chart images from PDFs | images[] |
-| Key Challenges | 2/1 split with severity sidebar | challenges[] |
-| Companies Intelligence | 5-column grid with expandable finding dots | CLIENTS + cross-ref |
-| News (Coming Soon) | Newspaper-style section with newsprint texture | Future |
+| Hero | THE {COUNTRY} OUTLOOK headline, mini map, key metrics, synthesis popup | TrendsData |
+| Intelligence Brief | 3-column top-5 (Trends/Opportunities/Challenges) with "View more →" | All findings |
+| Emerging Trends | Master-detail: hover list → expanded card with LinkedCompanyChips | trends[] |
+| Broker Analysis | Magazine crest + spine, paginated 3×2 article grid, page-turn animation | news_items[] |
+| Opportunities | Horizontal scroll vertical cards with sentence-boundary truncation | opportunities[] |
+| Visual Intelligence | Compact thumbnail grid (180px) with lightbox, nav arrows, "Ask Robin" | images[] |
+| Key Challenges | Master-detail with severity colors, LinkedCompanyChips | challenges[] |
+| Companies Intelligence | Editorial vertical list, company logos, colored finding-count pills, side panel | top_companies[] |
+| News (Coming Soon) | Newspaper-style section with newsprint grain, double rules | Future |
+
+## Key Types (v0.4.1)
+
+```typescript
+TopCompany: name, ticker, sector, hq, revenue, key_initiatives, investment_focus?, recent_moves?, logo_url?, linked_findings: { trends[], opportunities[], challenges[] }
+TrendsChallenge: t, d, severity ('critical'|'high'|'medium'|'low'), ic, source?, affected_companies?, linked_top_companies?
+TrendsOpportunity: t, p, timeline, d, ic, priority?, source?, affected_companies?, linked_top_companies?
+TrendsTrend: t, tag, d, ic, source?, affected_companies?, linked_top_companies?
+NewsItem: id, headline, summary, source_org, date, type, url, related_finding_ids, analyst_quote?, companies_mentioned?, sector?, linked_top_companies?
+TrendsData: challenges[], opportunities[], trends[], synthesis, source, news_items?, financial_highlights?, images?, top_companies?
+```
 
 ## Key Conventions
 
 - Framer Motion for all animations (cubic-bezier 0.4,0,0.2,1)
-- Lucide React for newer components, Material Symbols for older
+- Lucide React for newer components, Material Symbols (`.ms` class) for older
 - Zustand for global state
-- Inter font at weights 300-900
+- Inter font at weights 300-900; Playfair Display for magazine wordmark
 - Industry-specific data: files at `trends/{country}/{industry-slug}.json`
 - Magazine header: 3 cascading selectors (Region › Country › Industry) with slot-machine spinners
+- `window.history.replaceState` for seamless country/industry switching (no remount)
 - PDF generation: jsPDF with dark theme, cover page, section headers
+- Company logos: Google favicons (`https://www.google.com/s2/favicons?domain=...&sz=64`)
+- Data sanitizer in `/api/data`: auto-fixes string→number, 1-based→0-based indices, auto-generates missing logo_urls
+
+## Data Available
+
+- **US Communications & Media** (dummy data)
+- **US Chemicals & Natural Resources** (real AlphaSense PDF)
+- **Canada Banking** (real AlphaSense data)
+- **Canada All Industries** (aggregate)
 
 ## Spec Documents
 

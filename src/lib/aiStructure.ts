@@ -185,6 +185,130 @@ export async function structureWithClaude(rawText: string): Promise<AlphaSensePa
   return structureTextWithClaude(rawText);
 }
 
+/**
+ * Extract hyperlink mappings from a PDF using Claude.
+ * Claude reads the PDF and sees which URLs are linked to which source documents.
+ * Returns a mapping of document_title → URL for each cited source.
+ */
+export async function extractPdfLinkMappings(pdfPath: string): Promise<{ title: string; org: string; url: string }[]> {
+  ensureTmpDir();
+  const ts = Date.now();
+  const outputPath = join(TMP_DIR, `links-${ts}.json`);
+
+  const prompt = `Read the PDF file at ${pdfPath}.
+
+This is an AlphaSense intelligence report. It contains findings (Emerging Trends, Strategic Opportunities, Key Challenges) and Broker Analysis articles. Each finding cites a source document with a hyperlink to research.alpha-sense.com.
+
+Extract EVERY hyperlinked source citation. For each one, output the document title, the source organization, and the EXACT URL the hyperlink points to.
+
+Write the result as a JSON array to ${outputPath}:
+[
+  { "title": "Document Title as shown in the PDF", "org": "Source Organization", "url": "https://research.alpha-sense.com/?docid=..." },
+  ...
+]
+
+RULES:
+- Only include URLs that start with https://research.alpha-sense.com/
+- Include the FULL URL with all query parameters (docid, stmt, hl, page, etc.)
+- The title should match what appears in the PDF near the hyperlink
+- Include ALL cited sources, not just unique ones — some documents are cited multiple times
+- Write ONLY the JSON file — no other output`;
+
+  try {
+    await runClaudeWithTools(prompt, 180_000); // 3 min timeout
+
+    if (!existsSync(outputPath)) {
+      throw new Error('Claude did not write the link mappings output');
+    }
+
+    const raw = readFileSync(outputPath, 'utf8');
+    const mappings = JSON.parse(raw);
+    return Array.isArray(mappings) ? mappings : [];
+  } finally {
+    cleanup(outputPath);
+  }
+}
+
+/**
+ * Analyze a chart image using Claude vision and return structured ECharts-ready data.
+ * Uses the same file-based CLI proxy pattern.
+ */
+export async function analyzeChartImage(imagePath: string, caption: string): Promise<{
+  title: string; type: string; categories?: string[];
+  series: { name: string; data: number[]; type?: string }[];
+  description: string;
+}> {
+  ensureTmpDir();
+  const ts = Date.now();
+  const outputPath = join(TMP_DIR, `chart-${ts}.json`);
+
+  // imagePath is already on disk (public/visuals/...)
+  const absImagePath = imagePath.startsWith('/') ? join(process.cwd(), 'public', imagePath) : imagePath;
+
+  const prompt = `Look at the chart image at ${absImagePath}. Caption: "${caption}"
+
+Analyze this chart THOROUGHLY. Extract ALL data AND visual styling. Write the result as JSON to ${outputPath}.
+
+{
+  "title": "Exact chart title from the image",
+  "type": "bar" | "line" | "pie" | "area" | "combo" | "stacked" | "waterfall" | "scatter" | "gauge",
+  "categories": ["2023", "2024", "2025", ...],
+  "series": [
+    { "name": "Ad Spend", "data": [23.4, 28.8, 33.4], "type": "bar", "color": "#4A90D9" },
+    { "name": "Growth %", "data": [19, 13, 12], "type": "line", "yAxisIndex": 1 }
+  ],
+  "description": "2-3 sentences describing what the chart shows",
+  "xAxisName": "Year",
+  "yAxisName": "Ad Spend ($B)",
+  "yAxisUnit": "$B",
+  "yAxis2Name": "Growth Rate",
+  "yAxis2Unit": "%",
+  "colors": ["#4A90D9", "#34d399"],
+  "annotations": [
+    { "text": "$46.9", "dataIndex": 5 },
+    { "text": "9%", "dataIndex": 5 }
+  ],
+  "isStacked": false,
+  "isDualAxis": true,
+  "source": { "organization": "Source org if visible at bottom" }
+}
+
+CRITICAL RULES:
+- Read EVERY number on axes, data labels, and annotations (dollar values, percentages, growth rates)
+- DETECT THE CHART TYPE PRECISELY:
+  * "combo" = bars AND a line on same chart (very common — bars for values, line for growth %)
+  * "stacked" = bars stacked on top of each other
+  * "waterfall" = bars that build up/down from a baseline
+  * "pie" = circular, "area" = filled line chart
+- For COMBO charts: one series should have "type":"bar", another "type":"line" with "yAxisIndex":1
+- Extract the EXACT colors used (as hex codes) — look at bar fills, line colors
+- Extract ALL text annotations visible ON the chart (growth %, dollar labels above bars, callouts)
+- If chart has two Y-axes (e.g. left=$B, right=%), set isDualAxis:true and yAxis2Name/yAxis2Unit
+- For stacked bars, set isStacked:true and give each series the same "stack":"total"
+- Extract source/attribution text if visible below the chart
+- Write ONLY the JSON file`;
+
+  try {
+    await runClaudeWithTools(prompt, 120_000); // 2 min timeout per chart
+
+    if (!existsSync(outputPath)) {
+      throw new Error('Claude did not write chart analysis output');
+    }
+
+    const raw = readFileSync(outputPath, 'utf8');
+    const result = JSON.parse(raw);
+    return {
+      title: result.title || caption || 'Chart',
+      type: result.type || 'bar',
+      categories: result.categories,
+      series: result.series || [],
+      description: result.description || '',
+    };
+  } finally {
+    cleanup(outputPath);
+  }
+}
+
 function ensurePayloadFields(payload: AlphaSensePayload) {
   if (!payload.findings) payload.findings = [];
   if (!payload.news_items) payload.news_items = [];

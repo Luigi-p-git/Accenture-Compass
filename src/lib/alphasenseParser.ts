@@ -147,8 +147,11 @@ function parseTopCompanyLines(lines: string[]): TopCompany {
   const nameRaw = get('Company \\d+');
   const name = nameRaw || get('Name') || lines[0]?.replace(/^Company\s*\d+\s*[:—\-–]\s*/i, '').trim() || 'Unknown';
   const tickerRaw = get('Ticker');
-  const initiativesRaw = get('Key Initiatives');
+  const initiativesRaw = get('Key Investments') || get('Key Initiatives');
   const initiatives = initiativesRaw ? initiativesRaw.split(';').map(s => s.trim()).filter(Boolean) : [];
+  const investmentFocus = get('Investment Focus') || undefined;
+  const recentMovesRaw = get('Recent Moves');
+  const recentMoves = recentMovesRaw ? recentMovesRaw.split(';').map(s => s.trim()).filter(Boolean) : undefined;
 
   // Parse linked findings sub-block
   const trends: number[] = [];
@@ -173,6 +176,8 @@ function parseTopCompanyLines(lines: string[]): TopCompany {
     sector: get('Sector'), hq: get('Headquarters') || get('HQ'),
     revenue: get('Revenue'),
     key_initiatives: initiatives,
+    investment_focus: investmentFocus,
+    recent_moves: recentMoves,
     linked_findings: { trends, opportunities, challenges },
   };
 }
@@ -629,6 +634,15 @@ function parseLegacyFormat(text: string): AlphaSensePayload {
         }
         i++; continue;
       }
+      // Source Citation: line (primary citation/footnote number from the PDF)
+      if (/^source\s*citation\s*[:—\-–]\s*/i.test(line)) {
+        const citVal = line.replace(/^source\s*citation\s*[:—\-–]\s*/i, '').trim();
+        const citNum = citVal.match(/\d+/);
+        if (citNum) {
+          currentFinding.source.citation_id = parseInt(citNum[0]);
+        }
+        i++; continue;
+      }
       if (DESC_RE.test(line)) {
         currentFinding.description = line.replace(DESC_RE, '');
         i++;
@@ -729,6 +743,8 @@ function preProcessText(raw: string): string {
   t = t.replace(/(?<=[a-z.!?])(\s*Headquarters\s*[:—\-–])/gi, '\n$1');
   t = t.replace(/(?<=[a-z.!?])(\s*Revenue\s*[:—\-–])/gi, '\n$1');
   t = t.replace(/(?<=[a-z.!?])(\s*Linked Findings\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(?<=[a-z.!?])(\s*Investment Focus\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(?<=[a-z.!?])(\s*Recent Moves\s*[:—\-–])/gi, '\n$1');
 
   // Break before numbered items: "1." "2." etc when preceded by text
   t = t.replace(/(?<=[a-z.!?\d])(\s+\d{1,2}\.\s+[A-Z])/g, '\n$1');
@@ -742,6 +758,10 @@ function preProcessText(raw: string): string {
   t = t.replace(/(Companies Affected\s*[:—\-–])/gi, '\n$1');
   t = t.replace(/(Key Metrics\s*[:—\-–])/gi, '\n$1');
   t = t.replace(/(Company \d+\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(Key Investments\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(Investment Focus\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(Recent Moves\s*[:—\-–])/gi, '\n$1');
+  t = t.replace(/(Source Citation\s*[:—\-–])/gi, '\n$1');
 
   // Collapse multiple newlines
   t = t.replace(/\n{3,}/g, '\n\n');

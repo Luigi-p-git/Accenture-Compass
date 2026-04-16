@@ -315,6 +315,7 @@ export interface NewsItem {
   companies_mentioned?: string[];
   sector?: string;
   linked_top_companies?: number[];
+  citation_id?: number | null;
 }
 
 export interface TopCompany {
@@ -358,6 +359,7 @@ export interface AlphaSenseFinding {
     date: string | null;
     url: string | null;
     headline: string | null;
+    citation_id?: number | null;
   };
   affected_companies?: AffectedCompany[];
   key_metrics?: KeyMetric[];
@@ -420,6 +422,25 @@ export interface TrendsTrend {
   linked_top_companies?: number[];
 }
 
+export interface TransformedChart {
+  original_src: string;
+  title: string;
+  type: 'bar' | 'line' | 'pie' | 'area' | 'scatter' | 'gauge' | 'combo' | 'waterfall' | 'stacked';
+  categories?: string[];
+  series: { name: string; data: number[]; type?: string; color?: string; stack?: string; yAxisIndex?: number }[];
+  description: string;
+  source?: { document_title?: string; organization?: string; date?: string; url?: string };
+  xAxisName?: string;
+  yAxisName?: string;
+  yAxisUnit?: string;
+  yAxis2Name?: string;
+  yAxis2Unit?: string;
+  colors?: string[];
+  annotations?: { text: string; dataIndex?: number }[];
+  isStacked?: boolean;
+  isDualAxis?: boolean;
+}
+
 export interface TrendsData {
   challenges: TrendsChallenge[];
   opportunities: TrendsOpportunity[];
@@ -434,4 +455,5 @@ export interface TrendsData {
   financial_highlights?: FinancialHighlight[];
   images?: { src: string; caption?: string }[];
   top_companies?: TopCompany[];
+  transformed_charts?: TransformedChart[];
 }

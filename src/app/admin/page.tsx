@@ -68,7 +68,7 @@ function buildAlphaPrompt(region: string, country: string, industry: string, tim
 
 CONTEXT: I am researching ${subject} with a focus on developments from the past ${tf}. I need a structured intelligence brief covering emerging trends, strategic opportunities, key challenges, financial metrics, and broker/analyst sources across ${industryCtx}.${regionCtx}
 
-This report will be published in an executive magazine format. Every finding must be substantiated with a verifiable source, and every source MUST include a direct URL or hyperlink whenever publicly available.
+This report will be published in an executive magazine format. Every finding must be substantiated with a verifiable source document.
 
 ══════════════════════════════════
 EMERGING TRENDS
@@ -83,7 +83,7 @@ Description: [4-6 detailed sentences. Include specific data: dollar figures, per
 Impact: [High/Medium/Low] — [one-sentence justification]
 Timeframe: [Near-term (0-12 months) / Medium-term (1-3 years) / Long-term (3-5+ years)]
 Source: [Document title], [Organization], [Document type], [Date]
-Source URL: [Full https:// URL to the source document. Provide the direct link to the earnings transcript, press release, SEC/SEDAR filing, government publication, or news article. If behind a paywall, provide the landing page URL. Write NONE only as last resort.]
+Source Citation: [The primary citation number from your research, e.g. 3 or 42. This is the footnote/reference number for the main source document. Write the number only.]
 Companies Affected: [CompanyName (impact: positive — one-sentence detail with revenue/market data)], [CompanyName (impact: negative — detail)]
 Key Metrics: [Metric: $Value (+change%)], [Metric: Value]
 
@@ -111,10 +111,10 @@ Company 1: [Company Name]
 Ticker: [Stock ticker symbol, or PRIVATE if not publicly traded]
 Sector: [Primary industry sector]
 Headquarters: [City, Country]
-Revenue: [Latest annual revenue with currency, e.g. CAD$52B]
-Key Initiatives: [2-3 major investments or strategic moves, separated by semicolons]
+Revenue: [Latest annual revenue with currency, e.g. $180B]
+Key Investments: [2-3 major investments or strategic moves. For EACH, include the source citation number in brackets, e.g. "Invested $24B in content production [56]; Acquired streaming rights for NFL [15]; Launched unified Disney+/Hulu app [72]"]
 Investment Focus: [2-3 sentences describing current investment priorities and capital allocation strategy]
-Recent Moves: [1-2 recent strategic moves — M&A, partnerships, or capex announcements with dollar figures, separated by semicolons]
+Recent Moves: [1-2 recent strategic moves with source citation numbers — e.g. "Completed $110.9B acquisition of WBD [33]; Launched StreamSaver bundle at $18/month [34]"]
 Linked Findings:
   - Trends: [Finding numbers from Emerging Trends that affect this company, e.g. 1, 3, 5]
   - Opportunities: [Finding numbers from Strategic Opportunities this company is positioned for]
@@ -133,14 +133,14 @@ CRITICAL RULES FOR TOP 10 COMPANIES:
 FINANCIAL HIGHLIGHTS
 ══════════════════════════════════
 
-List 8-12 key economic and market metrics. Use EXACTLY this format — one clean line per metric:
+List 8-12 key economic and market metrics relevant to ${industryCtx}. Use EXACTLY this format — one clean line per metric:
 
-- GDP Growth: 1.8% (+0.3pp)
-- Unemployment Rate: 5.8% (-0.2pp)
-- Federal Deficit: CAD$78B (-$12.9B)
-- Policy Rate: 2.25% (-100bps)
-- Market Index: 34,000 (+41%)
-- Home Price: $698K (+0.0%)
+- Total Market Revenue: $380B (+8.5%)
+- Digital Ad Spend: $270B (+12%)
+- Broadband Penetration: 92% (+2pp)
+- Industry Employment: 2.8M (+3.1%)
+- M&A Volume: $85B (+22%)
+- Consumer Spending Index: 142 (+4.5%)
 
 STRICT RULES FOR FINANCIAL HIGHLIGHTS:
 - Each line: [Metric Name]: [Number with unit] ([change])
@@ -160,18 +160,7 @@ For EACH article, use this EXACT format:
 Summary: [2-3 sentence summary of the key insight, including specific data points]
 Analyst Quote: ["Analyst Name, Title at Firm" — "Direct quotation from the report or transcript." Write NONE if no direct quote available.]
 Companies Mentioned: [Exact company names from the Top 10 list that this article discusses, comma-separated. Write NONE if no Top 10 company is referenced.]
-Sector: [Primary sector this article covers, e.g. Chemicals, Energy, Technology]
-URL: [FULL https:// URL to the source. This is CRITICAL — provide the direct hyperlink to the document, press release, filing page, earnings transcript, or news article. For company filings, link to the investor relations page. For government publications, link to the .gov or .gc.ca page. For broker research, provide the research portal URL if publicly accessible.]
-
-CRITICAL URL REQUIREMENTS:
-- Every article MUST attempt to include a URL
-- For earnings calls: link to the company's investor relations / SEC Edgar / SEDAR+ page
-- For press releases: link to the company's newsroom or PR Newswire/GlobeNewsWire page
-- For government publications: link to the official .gov / .gc.ca / central bank page
-- For broker research: link to the research firm's public insights page if available
-- For news articles: link to the publisher's article page (Reuters, Bloomberg, Financial Post, etc.)
-- Only write NONE if absolutely no public URL exists for the source
-- Include analyst names and direct quotes where possible — this adds credibility to the magazine
+Sector: [Primary sector this article covers, e.g. Telecom, Streaming, Advertising, Media]
 
 ══════════════════════════════════
 SYNTHESIS
@@ -184,20 +173,18 @@ STRICT FORMAT RULES — READ CAREFULLY
 ══════════════════════════════════
 
 1. NUMBER every finding sequentially (1, 2, 3...) across all categories
-2. Every finding MUST have Description:, Impact:, Timeframe:, Source:, Source URL: on separate lines
-3. Every finding MUST include a Source URL — this is non-negotiable for our publication
+2. Every finding MUST have Description:, Impact:, Timeframe:, Source:, Source Citation:, Companies Affected:, Key Metrics: on separate lines
+3. Every finding MUST include a Source with document title, organization, document type, date, AND a Source Citation number (the primary footnote reference number)
 4. Companies Affected: use format "CompanyName (impact: positive/negative/neutral — detail)"
 5. FINANCIAL HIGHLIGHTS: numbers only, no URLs, no domains, no narrative text in metric lines
-6. BROKER ANALYSIS: every article MUST have a URL line — provide the best available public link
-7. Prioritize primary sources: earnings transcripts, analyst reports, SEC/SEDAR filings, official government publications
-8. Aim for 15-24 total findings across Trends + Opportunities + Challenges
-9. All URLs must be complete (start with https://)
-10. Do NOT embed URLs or domain names inside description text or metric values — put them ONLY on the Source URL: or URL: line
-11. TOP 10 COMPANIES: every company MUST have Linked Findings with valid finding numbers from above
-12. BROKER ANALYSIS: include Analyst Quote, Companies Mentioned, and Sector for every article
-13. Companies Affected in findings MUST use the EXACT same company names as in the Top 10 Companies section
-14. Each Top 10 Company MUST appear in the Companies Affected field of at least 3 different findings
-15. Impact rating criteria: POSITIVE = revenue/margins/market share expected to increase or company well-positioned; NEGATIVE = cost increases, regulatory risk, market share loss, operational disruption; NEUTRAL = affected but outcome uncertain or balanced`;
+6. Prioritize primary sources: earnings transcripts, analyst reports, SEC/SEDAR filings, official government publications
+7. Aim for 15-24 total findings across Trends + Opportunities + Challenges
+8. Do NOT embed URLs or domain names inside description text or metric values
+9. TOP 10 COMPANIES: every company MUST have Linked Findings with valid finding numbers from above
+10. BROKER ANALYSIS: include Analyst Quote, Companies Mentioned, and Sector for every article
+11. Companies Affected in findings MUST use the EXACT same company names as in the Top 10 Companies section
+12. Each Top 10 Company MUST appear in the Companies Affected field of at least 3 different findings
+13. Impact rating criteria: POSITIVE = revenue/margins/market share expected to increase or company well-positioned; NEGATIVE = cost increases, regulatory risk, market share loss, operational disruption; NEUTRAL = affected but outcome uncertain or balanced`;
 }
 
 interface Job {
@@ -227,6 +214,7 @@ export default function AdminPage() {
   const alphaPdfRef = useRef<HTMLInputElement>(null);
   const [alphaPdfName, setAlphaPdfName] = useState('');
   const [alphaProcessing, setAlphaProcessing] = useState(false);
+  const [alphaProgress, setAlphaProgress] = useState({ step: '', pct: 0 });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [alphaResult, setAlphaResult] = useState<any>(null);
   const [alphaError, setAlphaError] = useState('');
@@ -237,6 +225,10 @@ export default function AdminPage() {
   const [chartImages, setChartImages] = useState<{ src: string; caption: string }[]>([]);
   const [chartProcessing, setChartProcessing] = useState(false);
   const [chartError, setChartError] = useState('');
+  // PDF extraction options
+  const [pdfExtractCharts, setPdfExtractCharts] = useState(true);
+  const [pdfExtractLinks, setPdfExtractLinks] = useState(true);
+  const [pdfTransformCharts, setPdfTransformCharts] = useState(true);
 
   const toggleTarget = (key: string) => {
     setSelectedTargets(prev => {
@@ -294,6 +286,7 @@ export default function AdminPage() {
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh', fontFamily: "'Inter',system-ui,sans-serif", color: '#fff', overflowY: 'auto' }}>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       <header className="bar" style={{ position: 'sticky', top: 0, zIndex: 40 }}>
         <div className="bar-l">
           <span style={{ fontSize: 14, fontWeight: 900, cursor: 'pointer' }} onClick={() => router.push('/')}>accenture</span>
@@ -543,198 +536,369 @@ export default function AdminPage() {
                   <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--s2)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                       <span className="ms" style={{ fontSize: 16, color: 'var(--p)' }}>transform</span>
-                      <span style={{ fontSize: 13, fontWeight: 800 }}>Step 2 — Convert AlphaSense Output</span>
+                      <span style={{ fontSize: 13, fontWeight: 800 }}>Step 2 — Load Data & Update</span>
                     </div>
 
-                    {/* Three-tab toggle */}
-                    <div style={{ display: 'flex', background: 'var(--s1)', border: '1px solid var(--s2)', borderRadius: 8, padding: 3, marginBottom: 14 }}>
-                      {([['paste', 'content_paste', 'Paste Text'], ['pdf', 'picture_as_pdf', 'Upload PDF'], ['json', 'data_object', 'Paste JSON']] as const).map(([key, ic, label]) => (
-                        <button key={key} onClick={() => setAlphaInputMode(key as 'paste' | 'pdf' | 'json')} style={{
-                          flex: 1, padding: '7px 0', borderRadius: 5, border: 'none', cursor: 'pointer',
-                          fontSize: 9, fontWeight: 800, letterSpacing: '.04em',
-                          background: alphaInputMode === key ? 'var(--p)' : 'transparent',
-                          color: alphaInputMode === key ? '#fff' : 'var(--t3)',
-                          transition: 'all .2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                    {/* Country + Industry selector — shared, at the top */}
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+                      <div style={{ width: 140 }}>
+                        <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.12em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Country</label>
+                        <select value={alphaTargetCountry} onChange={e => { setAlphaTargetCountry(e.target.value); setAlphaSaved(false); }} style={{
+                          width: '100%', padding: '9px 10px', borderRadius: 6,
+                          background: 'var(--s1)', border: '1px solid var(--s2)',
+                          color: '#fff', fontSize: 10, fontWeight: 700,
+                          fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none',
                         }}>
-                          <span className="ms" style={{ fontSize: 13 }}>{ic}</span>{label}
-                        </button>
-                      ))}
+                          {Object.values(ALPHA_REGIONS).flat().map(c => (
+                            <option key={c} value={c.toLowerCase().replace(/\s+/g, '-')} style={{ background: '#111' }}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.12em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Industry</label>
+                        <select value={alphaTargetIndustry} onChange={e => { setAlphaTargetIndustry(e.target.value); setAlphaSaved(false); }} style={{
+                          width: '100%', padding: '9px 10px', borderRadius: 6,
+                          background: 'var(--s1)', border: '1px solid var(--s2)',
+                          color: '#fff', fontSize: 10, fontWeight: 700,
+                          fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none',
+                        }}>
+                          <option value="all-industries" style={{ background: '#111' }}>All Industries</option>
+                          {ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').map(ind => (
+                            <option key={ind} value={ind.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')} style={{ background: '#111' }}>{ind}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
-                    {/* Paste Text */}
-                    {alphaInputMode === 'paste' && (
-                      <textarea
-                        value={alphaInput}
-                        onChange={e => { setAlphaInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
-                        placeholder="Paste your AlphaSense output here...&#10;&#10;EMERGING TRENDS&#10;&#10;1. Finding title&#10;Description: ...&#10;Impact: High — ...&#10;Timeframe: Near-term (0-12 months)&#10;Source: ..."
-                        style={{
-                          width: '100%', height: 160, padding: '12px 14px', borderRadius: 10,
-                          background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
-                          fontSize: 10, fontFamily: "'Inter',sans-serif", lineHeight: 1.7,
-                          resize: 'vertical', outline: 'none',
-                        }}
-                      />
-                    )}
+                    {/* Two-column: JSON paste (left) + PDF for charts (right) */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
 
-                    {/* Upload PDF */}
-                    {alphaInputMode === 'pdf' && (
-                      <>
-                        <input ref={alphaPdfRef} type="file" accept=".pdf" style={{ display: 'none' }}
+                      {/* Left: JSON / Text paste */}
+                      <div>
+                        <div style={{ display: 'flex', background: 'var(--s1)', border: '1px solid var(--s2)', borderRadius: 6, padding: 2, marginBottom: 8 }}>
+                          {([['json', 'data_object', 'Paste JSON'], ['paste', 'content_paste', 'Paste Text']] as const).map(([key, ic, label]) => (
+                            <button key={key} onClick={() => setAlphaInputMode(key as 'paste' | 'pdf' | 'json')} style={{
+                              flex: 1, padding: '5px 0', borderRadius: 4, border: 'none', cursor: 'pointer',
+                              fontSize: 8, fontWeight: 800, letterSpacing: '.04em',
+                              background: alphaInputMode === key ? 'var(--p)' : 'transparent',
+                              color: alphaInputMode === key ? '#fff' : 'var(--t3)',
+                              transition: 'all .2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3,
+                            }}>
+                              <span className="ms" style={{ fontSize: 11 }}>{ic}</span>{label}
+                            </button>
+                          ))}
+                        </div>
+                        {alphaInputMode === 'json' ? (
+                          <textarea
+                            value={alphaJsonInput}
+                            onChange={e => {
+                              const val = e.target.value;
+                              setAlphaJsonInput(val); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false);
+                              // Auto-detect country + industry from pasted JSON
+                              try {
+                                const subjectMatch = val.match(/"subject"\s*:\s*"([^"]+)"/);
+                                if (subjectMatch) {
+                                  const s = subjectMatch[1].toLowerCase();
+                                  const allC = Object.values(ALPHA_REGIONS).flat();
+                                  const cm = allC.find((c: string) => s.includes(c.toLowerCase()));
+                                  if (cm) setAlphaTargetCountry(cm.toLowerCase().replace(/\s+/g, '-'));
+                                  const im = ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').find(ind => s.includes(ind.toLowerCase()));
+                                  if (im) setAlphaTargetIndustry(im.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+                                }
+                              } catch { /* ignore parse errors during typing */ }
+                            }}
+                            placeholder='Paste JSON here — supports both formats:&#10;&#10;{ "trends": [...], "top_companies": [...] }&#10;&#10;{ "findings": [...], "synthesis": "..." }'
+                            style={{
+                              width: '100%', height: 140, padding: '10px 12px', borderRadius: 8,
+                              background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
+                              fontSize: 9, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
+                              resize: 'vertical', outline: 'none',
+                            }}
+                          />
+                        ) : (
+                          <textarea
+                            value={alphaInput}
+                            onChange={e => { setAlphaInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
+                            placeholder="Paste AlphaSense text output here...&#10;&#10;EMERGING TRENDS&#10;&#10;1. Finding title&#10;Description: ..."
+                            style={{
+                              width: '100%', height: 140, padding: '10px 12px', borderRadius: 8,
+                              background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
+                              fontSize: 9, fontFamily: "'Inter',sans-serif", lineHeight: 1.7,
+                              resize: 'vertical', outline: 'none',
+                            }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Right: PDF upload for chart extraction */}
+                      <div>
+                        <div style={{ fontSize: 8, fontWeight: 800, color: '#fbbf24', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <span className="ms" style={{ fontSize: 12 }}>image</span>Chart PDF (optional)
+                        </div>
+                        <input ref={el => { chartPdfRef.current = el; }} type="file" accept=".pdf" style={{ display: 'none' }}
                           onChange={async (e) => {
                             const f = e.target.files?.[0]; if (!f) return;
                             setAlphaPdfName(f.name);
-                            setAlphaResult(null); setAlphaError(''); setAlphaSaved(false);
-                            // Read as text for FormData later — store in alphaInput as marker
-                            setAlphaInput(`__PDF__${f.name}`);
+                            setChartImages([]); setChartError(''); setAlphaSaved(false);
                           }}
                         />
                         <div
-                          onClick={() => alphaPdfRef.current?.click()}
+                          onClick={() => chartPdfRef.current?.click()}
                           style={{
-                            padding: alphaPdfName ? '12px 16px' : '24px 16px', textAlign: 'center', borderRadius: 10, cursor: 'pointer',
-                            background: alphaPdfName ? 'rgba(52,211,153,.04)' : 'var(--s1)',
-                            border: alphaPdfName ? '1px solid rgba(52,211,153,.2)' : '2px dashed var(--s2)',
-                            display: alphaPdfName ? 'flex' : 'block', alignItems: 'center', gap: 12,
-                            transition: 'all .3s',
+                            height: 140, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            borderRadius: 8, cursor: 'pointer',
+                            background: alphaPdfName ? 'rgba(251,191,36,.04)' : 'var(--s1)',
+                            border: alphaPdfName ? '1px solid rgba(251,191,36,.2)' : '2px dashed var(--s2)',
+                            transition: 'all .3s', gap: 6,
                           }}
                         >
-                          {alphaPdfName ? (<>
-                            <span className="ms" style={{ fontSize: 20, color: 'var(--em)' }}>check_circle</span>
-                            <div style={{ flex: 1, textAlign: 'left' }}>
-                              <div style={{ fontSize: 11, fontWeight: 800 }}>{alphaPdfName}</div>
-                              <div style={{ fontSize: 9, color: 'var(--t3)' }}>PDF ready for conversion</div>
-                            </div>
-                            <span style={{ fontSize: 8, color: 'var(--t4)', fontWeight: 700 }}>Replace</span>
-                          </>) : (<>
-                            <span className="ms" style={{ fontSize: 24, color: 'var(--p)' }}>picture_as_pdf</span>
-                            <div style={{ fontSize: 13, fontWeight: 800, marginTop: 6 }}>Drop or click to upload PDF</div>
-                            <p style={{ fontSize: 10, color: 'var(--t3)', marginTop: 3 }}>AlphaSense PDF export</p>
-                          </>)}
+                          <span className="ms" style={{ fontSize: 24, color: alphaPdfName ? '#fbbf24' : 'var(--t4)' }}>
+                            {alphaPdfName ? 'check_circle' : 'picture_as_pdf'}
+                          </span>
+                          <div style={{ fontSize: 10, fontWeight: 800, color: alphaPdfName ? '#fbbf24' : 'var(--t3)' }}>
+                            {alphaPdfName || 'Upload PDF for charts'}
+                          </div>
+                          <div style={{ fontSize: 8, color: 'var(--t4)' }}>
+                            {alphaPdfName ? 'Click to replace' : 'AlphaSense PDF report'}
+                          </div>
                         </div>
-                      </>
+                        {/* Extraction options — only show when PDF is attached */}
+                        {alphaPdfName && (
+                          <div style={{ display: 'flex', gap: 10, marginTop: 8, flexWrap: 'wrap' }}>
+                            {([
+                              { key: 'charts', label: 'Extract Charts', icon: 'bar_chart', color: '#fbbf24', state: pdfExtractCharts, set: setPdfExtractCharts, hint: 'instant' },
+                              { key: 'links', label: 'Extract Links', icon: 'link', color: '#60a5fa', state: pdfExtractLinks, set: setPdfExtractLinks, hint: 'instant' },
+                              { key: 'transform', label: 'Recreate Charts', icon: 'auto_awesome', color: '#A100FF', state: pdfTransformCharts, set: setPdfTransformCharts, hint: '~2 min (AI)' },
+                            ] as const).map(opt => (
+                              <button key={opt.key} onClick={() => opt.set(!opt.state)}
+                                style={{
+                                  flex: 1, minWidth: 100, padding: '6px 8px', borderRadius: 6, cursor: 'pointer',
+                                  background: opt.state ? `${opt.color}12` : 'var(--s1)',
+                                  border: `1px solid ${opt.state ? opt.color + '40' : 'var(--s2)'}`,
+                                  display: 'flex', alignItems: 'center', gap: 6, transition: 'all .2s',
+                                }}>
+                                <span className="ms" style={{ fontSize: 14, color: opt.state ? opt.color : 'var(--t4)' }}>
+                                  {opt.state ? 'check_box' : 'check_box_outline_blank'}
+                                </span>
+                                <div style={{ textAlign: 'left' }}>
+                                  <div style={{ fontSize: 8, fontWeight: 800, color: opt.state ? '#fff' : 'var(--t3)' }}>{opt.label}</div>
+                                  <div style={{ fontSize: 6, color: 'var(--t4)' }}>{opt.hint}</div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Single Process & Update button */}
+                    {(() => {
+                      const hasData = alphaInputMode === 'json' ? !!alphaJsonInput.trim() : !!alphaInput.trim();
+                      const hasPdf = !!alphaPdfName;
+                      const hasAnything = hasData || hasPdf;
+                      return (
+                    <div style={{ position: 'relative', width: '100%' }}>
+                    {/* Progress bar overlay */}
+                    {alphaProcessing && (
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 }}>
+                        <div style={{ height: 3, background: 'var(--s2)', borderRadius: '8px 8px 0 0', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${alphaProgress.pct}%`, background: 'linear-gradient(90deg, #34d399, #22d3ee)', borderRadius: 3, transition: 'width .6s cubic-bezier(.4,0,.2,1)' }} />
+                        </div>
+                      </div>
                     )}
-
-                    {/* Paste JSON */}
-                    {alphaInputMode === 'json' && (
-                      <>
-                        <textarea
-                          value={alphaJsonInput}
-                          onChange={e => { setAlphaJsonInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
-                          placeholder='Paste JSON here — supports both formats:&#10;&#10;TrendsData: { "trends": [...], "opportunities": [...], "challenges": [...], "top_companies": [...] }&#10;&#10;AlphaSense: { "findings": [...], "synthesis": "..." }'
-                          style={{
-                            width: '100%', height: 160, padding: '12px 14px', borderRadius: 10,
-                            background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
-                            fontSize: 10, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
-                            resize: 'vertical', outline: 'none',
-                          }}
-                        />
-                        {/* Direct load button for JSON — skips conversion */}
-                        <button
-                          disabled={!alphaJsonInput.trim()}
-                          style={{
-                            width: '100%', padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
-                            background: alphaJsonInput.trim() ? '#34d399' : 'var(--s2)',
-                            color: '#fff', marginTop: 12,
-                            fontSize: 11, fontWeight: 800, letterSpacing: '.06em',
-                            boxShadow: alphaJsonInput.trim() ? '0 4px 16px rgba(52,211,153,.25)' : 'none',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                            transition: 'all .2s',
-                          }}
-                          onClick={() => {
-                            try {
-                              // Clean up common paste issues
-                              let raw = alphaJsonInput.trim();
-                              // Strip markdown fences
-                              const fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-                              if (fenceMatch) raw = fenceMatch[1].trim();
-                              // If starts with "trends" or "findings" without { wrapper, add it
-                              if (raw.startsWith('"') && !raw.startsWith('{')) raw = '{' + raw;
-                              if (!raw.endsWith('}')) {
-                                const lastBrace = raw.lastIndexOf('}');
-                                if (lastBrace > 0) raw = raw.substring(0, lastBrace + 1);
-                              }
-                              // Find the JSON object boundaries
-                              const startIdx = raw.indexOf('{');
-                              const endIdx = raw.lastIndexOf('}');
-                              if (startIdx !== -1 && endIdx > startIdx) raw = raw.substring(startIdx, endIdx + 1);
-
-                              const parsed = JSON.parse(raw);
-                              // TrendsData format (has trends array)
-                              if (parsed.trends && Array.isArray(parsed.trends)) {
-                                const trends = parsed;
-                                if (!trends.source) trends.source = { subject: 'Unknown', date_generated: new Date().toISOString().split('T')[0], total_findings: (trends.trends?.length || 0) + (trends.opportunities?.length || 0) + (trends.challenges?.length || 0) };
-                                setAlphaResult({ success: true, trends, alphasense: { subject: trends.source?.subject, findings: [], synthesis: trends.synthesis || '' } });
-                              }
-                              // AlphaSense format (has findings array)
-                              else if (parsed.findings && Array.isArray(parsed.findings)) {
-                                setAlphaResult({ success: true, alphasense: parsed, trends: null });
-                                // Still need to convert — trigger the API
-                                fetch('/api/alphasense', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ json: parsed }) })
-                                  .then(r => r.json()).then(data => { if (data.success) setAlphaResult(data); });
-                              } else {
-                                setAlphaError('JSON must have either "trends" or "findings" array');
-                                return;
-                              }
-                              setAlphaError('');
-                              // Auto-detect country
-                              const subject = (parsed.source?.subject || parsed.subject || '').toLowerCase();
-                              const allCountries = Object.values(ALPHA_REGIONS).flat();
-                              const match = allCountries.find((c: string) => subject.includes(c.toLowerCase()));
-                              if (match) setAlphaTargetCountry(match.toLowerCase().replace(/\s+/g, '-'));
-                            } catch (err) {
-                              setAlphaError(err instanceof Error ? err.message : 'Invalid JSON');
-                            }
-                          }}
-                        >
-                          <span className="ms" style={{ fontSize: 14 }}>check_circle</span>Load JSON
-                        </button>
-                      </>
-                    )}
-
-                    {/* Convert button — for text and PDF only */}
-                    {alphaInputMode !== 'json' && <button
-                      disabled={alphaProcessing || (alphaInputMode === 'paste' && !alphaInput.trim()) || (alphaInputMode === 'pdf' && !alphaPdfName)}
+                    <button
+                      disabled={alphaProcessing || alphaSaved || !hasAnything}
                       style={{
-                        width: '100%', padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
-                        background: alphaProcessing ? 'var(--s2)' : 'linear-gradient(135deg, var(--p), #6b21a8)',
-                        color: '#fff', marginTop: 12,
-                        fontSize: 11, fontWeight: 800, letterSpacing: '.06em',
-                        boxShadow: alphaProcessing ? 'none' : '0 4px 16px rgba(161,0,255,.25)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                        opacity: alphaProcessing ? .6 : 1, transition: 'all .2s',
+                        width: '100%', padding: alphaProcessing ? '10px 0 14px' : '13px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
+                        background: alphaSaved ? 'rgba(52,211,153,.15)' : alphaProcessing ? 'var(--s1)' : 'linear-gradient(135deg, var(--p), #6b21a8)',
+                        color: alphaSaved ? 'var(--em)' : '#fff',
+                        fontSize: 12, fontWeight: 900, letterSpacing: '.04em',
+                        boxShadow: alphaSaved || alphaProcessing ? 'none' : '0 4px 16px rgba(161,0,255,.3)',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: alphaProcessing ? 4 : 0,
+                        opacity: !hasAnything && !alphaSaved ? .5 : 1,
+                        transition: 'all .2s',
                       }}
                       onClick={async () => {
                         setAlphaProcessing(true); setAlphaError(''); setAlphaResult(null); setAlphaSaved(false);
+                        setChartError(''); setChartImages([]);
+                        setAlphaProgress({ step: 'Preparing...', pct: 5 });
                         try {
-                          let res;
-                          if (alphaInputMode === 'pdf' && alphaPdfRef.current?.files?.[0]) {
-                            const form = new FormData();
-                            form.append('file', alphaPdfRef.current.files[0]);
-                            res = await fetch('/api/alphasense', { method: 'POST', body: form });
-                          } else {
-                            res = await fetch('/api/alphasense', {
-                              method: 'POST', headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ text: alphaInput }),
-                            });
+                          const hasDataInput = alphaInputMode === 'json' ? !!alphaJsonInput.trim() : !!alphaInput.trim();
+                          const pdfFile = chartPdfRef.current?.files?.[0];
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          let result: any = null;
+                          let detectedCountry = alphaTargetCountry;
+                          let detectedIndustry = alphaTargetIndustry;
+
+                          // ── Step A: Process JSON or Text (if provided) ──
+                          if (hasDataInput) {
+                            setAlphaProgress({ step: 'Parsing data...', pct: 10 });
+                            if (alphaInputMode === 'json') {
+                              let raw = alphaJsonInput.trim();
+                              const fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+                              if (fenceMatch) raw = fenceMatch[1].trim();
+                              if (raw.startsWith('"') && !raw.startsWith('{')) raw = '{' + raw;
+                              if (!raw.endsWith('}')) { const lb = raw.lastIndexOf('}'); if (lb > 0) raw = raw.substring(0, lb + 1); }
+                              const si = raw.indexOf('{'); const ei = raw.lastIndexOf('}');
+                              if (si !== -1 && ei > si) raw = raw.substring(si, ei + 1);
+                              const parsed = JSON.parse(raw);
+
+                              if (parsed.trends && Array.isArray(parsed.trends)) {
+                                if (!parsed.source) parsed.source = { subject: 'Unknown', date_generated: new Date().toISOString().split('T')[0], total_findings: (parsed.trends?.length || 0) + (parsed.opportunities?.length || 0) + (parsed.challenges?.length || 0) };
+                                result = { success: true, trends: parsed, alphasense: { subject: parsed.source?.subject, findings: [], synthesis: parsed.synthesis || '', metadata: { emerging_trend_count: parsed.trends?.length || 0, strategic_opportunity_count: parsed.opportunities?.length || 0, key_challenge_count: parsed.challenges?.length || 0, news_count: parsed.news_items?.length || 0, financial_highlight_count: parsed.financial_highlights?.length || 0, top_company_count: parsed.top_companies?.length || 0 } } };
+                              } else if (parsed.findings && Array.isArray(parsed.findings)) {
+                                const res = await fetch('/api/alphasense', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ json: parsed }) });
+                                result = await res.json();
+                                if (!res.ok) throw new Error(result.error || 'Conversion failed');
+                              } else {
+                                throw new Error('JSON must have either "trends" or "findings" array');
+                              }
+                            } else {
+                              const res = await fetch('/api/alphasense', {
+                                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ text: alphaInput }),
+                              });
+                              result = await res.json();
+                              if (!res.ok) {
+                                const debugInfo = result.debug ? `\n\nInput preview: "${result.debug.inputPreview?.substring(0, 150)}..."\n\nHint: ${result.debug.hint}` : '';
+                                throw new Error((result.error || 'Conversion failed') + debugInfo);
+                              }
+                            }
+
+                            setAlphaResult(result);
+
+                            // Auto-detect country + industry from subject
+                            const subject = (result.alphasense?.subject || result.trends?.source?.subject || '').toLowerCase().trim();
+                            const allCountries = Object.values(ALPHA_REGIONS).flat().sort((a, b) => b.length - a.length);
+                            const countryMatch = allCountries.find((c: string) => subject.includes(c.toLowerCase()));
+                            if (countryMatch) { detectedCountry = countryMatch.toLowerCase().replace(/\s+/g, '-'); setAlphaTargetCountry(detectedCountry); }
+                            const industryMatch = ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').sort((a, b) => b.length - a.length).find(ind => subject.includes(ind.toLowerCase()));
+                            if (industryMatch) { detectedIndustry = industryMatch.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); setAlphaTargetIndustry(detectedIndustry); }
+
+                            // Save to website
+                            setAlphaProgress({ step: 'Saving data...', pct: 40 });
+                            if (result?.trends) {
+                              const saveRes = await fetch('/api/data', {
+                                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ country: detectedCountry, topic: 'trends', data: result.trends, industry: detectedIndustry === 'all-industries' ? '' : detectedIndustry }),
+                              });
+                              if (!saveRes.ok) throw new Error('Failed to save data');
+                            }
                           }
-                          const data = await res.json();
-                          if (!res.ok) {
-                            const debugInfo = data.debug ? `\n\nInput preview: "${data.debug.inputPreview?.substring(0, 150)}..."\n\nHint: ${data.debug.hint}` : '';
-                            throw new Error((data.error || 'Conversion failed') + debugInfo);
+
+                          // ── Step B: PDF processing ──
+                          if (pdfFile) {
+                            // B1: Extract chart images (if checked)
+                            if (pdfExtractCharts) {
+                              setAlphaProgress({ step: 'Extracting charts from PDF...', pct: 50 });
+                              try {
+                                const form = new FormData();
+                                form.append('file', pdfFile);
+                                form.append('country', detectedCountry);
+                                form.append('industry', detectedIndustry === 'all-industries' ? '' : detectedIndustry);
+                                const imgRes = await fetch('/api/extract-images', { method: 'POST', body: form });
+                                const imgData = await imgRes.json();
+                                if (imgRes.ok && imgData.images?.length) {
+                                  setChartImages(imgData.images);
+                                  const indParam = detectedIndustry !== 'all-industries' ? `&industry=${detectedIndustry}` : '';
+                                  const existingRes = await fetch(`/api/data?country=${detectedCountry}&topic=trends${indParam}`);
+                                  const existingTrends = existingRes.ok ? (await existingRes.json()).data : (result?.trends || {});
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  const updated: any = { ...existingTrends, images: imgData.images };
+
+                                  // B1b: Transform charts with AI (if checked)
+                                  if (pdfTransformCharts) {
+                                    setAlphaProgress({ step: 'Recreating charts with AI...', pct: 60 });
+                                    try {
+                                      const tfRes = await fetch('/api/transform-charts', {
+                                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ images: imgData.images }),
+                                      });
+                                      const tfData = await tfRes.json();
+                                      if (tfRes.ok && tfData.charts?.length) {
+                                        updated.transformed_charts = tfData.charts;
+                                      }
+                                    } catch { /* non-fatal */ }
+                                  }
+
+                                  await fetch('/api/data', {
+                                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ country: detectedCountry, topic: 'trends', data: updated, industry: detectedIndustry === 'all-industries' ? '' : detectedIndustry }),
+                                  });
+                                } else if (imgData.error) {
+                                  setChartError(imgData.error);
+                                }
+                              } catch {
+                                setChartError('Chart extraction failed' + (hasDataInput ? ' (data was still saved)' : ''));
+                              }
+                            }
+
+                            // B2: Extract hyperlinks (if checked)
+                            if (pdfExtractLinks) {
+                              setAlphaProgress({ step: 'Extracting hyperlinks from PDF...', pct: 80 });
+                            try {
+                              const indParam = detectedIndustry !== 'all-industries' ? `&industry=${detectedIndustry}` : '';
+                              const currentRes = await fetch(`/api/data?country=${detectedCountry}&topic=trends${indParam}`);
+                              const currentData = currentRes.ok ? (await currentRes.json()).data : null;
+
+                              if (currentData) {
+                                const linkForm = new FormData();
+                                linkForm.append('file', pdfFile);
+                                linkForm.append('data', JSON.stringify(currentData));
+                                const linkRes = await fetch('/api/extract-links', { method: 'POST', body: linkForm });
+                                const linkData = await linkRes.json();
+
+                                if (linkRes.ok && linkData.matched) {
+                                  // Apply matched URLs to findings
+                                  let changed = false;
+                                  for (const match of linkData.matched.findings) {
+                                    const items = currentData[match.category];
+                                    if (items?.[match.index]?.source) {
+                                      items[match.index].source.url = match.url;
+                                      changed = true;
+                                    }
+                                  }
+                                  for (const match of linkData.matched.news) {
+                                    if (currentData.news_items?.[match.index]) {
+                                      currentData.news_items[match.index].url = match.url;
+                                      changed = true;
+                                    }
+                                  }
+                                  if (changed) {
+                                    await fetch('/api/data', {
+                                      method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ country: detectedCountry, topic: 'trends', data: currentData, industry: detectedIndustry === 'all-industries' ? '' : detectedIndustry }),
+                                    });
+                                    console.log(`[Admin] Applied ${linkData.matched.findings.length} finding links + ${linkData.matched.news.length} news links from PDF`);
+                                  }
+                                }
+                              }
+                            } catch { /* non-fatal — links are a bonus */ }
+                            }
                           }
-                          setAlphaResult(data);
-                          // Auto-detect country
-                          const subject = (data.alphasense?.subject || '').toLowerCase().trim();
-                          const allCountries = Object.values(ALPHA_REGIONS).flat();
-                          const match = allCountries.find(c => subject.includes(c.toLowerCase()));
-                          if (match) setAlphaTargetCountry(match.toLowerCase().replace(/\s+/g, '-'));
+
+                          setAlphaProgress({ step: 'Complete!', pct: 100 });
+                          setAlphaSaved(true);
                         } catch (err) {
-                          setAlphaError(err instanceof Error ? err.message : 'Conversion failed');
+                          setAlphaError(err instanceof Error ? err.message : 'Processing failed');
                         } finally { setAlphaProcessing(false); }
                       }}
                     >
-                      {alphaProcessing ? (<><span className="ms" style={{ fontSize: 14, animation: 'pulse 1s infinite' }}>psychology</span>AI Structuring... (up to 3 min)</>) : (<><span className="ms" style={{ fontSize: 14 }}>transform</span>Convert to JSON</>)}
-                    </button>}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span className="ms" style={{ fontSize: 16, animation: alphaProcessing ? 'spin 1.5s linear infinite' : 'none' }}>
+                          {alphaSaved ? 'check_circle' : alphaProcessing ? 'sync' : 'rocket_launch'}
+                        </span>
+                        {alphaSaved
+                          ? `Updated ${alphaTargetCountry}${alphaTargetIndustry !== 'all-industries' ? ' / ' + alphaTargetIndustry : ''}${chartImages.length ? ` + ${chartImages.length} charts` : ''}`
+                          : alphaProcessing ? `${alphaProgress.step}` : 'Process & Update Website'}
+                      </div>
+                      {alphaProcessing && (
+                        <span style={{ fontSize: 8, fontWeight: 700, color: '#34d399', letterSpacing: '.06em' }}>{alphaProgress.pct}%</span>
+                      )}
+                    </button>
+                    </div>
+                      );
+                    })()}
 
                     {/* Error */}
                     {alphaError && (
@@ -742,181 +906,58 @@ export default function AdminPage() {
                         <span className="ms" style={{ fontSize: 13, verticalAlign: 'middle', marginRight: 4 }}>error</span>{alphaError}
                       </div>
                     )}
+                    {chartError && (
+                      <div style={{ marginTop: 6, padding: '8px 12px', borderRadius: 6, background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.12)', fontSize: 9, color: '#fbbf24' }}>
+                        <span className="ms" style={{ fontSize: 11, verticalAlign: 'middle', marginRight: 4 }}>warning</span>{chartError}
+                      </div>
+                    )}
 
                     {/* Result preview */}
                     {alphaResult && (
                       <div style={{ marginTop: 14, animation: 'fadeIn .3s' }}>
                         {/* Summary bar */}
-                        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-                          <div style={{ flex: 1, padding: '10px 12px', borderRadius: 8, background: 'rgba(52,211,153,.04)', border: '1px solid rgba(52,211,153,.12)' }}>
+                        <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+                          <div style={{ flex: '1 1 180px', padding: '10px 12px', borderRadius: 8, background: 'rgba(52,211,153,.04)', border: '1px solid rgba(52,211,153,.12)' }}>
                             <div style={{ fontSize: 8, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.12em', textTransform: 'uppercase' }}>Subject</div>
                             <div style={{ fontSize: 13, fontWeight: 900, color: '#fff', marginTop: 2 }}>{alphaResult.alphasense?.subject}</div>
-                            <div style={{ fontSize: 8, color: 'var(--t3)', marginTop: 1 }}>{alphaResult.alphasense?.date_generated} · {alphaResult.alphasense?.total_findings} findings</div>
+                            <div style={{ fontSize: 8, color: 'var(--t3)', marginTop: 1 }}>{alphaResult.alphasense?.date_generated} · {alphaResult.alphasense?.total_findings || alphaResult.alphasense?.metadata?.emerging_trend_count + alphaResult.alphasense?.metadata?.strategic_opportunity_count + alphaResult.alphasense?.metadata?.key_challenge_count || '?'} findings</div>
                           </div>
                           {[
-                            { label: 'Trends', count: alphaResult.alphasense?.metadata?.emerging_trend_count, color: '#0ea5e9' },
-                            { label: 'Opps', count: alphaResult.alphasense?.metadata?.strategic_opportunity_count, color: '#34d399' },
-                            { label: 'Risks', count: alphaResult.alphasense?.metadata?.key_challenge_count, color: '#fbbf24' },
-                            { label: 'News', count: alphaResult.alphasense?.metadata?.news_count || alphaResult.alphasense?.news_items?.length || 0, color: '#60a5fa' },
-                            { label: 'Finance', count: alphaResult.alphasense?.metadata?.financial_highlight_count || alphaResult.alphasense?.financial_highlights?.length || 0, color: '#A100FF' },
+                            { label: 'Trends', count: alphaResult.alphasense?.metadata?.emerging_trend_count || alphaResult.trends?.trends?.length, color: '#0ea5e9' },
+                            { label: 'Opps', count: alphaResult.alphasense?.metadata?.strategic_opportunity_count || alphaResult.trends?.opportunities?.length, color: '#34d399' },
+                            { label: 'Risks', count: alphaResult.alphasense?.metadata?.key_challenge_count || alphaResult.trends?.challenges?.length, color: '#fbbf24' },
+                            { label: 'Companies', count: alphaResult.alphasense?.metadata?.top_company_count || alphaResult.trends?.top_companies?.length, color: '#60a5fa' },
                           ].map(c => (
-                            <div key={c.label} style={{ padding: '10px 12px', borderRadius: 8, background: `${c.color}08`, border: `1px solid ${c.color}18`, textAlign: 'center', minWidth: 70 }}>
-                              <div style={{ fontSize: 20, fontWeight: 900, color: c.color }}>{c.count || 0}</div>
-                              <div style={{ fontSize: 7, fontWeight: 800, color: c.color, letterSpacing: '.1em', textTransform: 'uppercase', marginTop: 1 }}>{c.label}</div>
+                            <div key={c.label} style={{ padding: '10px 12px', borderRadius: 8, background: `${c.color}08`, border: `1px solid ${c.color}18`, textAlign: 'center', minWidth: 60 }}>
+                              <div style={{ fontSize: 18, fontWeight: 900, color: c.color }}>{c.count || 0}</div>
+                              <div style={{ fontSize: 6, fontWeight: 800, color: c.color, letterSpacing: '.1em', textTransform: 'uppercase', marginTop: 1 }}>{c.label}</div>
                             </div>
                           ))}
+                          {chartImages.length > 0 && (
+                            <div style={{ padding: '10px 12px', borderRadius: 8, background: 'rgba(251,191,36,.08)', border: '1px solid rgba(251,191,36,.18)', textAlign: 'center', minWidth: 60 }}>
+                              <div style={{ fontSize: 18, fontWeight: 900, color: '#fbbf24' }}>{chartImages.length}</div>
+                              <div style={{ fontSize: 6, fontWeight: 800, color: '#fbbf24', letterSpacing: '.1em', textTransform: 'uppercase', marginTop: 1 }}>Charts</div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Synthesis preview */}
-                        {alphaResult.alphasense?.synthesis && (
+                        {(alphaResult.alphasense?.synthesis || alphaResult.trends?.synthesis) && (
                           <div style={{ padding: '10px 14px', borderRadius: 8, background: 'rgba(161,0,255,.03)', border: '1px solid rgba(161,0,255,.08)', marginBottom: 10 }}>
                             <div style={{ fontSize: 8, fontWeight: 800, color: 'var(--p)', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Synthesis</div>
-                            <p style={{ fontSize: 10, color: 'var(--t2)', lineHeight: 1.7 }}>{alphaResult.alphasense.synthesis.substring(0, 300)}{alphaResult.alphasense.synthesis.length > 300 ? '...' : ''}</p>
+                            <p style={{ fontSize: 10, color: 'var(--t2)', lineHeight: 1.7 }}>{((alphaResult.alphasense?.synthesis || alphaResult.trends?.synthesis) as string).substring(0, 300)}{(alphaResult.alphasense?.synthesis || alphaResult.trends?.synthesis || '').length > 300 ? '...' : ''}</p>
                           </div>
                         )}
 
                         {/* Copy JSON button */}
-                        <button onClick={() => navigator.clipboard.writeText(JSON.stringify(alphaResult.alphasense, null, 2))} style={{
+                        <button onClick={() => navigator.clipboard.writeText(JSON.stringify(alphaResult.trends || alphaResult.alphasense, null, 2))} style={{
                           width: '100%', padding: '8px 0', borderRadius: 6, border: '1px solid var(--s2)',
                           background: 'var(--s1)', color: 'var(--t2)', fontSize: 9, fontWeight: 700,
                           cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          marginBottom: 10, transition: 'all .2s',
+                          transition: 'all .2s',
                         }}>
                           <span className="ms" style={{ fontSize: 13 }}>content_copy</span>Copy Raw JSON
                         </button>
-
-                        {/* Country + Industry selector + Update button */}
-                        <div style={{ display: 'flex', gap: 8 }}>
-                          <div style={{ width: 120 }}>
-                            <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.12em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Country</label>
-                            <select value={alphaTargetCountry} onChange={e => { setAlphaTargetCountry(e.target.value); setAlphaSaved(false); }} style={{
-                              width: '100%', padding: '9px 10px', borderRadius: 6,
-                              background: 'var(--s1)', border: '1px solid var(--s2)',
-                              color: '#fff', fontSize: 10, fontWeight: 700,
-                              fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none',
-                            }}>
-                              {Object.values(ALPHA_REGIONS).flat().map(c => (
-                                <option key={c} value={c.toLowerCase().replace(/\s+/g, '-')} style={{ background: '#111' }}>{c}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div style={{ width: 140 }}>
-                            <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.12em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Industry</label>
-                            <select value={alphaTargetIndustry} onChange={e => { setAlphaTargetIndustry(e.target.value); setAlphaSaved(false); }} style={{
-                              width: '100%', padding: '9px 10px', borderRadius: 6,
-                              background: 'var(--s1)', border: '1px solid var(--s2)',
-                              color: '#fff', fontSize: 10, fontWeight: 700,
-                              fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none',
-                            }}>
-                              <option value="all-industries" style={{ background: '#111' }}>All Industries</option>
-                              {ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').map(ind => (
-                                <option key={ind} value={ind.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')} style={{ background: '#111' }}>{ind}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <button
-                            disabled={alphaSaved}
-                            style={{
-                              flex: 1, padding: '9px 0', borderRadius: 6, border: 'none', cursor: alphaSaved ? 'default' : 'pointer',
-                              background: alphaSaved ? 'rgba(52,211,153,.15)' : 'var(--em)',
-                              color: alphaSaved ? 'var(--em)' : '#000',
-                              fontSize: 10, fontWeight: 800, letterSpacing: '.04em',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                              marginTop: 'auto', transition: 'all .2s',
-                            }}
-                            onClick={async () => {
-                              if (!alphaResult?.trends) return;
-                              const res = await fetch('/api/data', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ country: alphaTargetCountry, topic: 'trends', data: alphaResult.trends, industry: alphaTargetIndustry === 'all-industries' ? '' : alphaTargetIndustry }),
-                              });
-                              if (res.ok) setAlphaSaved(true);
-                            }}
-                          >
-                            <span className="ms" style={{ fontSize: 14 }}>{alphaSaved ? 'check_circle' : 'sync'}</span>
-                            {alphaSaved ? `Updated ${alphaTargetCountry}${alphaTargetIndustry !== 'all-industries' ? ' / ' + alphaTargetIndustry : ''}` : 'Update Website'}
-                          </button>
-                        </div>
-
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── Visual Intelligence: PDF Chart Upload ── */}
-                  <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid var(--s2)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                      <span className="ms" style={{ fontSize: 16, color: '#fbbf24' }}>image</span>
-                      <span style={{ fontSize: 13, fontWeight: 800 }}>Visual Intelligence — Extract Charts from PDF</span>
-                    </div>
-                    <p style={{ fontSize: 9, color: 'var(--t3)', lineHeight: 1.5, marginBottom: 12 }}>Upload an AlphaSense PDF report to extract chart images. Select country and industry, then upload. Charts will appear in the magazine&apos;s Visual Intelligence section.</p>
-
-                    {/* Country + Industry for charts */}
-                    <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                      <div style={{ width: 120 }}>
-                        <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.1em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Country</label>
-                        <select value={alphaTargetCountry} onChange={e => setAlphaTargetCountry(e.target.value)} style={{ width: '100%', padding: '8px 10px', borderRadius: 6, background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff', fontSize: 10, fontWeight: 700, fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none' }}>
-                          {Object.values(ALPHA_REGIONS).flat().map(c => (
-                            <option key={c} value={c.toLowerCase().replace(/\s+/g, '-')} style={{ background: '#111' }}>{c}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div style={{ width: 140 }}>
-                        <label style={{ fontSize: 7, fontWeight: 800, color: 'var(--t4)', letterSpacing: '.1em', textTransform: 'uppercase', display: 'block', marginBottom: 4 }}>Industry</label>
-                        <select value={alphaTargetIndustry} onChange={e => setAlphaTargetIndustry(e.target.value)} style={{ width: '100%', padding: '8px 10px', borderRadius: 6, background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff', fontSize: 10, fontWeight: 700, fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer', appearance: 'none' }}>
-                          <option value="all-industries" style={{ background: '#111' }}>All Industries</option>
-                          {ALPHA_INDUSTRIES.filter(ind => ind !== 'All Industries').map(ind => (
-                            <option key={ind} value={ind.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')} style={{ background: '#111' }}>{ind}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <input ref={el => { chartPdfRef.current = el; }} type="file" accept=".pdf" style={{ display: 'none' }}
-                      onChange={async (e) => {
-                        const f = e.target.files?.[0]; if (!f) return;
-                        setChartProcessing(true); setChartError(''); setChartImages([]);
-                        try {
-                          const form = new FormData();
-                          form.append('file', f);
-                          form.append('country', alphaTargetCountry);
-                          form.append('industry', alphaTargetIndustry === 'all-industries' ? '' : alphaTargetIndustry);
-                          const res = await fetch('/api/extract-images', { method: 'POST', body: form });
-                          const data = await res.json();
-                          if (!res.ok) throw new Error(data.error);
-                          setChartImages(data.images);
-                          // Save images to the trends data
-                          const trendRes = await fetch(`/api/data?country=${alphaTargetCountry}&topic=trends${alphaTargetIndustry !== 'all-industries' ? `&industry=${alphaTargetIndustry}` : ''}`);
-                          if (trendRes.ok) {
-                            const trendData = await trendRes.json();
-                            const updated = { ...trendData.data, images: data.images };
-                            await fetch('/api/data', {
-                              method: 'POST', headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ country: alphaTargetCountry, topic: 'trends', data: updated, industry: alphaTargetIndustry === 'all-industries' ? '' : alphaTargetIndustry }),
-                            });
-                          }
-                        } catch (err) { setChartError(err instanceof Error ? err.message : 'Failed'); }
-                        finally { setChartProcessing(false); }
-                      }}
-                    />
-                    <button onClick={() => chartPdfRef.current?.click()} disabled={chartProcessing} style={{
-                      width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: chartProcessing ? 'default' : 'pointer',
-                      background: chartProcessing ? 'var(--s2)' : 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-                      color: chartProcessing ? 'var(--t3)' : '#000',
-                      fontSize: 11, fontWeight: 800, letterSpacing: '.04em',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                      boxShadow: chartProcessing ? 'none' : '0 4px 16px rgba(251,191,36,.2)',
-                      transition: 'all .2s',
-                    }}>
-                      <span className="ms" style={{ fontSize: 16 }}>{chartProcessing ? 'sync' : 'picture_as_pdf'}</span>
-                      {chartProcessing ? 'Extracting charts...' : 'Upload PDF & Extract Charts'}
-                    </button>
-                    {chartError && <div style={{ marginTop: 8, padding: '8px 12px', borderRadius: 6, background: 'rgba(248,113,113,.06)', border: '1px solid rgba(248,113,113,.12)', fontSize: 9, color: 'var(--red)' }}>{chartError}</div>}
-                    {chartImages.length > 0 && (
-                      <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 6, background: 'rgba(52,211,153,.04)', border: '1px solid rgba(52,211,153,.12)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <span className="ms" style={{ fontSize: 14, color: 'var(--em)' }}>check_circle</span>
-                        <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--em)' }}>{chartImages.length} chart{chartImages.length > 1 ? 's' : ''} extracted and saved</span>
-                        <span style={{ fontSize: 8, color: 'var(--t3)', marginLeft: 4 }}>→ Visual Intelligence section in the magazine</span>
                       </div>
                     )}
                   </div>

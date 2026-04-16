@@ -33,15 +33,27 @@ function findAllOccurrences(buffer: Buffer, marker: Buffer, startFrom = 0): numb
 function extractImages(pdfBuffer: Buffer): { data: Buffer; type: 'jpeg' | 'png' }[] {
   const images: { data: Buffer; type: 'jpeg' | 'png' }[] = [];
 
-  // Extract JPEGs
+  // Extract JPEGs — find start markers, then search for the matching end
   const jpegStarts = findAllOccurrences(pdfBuffer, JPEG_START);
+  const usedEnds = new Set<number>();
   for (const start of jpegStarts) {
-    const endIdx = pdfBuffer.indexOf(JPEG_END, start + 3);
-    if (endIdx === -1) continue;
-    const end = endIdx + 2;
+    // Find the LAST FF D9 before the next FF D8 (or end of buffer)
+    const nextStart = jpegStarts.find(s => s > start) || pdfBuffer.length;
+    let lastEnd = -1;
+    let searchPos = start + 3;
+    while (searchPos < nextStart) {
+      const endIdx = pdfBuffer.indexOf(JPEG_END, searchPos);
+      if (endIdx === -1 || endIdx >= nextStart) break;
+      lastEnd = endIdx;
+      searchPos = endIdx + 2;
+    }
+    if (lastEnd === -1) continue;
+    if (usedEnds.has(lastEnd)) continue;
+    usedEnds.add(lastEnd);
+    const end = lastEnd + 2;
     const size = end - start;
-    // Only keep images larger than 5KB (skip tiny thumbnails/icons)
-    if (size > 5000 && size < 10_000_000) {
+    // Keep images larger than 2KB (lowered threshold to catch smaller charts)
+    if (size > 2000 && size < 10_000_000) {
       images.push({ data: pdfBuffer.subarray(start, end), type: 'jpeg' });
     }
   }
@@ -73,10 +85,18 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const extracted = extractImages(buffer);
+    let extracted = extractImages(buffer);
+
+    // Deduplicate by size (images with same byte length are likely duplicates)
+    const seenSizes = new Set<number>();
+    extracted = extracted.filter(img => {
+      if (seenSizes.has(img.data.length)) return false;
+      seenSizes.add(img.data.length);
+      return true;
+    });
 
     if (extracted.length === 0) {
-      return NextResponse.json({ error: 'No chart images found in this PDF. The PDF may use vector graphics instead of embedded images.' }, { status: 422 });
+      return NextResponse.json({ error: 'No chart images found in this PDF.' }, { status: 422 });
     }
 
     // Save images to public/visuals/{country}/

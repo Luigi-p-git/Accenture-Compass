@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
-import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany, AffectedCompany } from '@/types';
+import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany, AffectedCompany, TransformedChart } from '@/types';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { parseChartValue } from '@/lib/alphasenseParser';
 import { generateIntelligenceReport } from '@/lib/intelligenceReport';
@@ -57,21 +57,22 @@ function CompanyLogo({ name, logoUrl, size = 36 }: { name: string; logoUrl?: str
   return <img src={logoUrl} alt={name} onError={() => setFailed(true)} style={{ width: size, height: size, objectFit: 'contain', flexShrink: 0, borderRadius: 4, background: 'rgb(var(--ink) / .03)', padding: 2 }} />;
 }
 
-/** Generate AlphaSense search URL for source documents */
+/** Get source URL — only returns real URLs extracted from PDF or provided by data */
 function getSourceUrl(source: { document_title?: string | null; organization?: string | null; url?: string | null } | undefined): string | null {
   if (!source) return null;
-  if (source.url?.includes('alphasense.com')) return source.url;
-  const query = [source.document_title, source.organization].filter(Boolean).join(' ');
-  if (!query) return source.url || null;
-  return `https://research.alphasense.com/search?query=${encodeURIComponent(query)}`;
+  if (source.url && source.url.startsWith('http')) return source.url;
+  return null;
 }
 
 /** Show linked top companies for a finding with impact details */
-function LinkedCompanyChips({ finding, topCompanies, onSelectCompany }: {
+function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source }: {
   finding: { linked_top_companies?: number[]; affected_companies?: AffectedCompany[] };
   topCompanies: TopCompany[];
   onSelectCompany: (idx: number) => void;
+  source?: { document_title?: string | null; organization?: string | null; url?: string | null } | null;
 }) {
+  const sourceUrl = source?.url && source.url.startsWith('http') ? source.url : null;
+  const sourceName = source?.organization || source?.document_title || '';
   if (!finding.linked_top_companies?.length && !finding.affected_companies?.length) return null;
 
   // Build display list from linked_top_companies with impact from affected_companies
@@ -84,7 +85,7 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany }: {
       const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
       return na === nc || na.includes(nc) || nc.includes(na);
     });
-    return { co, tcIdx, impact: ac?.impact || 'neutral' as const, detail: ac?.detail || '' };
+    return { co, tcIdx, impact: ac?.impact || 'neutral' as const, detail: ac?.detail || `${co.sector} · ${co.revenue} · Referenced in ${co.linked_findings.trends.length + co.linked_findings.opportunities.length + co.linked_findings.challenges.length} findings` };
   }).filter(Boolean) as { co: TopCompany; tcIdx: number; impact: string; detail: string }[];
 
   if (items.length === 0) return null;
@@ -109,6 +110,7 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany }: {
                 </span>
               </div>
               {detail && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .35)', lineHeight: 1.5, marginTop: 2 }}>{detail}</div>}
+              {sourceUrl && <a href={sourceUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 3, display: 'inline-block' }}>Source: {sourceName ? sourceName.substring(0, 40) + (sourceName.length > 40 ? '...' : '') : 'AlphaSense'} ↗</a>}
             </div>
           </div>
         ))}
@@ -179,7 +181,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
   const activeData = liveData;
   const trends = activeData?.trends ?? [];
   const opps = activeData?.opportunities ?? [];
-  const challenges = activeData?.challenges ?? [];
+  const sevOrder: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
+  const challenges = [...(activeData?.challenges ?? [])].sort((a, b) => (sevOrder[a.severity] ?? 9) - (sevOrder[b.severity] ?? 9));
   const synthesis = activeData?.synthesis ?? '';
   const newsItems = activeData?.news_items ?? [];
   const financials = activeData?.financial_highlights ?? [];
@@ -221,7 +224,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           />
         </div>
         <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-          {['Trends', 'Analysis', 'Opportunities', 'Visuals', 'Challenges', 'Companies', 'News'].map((s, i) => (
+          {['Trends', 'Analysis', 'Opportunities', 'Data', 'Challenges', 'Companies', 'News'].map((s, i) => (
             <a key={s} href={`#sec-${i}`} style={{ fontSize: 8, fontWeight: 900, letterSpacing: '-.01em', textTransform: 'uppercase', color: 'var(--t1)', textDecoration: 'none', transition: 'color .2s', opacity: .35 }}
               onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; e.currentTarget.style.opacity = '1'; }}
               onMouseLeave={e => { e.currentTarget.style.color = ''; e.currentTarget.style.opacity = '.35'; }}
@@ -308,7 +311,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4, delay: .4, ease }}
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: .97 }}
-                    onClick={() => generateIntelligenceReport(activeData, country, selIndustry)}
+                    onClick={() => generateIntelligenceReport(activeData, selCountry !== 'All Countries' ? selCountry : country, selIndustry)}
                     style={{
                       width: 170, padding: 0, border: 'none', cursor: 'pointer',
                       background: 'transparent', position: 'relative',
@@ -493,7 +496,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <DescriptionBullets text={trends[activeTrend].d} accent="#A100FF" />
 
                       {/* Linked companies with impact */}
-                      <LinkedCompanyChips finding={trends[activeTrend]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} />
+                      <LinkedCompanyChips finding={trends[activeTrend]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={trends[activeTrend].source} />
 
                       {/* Source via AlphaSense */}
                       {trends[activeTrend].source?.document_title && (() => {
@@ -505,7 +508,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                               {trends[activeTrend].source!.organization ? ` — ${trends[activeTrend].source!.organization}` : ''}
                               {trends[activeTrend].source!.date ? ` · ${trends[activeTrend].source!.date}` : ''}
                             </div>
-                            {url && <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
+                            {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
                           </div>
                         );
                       })()}
@@ -530,7 +533,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             NEWS — Inverted white section
            ════════════════════════════════════════ */}
         {newsItems.length > 0 && (
-          <BrokerAnalysisSection newsItems={newsItems} onExpand={(i: number) => setExpanded({ t: 'news', i })} />
+          <BrokerAnalysisSection newsItems={newsItems} onExpand={(i: number) => setExpanded({ t: 'news', i })} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} />
         )}
 
         {/* ════════════════════════════════════════
@@ -577,10 +580,28 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         )}
 
         {/* ════════════════════════════════════════
-            VISUAL INTELLIGENCE — extracted chart images
+            VISUAL INTELLIGENCE — auto-generated charts + extracted images
            ════════════════════════════════════════ */}
-        {activeData?.images && activeData.images.length > 0 && (
-          <VisualIntelligenceSection images={activeData.images} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
+        {(financials.length > 0 || topCompanies.length > 0 || (activeData?.images && activeData.images.length > 0) || (activeData?.transformed_charts && activeData.transformed_charts.length > 0)) && (
+          <>
+            {/* Auto-generated charts from financial data */}
+            {(financials.length > 0 || topCompanies.length > 0) && (
+              <GeneratedChartsSection financials={financials} topCompanies={topCompanies}
+                findingCounts={{ trends: trends.length, opportunities: opps.length, challenges: challenges.length }}
+                onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')}
+                onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }}
+                onScrollToSection={(anchor) => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              />
+            )}
+            {/* PDF charts recreated as ECharts (from Claude vision analysis) */}
+            {activeData?.transformed_charts && activeData.transformed_charts.length > 0 && (
+              <TransformedChartsSection charts={activeData.transformed_charts} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
+            )}
+            {/* Extracted PDF images fallback (if any, and no transformed versions) */}
+            {activeData?.images && activeData.images.length > 0 && (!activeData.transformed_charts || activeData.transformed_charts.length === 0) && (
+              <VisualIntelligenceSection images={activeData.images} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
+            )}
+          </>
         )}
 
         {/* ════════════════════════════════════════
@@ -635,7 +656,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
                       <DescriptionBullets text={challenges[activeChallenge].d} accent="#f87171" />
 
-                      <LinkedCompanyChips finding={challenges[activeChallenge]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} />
+                      <LinkedCompanyChips finding={challenges[activeChallenge]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={challenges[activeChallenge].source} />
 
                       {challenges[activeChallenge].source?.document_title && (() => {
                         const url = getSourceUrl(challenges[activeChallenge].source);
@@ -645,7 +666,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                               {challenges[activeChallenge].source!.document_title}
                               {challenges[activeChallenge].source!.organization ? ` — ${challenges[activeChallenge].source!.organization}` : ''}
                             </div>
-                            {url && <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
+                            {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>}
                           </div>
                         );
                       })()}
@@ -912,12 +933,41 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <div style={{ fontSize: 10, fontStyle: 'italic', color: a(.45), lineHeight: 1.7 }}>"{n.analyst_quote}"</div>
                     </div>
                   )}
+                  {/* Companies Referenced */}
+                  {n.linked_top_companies && n.linked_top_companies.length > 0 && (
+                    <div style={{ paddingTop: 14, borderTop: `1px solid ${a(.04)}`, marginBottom: 14 }}>
+                      <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Companies Referenced</div>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {n.linked_top_companies.map(tcIdx => {
+                          const c = topCompanies[tcIdx];
+                          if (!c) return null;
+                          return (
+                            <span key={tcIdx}
+                              onClick={(e) => { e.stopPropagation(); setExpanded(null); setSelCompany(tcIdx); }}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 8px', background: a(.02), border: `1px solid ${a(.06)}`, cursor: 'pointer', transition: 'all .15s' }}
+                              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(96,165,250,.08)'; e.currentTarget.style.borderColor = 'rgba(96,165,250,.15)'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = a(.02); e.currentTarget.style.borderColor = a(.06); }}
+                            >
+                              <CompanyLogo name={c.name} logoUrl={c.logo_url} size={16} />
+                              <div>
+                                <div style={{ fontSize: 9, fontWeight: 800 }}>{c.name}</div>
+                                {c.revenue && <div style={{ fontSize: 7, color: a(.2) }}>{c.revenue}</div>}
+                              </div>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                   {/* Source details */}
                   <div style={{ paddingTop: 14, borderTop: `1px solid ${a(.04)}` }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: a(.15), letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Source</div>
                     {n.source_org && <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 2 }}>{n.source_org}</div>}
                     {n.type && <div style={{ fontSize: 9, color: a(.25) }}>{n.type}{n.date ? ` · ${n.date}` : ''}</div>}
-                    {n.url && <a href={n.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 9, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open source document ↗</a>}
+                    {(() => {
+                      const url = getSourceUrl({ document_title: n.headline, organization: n.source_org, url: n.url });
+                      return url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 9, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Open in AlphaSense ↗</a>;
+                    })()}
                   </div>
                 </motion.div>
               </motion.div>
@@ -949,32 +999,48 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   {'timeline' in item && item.timeline && <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: 'rgb(var(--ink) / .08)', color: 'rgb(var(--ink) / .3)' }}>{item.timeline}</span>}
                   {'tag' in item && <span style={{ fontSize: 7, fontWeight: 700, padding: '2px 6px', background: `${accent}08`, color: accent }}>{item.tag}</span>}
                 </div>
-                {item.source?.document_title && (
-                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 4 }}>Source</div>
-                    <div style={{ fontSize: 9, color: 'rgb(var(--ink) / .35)' }}>{item.source.document_title}{item.source.organization ? ` — ${item.source.organization}` : ''}</div>
-                    {item.source.document_type && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .2)', marginTop: 2 }}>{item.source.document_type}{item.source.date ? ` · ${item.source.date}` : ''}</div>}
-                    {item.source.url && <a href={item.source.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 3 }}>View source ↗</a>}
-                  </div>
-                )}
+                {item.source?.document_title && (() => {
+                  const srcUrl = getSourceUrl(item.source);
+                  return (
+                    <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
+                      <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 4 }}>Source</div>
+                      <div style={{ fontSize: 9, color: 'rgb(var(--ink) / .35)' }}>{item.source!.document_title}{item.source!.organization ? ` — ${item.source!.organization}` : ''}</div>
+                      {item.source!.document_type && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .2)', marginTop: 2 }}>{item.source!.document_type}{item.source!.date ? ` · ${item.source!.date}` : ''}</div>}
+                      {srcUrl && <a href={srcUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 8, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 3 }}>Open in AlphaSense ↗</a>}
+                    </div>
+                  );
+                })()}
                 {/* Company Impact from AlphaSense data */}
                 {item.affected_companies && item.affected_companies.length > 0 && (
                   <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgb(var(--ink) / .08)' }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Company Impact</div>
-                    {item.affected_companies.map((co, ci) => (
-                      <div key={ci} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '6px 0', borderBottom: '1px solid rgb(var(--ink) / .08)' }}>
+                    {item.affected_companies.map((co, ci) => {
+                      const tcIdx = topCompanies.findIndex(tc => {
+                        const na = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+                        const nb = tc.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+                        return na === nb || na.includes(nb) || nb.includes(na);
+                      });
+                      return (
+                      <div key={ci}
+                        onClick={tcIdx >= 0 ? (e) => { e.stopPropagation(); setExpanded(null); setSelCompany(tcIdx); } : undefined}
+                        style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '6px 0', borderBottom: '1px solid rgb(var(--ink) / .08)', cursor: tcIdx >= 0 ? 'pointer' : 'default', transition: 'background .15s' }}
+                        onMouseEnter={tcIdx >= 0 ? e => { e.currentTarget.style.background = 'rgb(var(--ink) / .03)'; } : undefined}
+                        onMouseLeave={tcIdx >= 0 ? e => { e.currentTarget.style.background = 'transparent'; } : undefined}
+                      >
                         <span style={{ fontSize: 10, marginTop: 1, flexShrink: 0, color: co.impact === 'positive' ? '#34d399' : co.impact === 'negative' ? '#f87171' : '#fbbf24' }}>
                           {co.impact === 'positive' ? '↑' : co.impact === 'negative' ? '↓' : '→'}
                         </span>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <span style={{ fontSize: 10, fontWeight: 800 }}>{co.name}</span>
+                            <span style={{ fontSize: 10, fontWeight: 800, color: tcIdx >= 0 ? '#60a5fa' : 'inherit' }}>{co.name}</span>
                             {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .2)' }}>{co.ticker}</span>}
+                            {tcIdx >= 0 && <span style={{ fontSize: 8, color: 'rgb(var(--ink) / .15)' }}>→</span>}
                           </div>
                           <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .3)', lineHeight: 1.5, marginTop: 2 }}>{co.detail}</div>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
                 {relCompanies.length > 0 && (
@@ -1006,6 +1072,34 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           const linkedT = co.linked_findings.trends.map(id => trends[id]).filter(Boolean);
           const linkedO = co.linked_findings.opportunities.map(id => opps[id]).filter(Boolean);
           const linkedC = co.linked_findings.challenges.map(id => challenges[id]).filter(Boolean);
+
+          // Impact summary: count positive/negative/neutral across all linked findings
+          const allLinkedFindings = [
+            ...linkedT.map(f => ({ f, cat: 'trends' as const })),
+            ...linkedO.map(f => ({ f, cat: 'opportunities' as const })),
+            ...linkedC.map(f => ({ f, cat: 'challenges' as const })),
+          ];
+          const impactCounts = { positive: 0, negative: 0, neutral: 0 };
+          allLinkedFindings.forEach(({ f }) => {
+            const ac = f.affected_companies?.find((c: AffectedCompany) => {
+              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              return na === nc || na.includes(nc) || nc.includes(na);
+            });
+            if (ac) impactCounts[ac.impact as keyof typeof impactCounts]++;
+            else impactCounts.neutral++;
+          });
+          const totalImpacts = impactCounts.positive + impactCounts.negative + impactCounts.neutral;
+
+          // Helper to find impact detail for this company in a finding
+          const getImpactForFinding = (f: { affected_companies?: AffectedCompany[] }) => {
+            return f.affected_companies?.find((c: AffectedCompany) => {
+              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              return na === nc || na.includes(nc) || nc.includes(na);
+            });
+          };
+
           return (
             <motion.div key="co-panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelCompany(null)}
               style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(4px)' }}>
@@ -1036,67 +1130,166 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   </div>
                 )}
 
-                {/* Key Initiatives */}
-                {co.key_initiatives.length > 0 && (
-                  <div style={{ marginBottom: 18 }}>
-                    <div style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Key Initiatives</div>
-                    {co.key_initiatives.map((init, ii) => (
-                      <div key={ii} style={{ display: 'flex', gap: 8, padding: '4px 0' }}>
-                        <div style={{ width: 4, height: 4, marginTop: 5, background: '#60a5fa', flexShrink: 0 }} />
-                        <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{init}</span>
+                {/* Investment Focus */}
+                {co.investment_focus && (
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#34d399', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Investment Focus</div>
+                    <p style={{ fontSize: 10, color: a(.45), lineHeight: 1.7 }}>{co.investment_focus}</p>
+                  </div>
+                )}
+
+                {/* Recent Moves */}
+                {co.recent_moves && co.recent_moves.length > 0 && (
+                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: '#fbbf24', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Recent Moves</div>
+                    {co.recent_moves.map((move, mi) => (
+                      <div key={mi} style={{ display: 'flex', gap: 8, padding: '4px 0' }}>
+                        <span style={{ color: '#fbbf24', fontSize: 10, marginTop: 2, flexShrink: 0, opacity: .6 }}>→</span>
+                        <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{move}</span>
                       </div>
                     ))}
                   </div>
                 )}
 
-                {/* Linked Trends */}
+                {/* Impact Summary Bar */}
+                {totalImpacts > 0 && (
+                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ fontSize: 7, fontWeight: 900, color: a(.2), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 8 }}>Impact Summary</div>
+                    <div style={{ display: 'flex', height: 4, overflow: 'hidden', marginBottom: 6 }}>
+                      {impactCounts.positive > 0 && <div style={{ flex: impactCounts.positive, background: '#34d399' }} />}
+                      {impactCounts.neutral > 0 && <div style={{ flex: impactCounts.neutral, background: '#fbbf24' }} />}
+                      {impactCounts.negative > 0 && <div style={{ flex: impactCounts.negative, background: '#f87171' }} />}
+                    </div>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 8 }}>
+                      {impactCounts.positive > 0 && <span style={{ color: '#34d399', fontWeight: 800 }}>↑ {impactCounts.positive} positive</span>}
+                      {impactCounts.neutral > 0 && <span style={{ color: '#fbbf24', fontWeight: 800 }}>→ {impactCounts.neutral} neutral</span>}
+                      {impactCounts.negative > 0 && <span style={{ color: '#f87171', fontWeight: 800 }}>↓ {impactCounts.negative} negative</span>}
+                    </div>
+                  </div>
+                )}
+
+                {/* Key Investments */}
+                {co.key_initiatives.length > 0 && (() => {
+                  // Build a pool of source URLs from all linked findings for this company
+                  const allLinkedSources = [...linkedT, ...linkedO, ...linkedC]
+                    .filter(f => f.source?.url)
+                    .map(f => ({ url: f.source!.url!, org: f.source!.organization || '', title: f.t }));
+                  return (
+                  <div style={{ marginBottom: 18, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <div style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa', letterSpacing: '.15em', textTransform: 'uppercase' }}>Key Investments</div>
+                      <div style={{ fontSize: 6, color: a(.15) }}>AlphaSense research</div>
+                    </div>
+                    {co.key_initiatives.map((init, ii) => {
+                      // Try to find a source for this initiative by matching words to linked findings
+                      const initWords = init.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+                      const matchedSource = allLinkedSources.find(s => {
+                        const fWords = s.title.toLowerCase().split(/\s+/);
+                        return initWords.filter(w => fWords.some(fw => fw.includes(w) || w.includes(fw))).length >= 2;
+                      }) || allLinkedSources[ii % allLinkedSources.length]; // fallback: round-robin
+                      return (
+                        <div key={ii} style={{ display: 'flex', gap: 8, padding: '5px 0', borderBottom: ii < co.key_initiatives.length - 1 ? `1px solid ${a(.03)}` : 'none' }}>
+                          <div style={{ width: 4, height: 4, marginTop: 5, background: '#60a5fa', flexShrink: 0 }} />
+                          <div style={{ flex: 1 }}>
+                            <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{init.replace(/\s*\[\d+\]\s*/g, ' ').trim()}</span>
+                            {matchedSource && (
+                              <a href={matchedSource.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                                style={{ display: 'block', fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2 }}>
+                                {matchedSource.org.substring(0, 30)} ↗
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  );
+                })()}
+
+                {/* Linked Trends — with impact detail */}
                 {linkedT.length > 0 && (
                   <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: '#A100FF', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Trends</div>
-                    {linkedT.map((t, ti) => (
-                      <div key={ti} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'trend', i: trends.indexOf(t) }); }}
-                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; }}
-                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
-                        <div style={{ width: 5, height: 5, background: '#A100FF', marginTop: 4, flexShrink: 0 }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{t.t}</span>
-                      </div>
-                    ))}
+                    {linkedT.map((t, ti) => {
+                      const impact = getImpactForFinding(t);
+                      const url = getSourceUrl(t.source);
+                      return (
+                        <div key={ti} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'trend', i: trends.indexOf(t) }); }}
+                          style={{ padding: '8px 0', cursor: 'pointer', transition: 'background .15s', borderBottom: ti < linkedT.length - 1 ? `1px solid ${a(.04)}` : 'none' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(161,0,255,.04)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                            <span style={{ fontSize: 10, color: impact ? (impact.impact === 'positive' ? '#34d399' : impact.impact === 'negative' ? '#f87171' : '#fbbf24') : a(.15), marginTop: 1, flexShrink: 0 }}>
+                              {impact ? (impact.impact === 'positive' ? '↑' : impact.impact === 'negative' ? '↓' : '→') : '·'}
+                            </span>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{t.t}</span>
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{t.source?.organization ? t.source.organization.substring(0, 30) : 'Source'} ↗</a>}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
-                {/* Linked Opportunities */}
+                {/* Linked Opportunities — with impact detail */}
                 {linkedO.length > 0 && (
                   <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: '#34d399', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Opportunities</div>
-                    {linkedO.map((o, oi) => (
-                      <div key={oi} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'opportunity', i: opps.indexOf(o) }); }}
-                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#34d399'; }}
-                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
-                        <div style={{ width: 5, height: 5, background: '#34d399', marginTop: 4, flexShrink: 0 }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{o.t}</span>
-                      </div>
-                    ))}
+                    {linkedO.map((o, oi) => {
+                      const impact = getImpactForFinding(o);
+                      const url = getSourceUrl(o.source);
+                      return (
+                        <div key={oi} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'opportunity', i: opps.indexOf(o) }); }}
+                          style={{ padding: '8px 0', cursor: 'pointer', transition: 'background .15s', borderBottom: oi < linkedO.length - 1 ? `1px solid ${a(.04)}` : 'none' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(52,211,153,.04)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                            <span style={{ fontSize: 10, color: impact ? (impact.impact === 'positive' ? '#34d399' : impact.impact === 'negative' ? '#f87171' : '#fbbf24') : a(.15), marginTop: 1, flexShrink: 0 }}>
+                              {impact ? (impact.impact === 'positive' ? '↑' : impact.impact === 'negative' ? '↓' : '→') : '·'}
+                            </span>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{o.t}</span>
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{o.source?.organization ? o.source.organization.substring(0, 30) : 'Source'} ↗</a>}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
-                {/* Linked Challenges */}
+                {/* Linked Challenges — with impact detail */}
                 {linkedC.length > 0 && (
                   <div style={{ paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: '#f87171', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Linked Challenges</div>
-                    {linkedC.map((c, ci) => (
-                      <div key={ci} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'challenge', i: challenges.indexOf(c) }); }}
-                        style={{ display: 'flex', gap: 8, padding: '5px 0', cursor: 'pointer', transition: 'color .2s' }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; }}
-                        onMouseLeave={e => { e.currentTarget.style.color = ''; }}>
-                        <div style={{ width: 5, height: 5, background: '#f87171', marginTop: 4, flexShrink: 0 }} />
-                        <div>
-                          <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{c.t}</span>
-                          <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 4px', marginLeft: 6, background: `${sevColor(c.severity)}15`, color: sevColor(c.severity), textTransform: 'uppercase' }}>{c.severity}</span>
+                    {linkedC.map((c, ci) => {
+                      const impact = getImpactForFinding(c);
+                      const url = getSourceUrl(c.source);
+                      return (
+                        <div key={ci} onClick={(e) => { e.stopPropagation(); setSelCompany(null); setExpanded({ t: 'challenge', i: challenges.indexOf(c) }); }}
+                          style={{ padding: '8px 0', cursor: 'pointer', transition: 'background .15s', borderBottom: ci < linkedC.length - 1 ? `1px solid ${a(.04)}` : 'none' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(248,113,113,.04)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                            <span style={{ fontSize: 10, color: impact ? (impact.impact === 'positive' ? '#34d399' : impact.impact === 'negative' ? '#f87171' : '#fbbf24') : a(.15), marginTop: 1, flexShrink: 0 }}>
+                              {impact ? (impact.impact === 'positive' ? '↑' : impact.impact === 'negative' ? '↓' : '→') : '·'}
+                            </span>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div>
+                                <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{c.t}</span>
+                                <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 4px', marginLeft: 6, background: `${sevColor(c.severity)}15`, color: sevColor(c.severity), textTransform: 'uppercase' }}>{c.severity}</span>
+                              </div>
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{c.source?.organization ? c.source.organization.substring(0, 30) : 'Source'} ↗</a>}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </motion.div>
@@ -1112,14 +1305,363 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 }
 
 /* ══════════════════════════════════════════════
+   TRANSFORMED CHARTS — PDF charts recreated via Claude vision
+   ══════════════════════════════════════════════ */
+function TransformedChartsSection({ charts, onAskRobin }: { charts: TransformedChart[]; onAskRobin: (label: string) => void }) {
+  const light = useCompassStore(s => s.theme) === 'light';
+  const a = (o: number) => `rgb(var(--ink) / ${o})`;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [EChart, setEChart] = useState<any>(null);
+  useEffect(() => { import('echarts-for-react').then(mod => setEChart(() => mod.default)); }, []);
+
+  const txtColor = light ? 'rgba(0,0,0,.5)' : 'rgba(255,255,255,.5)';
+  const subtxtColor = light ? 'rgba(0,0,0,.2)' : 'rgba(255,255,255,.2)';
+  const borderColor = light ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.06)';
+  const defaultColors = ['#60a5fa', '#A100FF', '#34d399', '#fbbf24', '#f87171', '#818cf8', '#fb923c', '#22d3ee'];
+
+  if (!EChart) return null;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function buildOption(chart: TransformedChart): any {
+    const colors = chart.colors?.length ? chart.colors : defaultColors;
+    const tooltipStyle = { backgroundColor: light ? '#fff' : '#1a1a1a', borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' } };
+
+    // ── PIE / DONUT ──
+    if (chart.type === 'pie') {
+      return {
+        backgroundColor: 'transparent',
+        tooltip: { trigger: 'item', ...tooltipStyle },
+        series: [{
+          type: 'pie', radius: ['42%', '72%'], center: ['50%', '50%'],
+          itemStyle: { borderRadius: 5, borderColor: light ? '#fafafa' : '#0a0a0a', borderWidth: 2 },
+          label: { color: txtColor, fontSize: 9, fontWeight: 700, fontFamily: 'Inter', formatter: '{b}\n{d}%' },
+          emphasis: { itemStyle: { shadowBlur: 15, shadowColor: 'rgba(161,0,255,.25)' } },
+          data: (chart.categories || []).map((cat, i) => ({ value: chart.series[0]?.data[i] || 0, name: cat, itemStyle: { color: colors[i % colors.length] } })),
+          animationType: 'scale', animationEasing: 'cubicOut', animationDuration: 800,
+        }],
+      };
+    }
+
+    // ── COMBO / DUAL-AXIS (bars + line) ──
+    const isCombo = chart.type === 'combo' || chart.isDualAxis || chart.series.some(s => s.type === 'line') && chart.series.some(s => s.type === 'bar');
+    const isStacked = chart.type === 'stacked' || chart.isStacked;
+    const isLine = chart.type === 'line' || chart.type === 'area';
+
+    // Build yAxis array
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const yAxes: any[] = [{
+      type: 'value', name: chart.yAxisName || '', nameTextStyle: { color: subtxtColor, fontSize: 8, fontFamily: 'Inter' },
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: txtColor, fontSize: 8, fontFamily: 'Inter', formatter: chart.yAxisUnit === '$B' ? '${value}B' : chart.yAxisUnit === '$M' ? '${value}M' : '{value}' + (chart.yAxisUnit === '%' ? '%' : '') },
+      splitLine: { lineStyle: { color: borderColor } },
+    }];
+    if (isCombo || chart.isDualAxis) {
+      yAxes.push({
+        type: 'value', name: chart.yAxis2Name || '', nameTextStyle: { color: subtxtColor, fontSize: 8, fontFamily: 'Inter' },
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { color: txtColor, fontSize: 8, fontFamily: 'Inter', formatter: chart.yAxis2Unit === '%' ? '{value}%' : '{value}' },
+        splitLine: { show: false },
+      });
+    }
+
+    return {
+      backgroundColor: 'transparent',
+      tooltip: { trigger: 'axis', axisPointer: { type: isLine ? 'line' : 'shadow' }, ...tooltipStyle },
+      legend: chart.series.length > 1 ? { data: chart.series.map(s => s.name), textStyle: { color: txtColor, fontSize: 8, fontWeight: 700, fontFamily: 'Inter' }, bottom: 0, itemWidth: 10, itemHeight: 3 } : undefined,
+      grid: { left: 10, right: isCombo ? 10 : 16, top: chart.annotations?.length ? 24 : 16, bottom: chart.series.length > 1 ? 28 : 8, containLabel: true },
+      xAxis: {
+        type: 'category', data: chart.categories || [],
+        name: chart.xAxisName || '', nameLocation: 'center', nameGap: 25, nameTextStyle: { color: subtxtColor, fontSize: 8, fontFamily: 'Inter' },
+        axisLine: { lineStyle: { color: borderColor } }, axisTick: { show: false },
+        axisLabel: { color: txtColor, fontSize: 8, fontWeight: 700, fontFamily: 'Inter', rotate: (chart.categories?.length || 0) > 8 ? 30 : 0 },
+      },
+      yAxis: yAxes.length > 1 ? yAxes : yAxes[0],
+      series: chart.series.map((s, si) => {
+        const seriesType = s.type || (isLine ? 'line' : 'bar');
+        const color = s.color || colors[si % colors.length];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const item: any = {
+          name: s.name, type: seriesType, data: s.data,
+          yAxisIndex: s.yAxisIndex ?? (isCombo && seriesType === 'line' ? 1 : 0),
+          animationDelay: (i: number) => i * 40,
+        };
+        if (seriesType === 'bar') {
+          item.itemStyle = { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: color }, { offset: 1, color: color + 'B0' }] }, borderRadius: [3, 3, 0, 0] };
+          item.barMaxWidth = 40;
+          if (isStacked) item.stack = s.stack || 'total';
+          // Show value labels on top of bars
+          item.label = { show: true, position: 'top', color: txtColor, fontSize: 8, fontWeight: 800, fontFamily: 'Inter', formatter: (chart.yAxisUnit === '$B' || chart.yAxisUnit === '$b') ? '${c}' : '{c}' + (chart.yAxisUnit === '%' ? '%' : '') };
+        }
+        if (seriesType === 'line') {
+          item.lineStyle = { width: 2.5, color, type: 'dashed' };
+          item.itemStyle = { color };
+          item.symbol = 'triangle';
+          item.symbolSize = 8;
+          item.smooth = 0.3;
+          item.label = { show: true, position: 'bottom', color, fontSize: 7, fontWeight: 800, fontFamily: 'Inter', formatter: '{c}' + (chart.yAxis2Unit === '%' ? '%' : '') };
+          if (chart.type === 'area') {
+            item.areaStyle = { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: color + '40' }, { offset: 1, color: color + '05' }] } };
+          }
+        }
+        return item;
+      }),
+      animationEasing: 'cubicOut', animationDuration: 800,
+    };
+  }
+
+  const panelStyle: React.CSSProperties = { background: light ? 'rgba(0,0,0,.015)' : 'rgba(255,255,255,.015)', border: `1px solid ${borderColor}`, padding: '20px 16px 12px', position: 'relative', overflow: 'hidden' };
+
+  return (
+    <section style={{ marginBottom: 48 }}>
+      <SectionRule label="Report Charts" accent="#A100FF" />
+      <div style={{ fontSize: 8, color: a(.2), marginTop: -16, marginBottom: 16 }}>Recreated from AlphaSense PDF report — interactive versions</div>
+      <div style={{ display: 'grid', gridTemplateColumns: charts.length === 1 ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
+        {charts.map((chart, ci) => (
+          <motion.div key={ci} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .5, delay: ci * .1, ease }}
+            style={{ ...panelStyle, gridColumn: charts.length === 3 && ci === 2 ? 'span 2' : undefined }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: '-.01em', lineHeight: 1.3 }}>{chart.title}</div>
+                {chart.description && <div style={{ fontSize: 7, color: a(.3), marginTop: 3, lineHeight: 1.5 }}>{chart.description}</div>}
+              </div>
+              <button onClick={() => onAskRobin(`Analyze this chart: "${chart.title}". ${chart.description}`)}
+                style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(59,130,246,.08)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 4, padding: '2px 6px', cursor: 'pointer', flexShrink: 0 }}
+              ><span style={{ fontSize: 6, fontWeight: 800, color: '#60a5fa' }}>Ask Robin</span></button>
+            </div>
+            <EChart option={buildOption(chart)} style={{ height: 260 }} opts={{ renderer: 'canvas' }} />
+            {/* Source attribution */}
+            {chart.source && (chart.source.organization || chart.source.document_title) && (
+              <div style={{ marginTop: 6, paddingTop: 6, borderTop: `1px solid ${borderColor}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: 7, color: a(.2) }}>
+                  {chart.source.organization}{chart.source.date ? ` · ${chart.source.date}` : ''}
+                  {chart.source.document_title ? ` — ${chart.source.document_title}` : ''}
+                </div>
+                {chart.source.url && <a href={chart.source.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none' }}>Source ↗</a>}
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   DATA VISUALIZATIONS — ECharts premium rendering
+   ══════════════════════════════════════════════ */
+function GeneratedChartsSection({ financials, topCompanies, findingCounts, onAskRobin, onSelectCompany, onScrollToSection }: {
+  financials: FinancialHighlight[]; topCompanies: TopCompany[];
+  findingCounts: { trends: number; opportunities: number; challenges: number };
+  onAskRobin: (label: string) => void;
+  onSelectCompany: (idx: number) => void; onScrollToSection: (anchor: string) => void;
+}) {
+  const light = useCompassStore(s => s.theme) === 'light';
+  const a = (o: number) => `rgb(var(--ink) / ${o})`;
+  // Dynamic import state for ECharts (heavy library — lazy load)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [EChart, setEChart] = useState<any>(null);
+  useEffect(() => {
+    import('echarts-for-react').then(mod => setEChart(() => mod.default));
+  }, []);
+
+  const txtColor = light ? 'rgba(0,0,0,.45)' : 'rgba(255,255,255,.45)';
+  const subtxtColor = light ? 'rgba(0,0,0,.2)' : 'rgba(255,255,255,.2)';
+  const bgColor = 'transparent';
+  const borderColor = light ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.06)';
+
+  // ── Parse financial data ──
+  const finData = financials.slice(0, 12).map(f => {
+    const raw = f.current_value.replace(/[,$£€¥\s]/g, '');
+    const m = raw.match(/^([+-]?)(\d+\.?\d*)\s*(%|[KMBT])?$/i);
+    let val = m ? parseFloat(m[2]) : parseFloat(raw) || 0;
+    const suffix = m?.[3]?.toUpperCase();
+    if (suffix === 'K') val /= 1000;
+    else if (suffix === 'M') val *= 1;
+    else if (suffix === 'B') val *= 1000;
+    else if (suffix === 'T') val *= 1000000;
+    return { name: f.metric, value: val, display: f.current_value, change: f.change };
+  }).filter(d => d.value > 0).sort((x, y) => x.value - y.value);
+
+  // ── Company revenue data ──
+  const compData = topCompanies.slice(0, 10).map(c => ({
+    name: c.name, value: parseChartValue(c.revenue) / 1e9, display: c.revenue, ticker: c.ticker,
+  })).filter(d => d.value > 0).sort((x, y) => x.value - y.value);
+
+  // ── Finding distribution (actual finding counts, not link counts) ──
+  const findingDist = [
+    { name: 'Trends', value: findingCounts.trends, color: '#A100FF' },
+    { name: 'Opportunities', value: findingCounts.opportunities, color: '#34d399' },
+    { name: 'Challenges', value: findingCounts.challenges, color: '#f87171' },
+  ].filter(d => d.value > 0);
+
+  // ── Company impact heatmap data ──
+  const heatData: [number, number, number][] = [];
+  const cats = ['Trends', 'Opportunities', 'Challenges'] as const;
+  const catKeys = ['trends', 'opportunities', 'challenges'] as const;
+  const compNames = topCompanies.slice(0, 10).map(c => c.name.length > 18 ? c.name.substring(0, 16) + '…' : c.name);
+  topCompanies.slice(0, 10).forEach((c, ci) => {
+    catKeys.forEach((k, ki) => { heatData.push([ki, ci, c.linked_findings[k].length]); });
+  });
+  const heatMax = Math.max(...heatData.map(d => d[2]), 1);
+
+  if (finData.length === 0 && compData.length === 0) return null;
+  if (!EChart) return (
+    <section id="sec-3" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
+      <SectionRule label="Data Visualizations" accent="#fbbf24" />
+      <div style={{ padding: '40px 0', textAlign: 'center' }}>
+        <span className="ms" style={{ fontSize: 24, color: a(.1), animation: 'pulse 1.5s infinite' }}>insert_chart</span>
+        <div style={{ fontSize: 10, color: a(.2), marginTop: 8 }}>Loading visualizations...</div>
+      </div>
+    </section>
+  );
+
+  const panelStyle: React.CSSProperties = { background: light ? 'rgba(0,0,0,.015)' : 'rgba(255,255,255,.015)', border: `1px solid ${borderColor}`, padding: '20px 16px 8px', position: 'relative', overflow: 'hidden' };
+
+  // ── ECharts options ──
+  const marketMetricsOpt = {
+    backgroundColor: bgColor,
+    tooltip: { trigger: 'axis' as const, axisPointer: { type: 'shadow' as const }, backgroundColor: light ? '#fff' : '#1a1a1a', borderColor: borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (p: any) => { const d = p[0]; const item = finData[d.dataIndex]; return `<b>${item.name}</b><br/>${item.display}${item.change ? ` <span style="color:${item.change?.startsWith('-') ? '#f87171' : '#34d399'}">${item.change}</span>` : ''}`; },
+    },
+    grid: { left: 10, right: 30, top: 8, bottom: 8, containLabel: true },
+    xAxis: { type: 'value' as const, show: false },
+    yAxis: { type: 'category' as const, data: finData.map(d => d.name.length > 28 ? d.name.substring(0, 26) + '…' : d.name), axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: txtColor, fontSize: 9, fontWeight: 700, fontFamily: 'Inter' } },
+    series: [{ type: 'bar' as const, data: finData.map((d, i) => ({ value: d.value, itemStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: i % 2 === 0 ? 'rgba(251,191,36,.65)' : 'rgba(245,158,11,.55)' }, { offset: 1, color: i % 2 === 0 ? 'rgba(245,158,11,.9)' : 'rgba(251,191,36,.85)' }] }, borderRadius: [0, 3, 3, 0] } })), barWidth: 16, label: { show: true, position: 'right' as const, color: txtColor, fontSize: 9, fontWeight: 800, fontFamily: 'Inter',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (p: any) => finData[p.dataIndex].display }, animationDelay: (i: number) => i * 60, }],
+    animationEasing: 'cubicOut' as const,
+    animationDuration: 800,
+  };
+
+  const compRevenueOpt = {
+    backgroundColor: bgColor,
+    tooltip: { trigger: 'axis' as const, axisPointer: { type: 'shadow' as const }, backgroundColor: light ? '#fff' : '#1a1a1a', borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (p: any) => { const d = p[0]; const item = compData[d.dataIndex]; return `<b>${item.name}</b>${item.ticker ? ` (${item.ticker})` : ''}<br/>${item.display}`; },
+    },
+    grid: { left: 10, right: 40, top: 8, bottom: 8, containLabel: true },
+    xAxis: { type: 'value' as const, show: false },
+    yAxis: { type: 'category' as const, data: compData.map(d => d.name.length > 20 ? d.name.substring(0, 18) + '…' : d.name), axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: txtColor, fontSize: 9, fontWeight: 700, fontFamily: 'Inter' } },
+    series: [{ type: 'bar' as const, data: compData.map((d, i) => ({ value: d.value, itemStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: `rgba(96,165,250,${0.3 + (i / compData.length) * 0.4})` }, { offset: 1, color: `rgba(59,130,246,${0.5 + (i / compData.length) * 0.45})` }] }, borderRadius: [0, 3, 3, 0] } })), barWidth: 18, label: { show: true, position: 'right' as const, color: txtColor, fontSize: 9, fontWeight: 800, fontFamily: 'Inter',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (p: any) => compData[p.dataIndex].display }, animationDelay: (i: number) => i * 80, }],
+    animationEasing: 'cubicOut' as const, animationDuration: 1000,
+  };
+
+  const donutOpt = {
+    backgroundColor: bgColor,
+    tooltip: { trigger: 'item' as const, backgroundColor: light ? '#fff' : '#1a1a1a', borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' } },
+    series: [{
+      type: 'pie' as const, radius: ['52%', '78%'], center: ['50%', '50%'],
+      avoidLabelOverlap: true,
+      itemStyle: { borderRadius: 6, borderColor: light ? '#fafafa' : '#0a0a0a', borderWidth: 3 },
+      label: { show: true, color: txtColor, fontSize: 10, fontWeight: 800, fontFamily: 'Inter', formatter: '{b}\n{c}' },
+      labelLine: { lineStyle: { color: subtxtColor } },
+      emphasis: { itemStyle: { shadowBlur: 20, shadowColor: 'rgba(161,0,255,.3)' }, label: { fontSize: 12, fontWeight: 900 } },
+      data: findingDist.map(d => ({ value: d.value, name: d.name, itemStyle: { color: d.color } })),
+      animationType: 'scale' as const, animationEasing: 'cubicOut' as const, animationDuration: 1000,
+    }],
+  };
+
+  const heatmapOpt = compNames.length > 0 ? {
+    backgroundColor: bgColor,
+    tooltip: { position: 'top' as const, backgroundColor: light ? '#fff' : '#1a1a1a', borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (p: any) => `<b>${compNames[p.value[1]]}</b><br/>${cats[p.value[0]]}: ${p.value[2]} findings`,
+    },
+    grid: { left: 10, right: 20, top: 30, bottom: 10, containLabel: true },
+    xAxis: { type: 'category' as const, data: [...cats], position: 'top' as const, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: txtColor, fontSize: 9, fontWeight: 800, fontFamily: 'Inter' }, splitArea: { show: false } },
+    yAxis: { type: 'category' as const, data: compNames, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: txtColor, fontSize: 8, fontWeight: 700, fontFamily: 'Inter' }, splitArea: { show: false } },
+    visualMap: { min: 0, max: heatMax, show: false, inRange: { color: ['rgba(161,0,255,.04)', 'rgba(161,0,255,.15)', 'rgba(161,0,255,.35)', 'rgba(161,0,255,.6)', '#A100FF'] } },
+    series: [{ type: 'heatmap' as const, data: heatData, label: { show: true, color: txtColor, fontSize: 10, fontWeight: 900, fontFamily: 'Inter' }, emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(161,0,255,.4)' } }, itemStyle: { borderRadius: 3, borderColor: light ? '#fafafa' : '#0a0a0a', borderWidth: 2 }, animationDelay: (i: number) => i * 30, }],
+    animationEasing: 'cubicOut' as const, animationDuration: 800,
+  } : null;
+
+  return (
+    <section id="sec-3" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
+      <SectionRule label="Data Visualizations" accent="#fbbf24" />
+      <div style={{ fontSize: 8, color: a(.2), marginTop: -16, marginBottom: 16 }}>Auto-generated from AlphaSense financial highlights and company intelligence data</div>
+
+      {/* Top row: Market Metrics + Company Revenue */}
+      <div style={{ display: 'grid', gridTemplateColumns: compData.length > 0 ? '1fr 1fr' : '1fr', gap: 16 }}>
+        {finData.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .5, ease }} style={panelStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <div>
+                <div style={{ fontSize: 8, fontWeight: 900, color: '#fbbf24', letterSpacing: '.12em', textTransform: 'uppercase' }}>Market Metrics</div>
+                <div style={{ fontSize: 7, color: a(.2), marginTop: 2 }}>{finData.length} key indicators</div>
+              </div>
+              <button onClick={() => onAskRobin('Analyze the key financial metrics shown in the data visualizations. What are the most significant trends?')}
+                style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(59,130,246,.08)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 4, padding: '2px 6px', cursor: 'pointer' }}
+              ><span style={{ fontSize: 6, fontWeight: 800, color: '#60a5fa' }}>Ask Robin</span></button>
+            </div>
+            <EChart option={marketMetricsOpt} style={{ height: Math.max(finData.length * 30, 200) }} opts={{ renderer: 'canvas' }} />
+          </motion.div>
+        )}
+
+        {compData.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .5, delay: .1, ease }} style={panelStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <div>
+                <div style={{ fontSize: 8, fontWeight: 900, color: '#60a5fa', letterSpacing: '.12em', textTransform: 'uppercase' }}>Company Revenue</div>
+                <div style={{ fontSize: 7, color: a(.2), marginTop: 2 }}>Top {compData.length} by annual revenue</div>
+              </div>
+              <button onClick={() => onAskRobin('Compare the revenue profiles of the top companies. Who dominates and how do smaller players compete?')}
+                style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(59,130,246,.08)', border: '1px solid rgba(59,130,246,.15)', borderRadius: 4, padding: '2px 6px', cursor: 'pointer' }}
+              ><span style={{ fontSize: 6, fontWeight: 800, color: '#60a5fa' }}>Ask Robin</span></button>
+            </div>
+            <EChart option={compRevenueOpt} style={{ height: Math.max(compData.length * 32, 200), cursor: 'pointer' }} opts={{ renderer: 'canvas' }}
+              onEvents={{ click: (p: { dataIndex: number }) => { const orig = topCompanies.findIndex(c => c.name === compData[p.dataIndex]?.name); if (orig >= 0) onSelectCompany(orig); } }} />
+          </motion.div>
+        )}
+      </div>
+
+      {/* Bottom row: Finding Distribution Donut + Company Heatmap */}
+      {(findingDist.length > 0 || heatmapOpt) && (
+        <div style={{ display: 'grid', gridTemplateColumns: findingDist.length > 0 && heatmapOpt ? '1fr 2fr' : '1fr', gap: 16, marginTop: 16 }}>
+          {findingDist.length > 0 && (
+            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .5, delay: .2, ease }} style={panelStyle}>
+              <div style={{ fontSize: 8, fontWeight: 900, color: '#A100FF', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Intelligence Mix</div>
+              <div style={{ fontSize: 7, color: a(.2) }}>Finding distribution across categories</div>
+              <EChart option={donutOpt} style={{ height: 220, cursor: 'pointer' }} opts={{ renderer: 'canvas' }}
+                onEvents={{ click: (p: { name: string }) => { const map: Record<string, string> = { Trends: 'sec-0', Opportunities: 'sec-2', Challenges: 'sec-4' }; const anchor = map[p.name]; if (anchor) onScrollToSection(anchor); } }} />
+            </motion.div>
+          )}
+
+          {heatmapOpt && (
+            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .5, delay: .3, ease }} style={panelStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                <div>
+                  <div style={{ fontSize: 8, fontWeight: 900, color: '#A100FF', letterSpacing: '.12em', textTransform: 'uppercase' }}>Company × Finding Heatmap</div>
+                  <div style={{ fontSize: 7, color: a(.2), marginTop: 2 }}>Density of findings per company across categories</div>
+                </div>
+              </div>
+              <EChart option={heatmapOpt} style={{ height: Math.max(compNames.length * 28 + 40, 200), cursor: 'pointer' }} opts={{ renderer: 'canvas' }}
+                onEvents={{ click: (p: { value?: [number, number, number] }) => {
+                  if (!p.value) return;
+                  const [catIdx, compIdx] = p.value;
+                  const sectionMap = ['sec-0', 'sec-2', 'sec-4'];
+                  if (p.value[2] > 0) onScrollToSection(sectionMap[catIdx]);
+                  else onSelectCompany(compIdx);
+                } }} />
+            </motion.div>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════
    SECTION RULE — editorial divider
    ══════════════════════════════════════════════ */
 function VisualIntelligenceSection({ images, onAskRobin }: { images: { src: string; caption?: string }[]; onAskRobin: (label: string) => void }) {
   const [expandedImg, setExpandedImg] = useState<number | null>(null);
   return (
     <>
-      <section id="sec-3" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
-        <SectionRule label="Visual Intelligence" accent="#fbbf24" />
+      <section style={{ marginBottom: 48, scrollMarginTop: 56 }}>
+        <SectionRule label="Extracted Charts" accent="#fbbf24" />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10, marginTop: 20 }}>
           {images.map((img, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .3, delay: i * .04, ease }}
@@ -1259,7 +1801,7 @@ const REGION_IDS: Record<string, string[]> = {
 /* ══════════════════════════════════════════════
    BROKER ANALYSIS — Magazine spread with page turn
    ══════════════════════════════════════════════ */
-function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[]; onExpand: (i: number) => void }) {
+function BrokerAnalysisSection({ newsItems, onExpand, topCompanies, onSelectCompany }: { newsItems: NewsItem[]; onExpand: (i: number) => void; topCompanies: TopCompany[]; onSelectCompany: (idx: number) => void }) {
   const [page, setPage] = useState(0);
   const light = useCompassStore(s => s.theme) === 'light';
   const perPage = 6;
@@ -1357,6 +1899,29 @@ function BrokerAnalysisSection({ newsItems, onExpand }: { newsItems: NewsItem[];
                   {n.source_org && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .2)' }}>{n.source_org}</span>}
                   {n.date && <span style={{ fontSize: 6, color: 'rgb(var(--ink) / .12)' }}>· {n.date}</span>}
                 </div>
+                {/* Company chips */}
+                {n.linked_top_companies && n.linked_top_companies.length > 0 && (
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 8 }}>
+                    {n.linked_top_companies.slice(0, 4).map(tcIdx => {
+                      const c = topCompanies[tcIdx];
+                      if (!c) return null;
+                      return (
+                        <span key={tcIdx}
+                          onClick={(e) => { e.stopPropagation(); onSelectCompany(tcIdx); }}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 6px', background: 'rgba(96,165,250,.06)', border: '1px solid rgba(96,165,250,.1)', fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .35)', cursor: 'pointer', transition: 'all .15s' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(96,165,250,.15)'; e.currentTarget.style.borderColor = 'rgba(96,165,250,.25)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(96,165,250,.06)'; e.currentTarget.style.borderColor = 'rgba(96,165,250,.1)'; }}
+                        >
+                          <CompanyLogo name={c.name} logoUrl={c.logo_url} size={12} />
+                          {c.name.length > 15 ? c.name.substring(0, 13) + '…' : c.name}
+                        </span>
+                      );
+                    })}
+                    {n.linked_top_companies.length > 4 && (
+                      <span style={{ fontSize: 6, fontWeight: 700, color: 'rgb(var(--ink) / .15)', padding: '2px 4px' }}>+{n.linked_top_companies.length - 4}</span>
+                    )}
+                  </div>
+                )}
               </motion.div>
             ))}
           </motion.div>
