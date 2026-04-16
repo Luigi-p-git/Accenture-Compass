@@ -224,23 +224,244 @@
   "images": [
     {
       "src": "/visuals/canada/chart-1.jpeg",
-      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
     },
     {
       "src": "/visuals/canada/chart-2.jpeg",
-      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
     },
     {
       "src": "/visuals/canada/chart-3.jpeg",
-      "caption": "Chart 3 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+      "caption": "Chart 3 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
     },
     {
       "src": "/visuals/canada/chart-4.jpeg",
-      "caption": "Chart 4 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+      "caption": "Chart 4 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    }
+  ],
+  "news_items": [],
+  "financial_highlights": [],
+  "top_companies": [],
+  "transformed_charts": [
+    {
+      "original_src": "/visuals/canada/chart-1.jpeg",
+      "title": "US CTV Ad Spend ($b)",
+      "type": "bar",
+      "categories": [
+        "2023",
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028"
+      ],
+      "series": [
+        {
+          "name": "Ad Spend ($b)",
+          "data": [
+            23.4,
+            28.8,
+            33.4,
+            37.7,
+            42.2,
+            46.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "YoY Growth (%)",
+          "data": [
+            19,
+            13,
+            12,
+            11,
+            9
+          ],
+          "type": "line"
+        }
+      ],
+      "description": "US Connected TV (CTV) advertising spend is projected to grow from $23.4 billion in 2023 to $46.9 billion by 2028, roughly doubling over the period. Year-over-year growth rates are decelerating from 19% (2023–2024) down to 9% (2027–2028), indicating a maturing but still rapidly expanding market."
     },
     {
-      "src": "/visuals/canada/chart-5.jpeg",
-      "caption": "Chart 5 — Extracted from DR-Report-by-Alphasense-04-15-2026-15-35.pdf"
+      "original_src": "/visuals/canada/chart-2.jpeg",
+      "title": "Analyst Ratings & Price Targets — US Communications & Media Companies",
+      "type": "bar",
+      "categories": [
+        "DIS",
+        "CMCSA",
+        "WBD",
+        "CHTR",
+        "T",
+        "VZ",
+        "TMUS"
+      ],
+      "series": [
+        {
+          "name": "Stock Price ($)",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Target Price ($)",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst coverage table from BN (Bernstein) showing ratings and stock prices for seven US communications and media companies. Most stocks carry a Sector Weight (SW) rating except AT&T (T) which has an Overweight (OW) rating with a $36 price target. Charter (CHTR) and T-Mobile (TMUS) have the highest stock prices at ~$216 and ~$210 respectively, while WBD and CMCSA trade under $30."
+    },
+    {
+      "original_src": "/visuals/canada/chart-3.jpeg",
+      "title": "EBITDA, Revenue & Valuation Forecast (FY ends 12/31)",
+      "type": "bar",
+      "categories": [
+        "F2025A",
+        "1Q26E",
+        "2Q26E",
+        "3Q26E",
+        "4Q26E",
+        "F2026E",
+        "F2027E"
+      ],
+      "series": [
+        {
+          "name": "EBITDA (M)",
+          "data": [
+            8744,
+            2086.3,
+            2141.7,
+            2375.1,
+            2252.1,
+            8855.2,
+            8899.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Cons. EBITDA (M)",
+          "data": [
+            null,
+            1979,
+            2055.7,
+            2318,
+            2134.4,
+            8627.1,
+            8605.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous EBITDA (M)",
+          "data": [
+            8729.7,
+            2053.2,
+            2099.1,
+            2414.6,
+            2247.6,
+            8814.4,
+            8672
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Revenue (M)",
+          "data": [
+            37296,
+            9023.8,
+            9473.8,
+            9446.4,
+            10014.3,
+            37958.3,
+            38239.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous Revenue (M)",
+          "data": [
+            37313.7,
+            9046.2,
+            9008.7,
+            8675.8,
+            9410.7,
+            36141.3,
+            36656.4
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "EV/EBITDA (x)",
+          "data": [
+            11.4,
+            null,
+            null,
+            null,
+            null,
+            11.3,
+            11.2
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Financial forecast table showing EBITDA and Revenue estimates (in $M) for fiscal years ending 12/31, broken down by quarterly (1Q26E–4Q26E) and annual (F2025A, F2026E, F2027E) periods. Current estimates are compared against consensus and previous estimates. EBITDA is projected to grow modestly from $8,744M (F2025A) to $8,899.5M (F2027E), while revenue is expected to increase from $37,296M to $38,240M, with EV/EBITDA valuation remaining stable around 11.2–11.4x."
+    },
+    {
+      "original_src": "/visuals/canada/chart-4.jpeg",
+      "title": "Telecom & Media Analyst Ratings and Stock Prices",
+      "type": "bar",
+      "categories": [
+        "DIS",
+        "CMCSA",
+        "WBD",
+        "CHTR",
+        "T",
+        "VZ",
+        "TMUS"
+      ],
+      "series": [
+        {
+          "name": "Stock Price ($)",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Price Target ($)",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst ratings table for seven major US telecom and media companies from a BN (Bernstein) analyst report. Most stocks carry a Sector Weight (SW) rating with no explicit price target, except AT&T (T) which has an Overweight (OW) rating with a $36 price target. Charter Communications (CHTR) and T-Mobile (TMUS) have the highest stock prices at $215.88 and $210.03 respectively, while Warner Bros. Discovery (WBD) trades lowest at $27.46."
     }
   ]
 }

@@ -1,0 +1,249 @@
+{
+  "images": [
+    {
+      "src": "/visuals/canada/communications-media/chart-1.jpeg",
+      "caption": "Chart 1 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/canada/communications-media/chart-2.jpeg",
+      "caption": "Chart 2 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/canada/communications-media/chart-3.jpeg",
+      "caption": "Chart 3 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    },
+    {
+      "src": "/visuals/canada/communications-media/chart-4.jpeg",
+      "caption": "Chart 4 — Extracted from DR-Report-by-Alphasense-04-15-2026-20-18.pdf"
+    }
+  ],
+  "transformed_charts": [
+    {
+      "original_src": "/visuals/canada/communications-media/chart-1.jpeg",
+      "title": "US CTV Ad Spend ($b)",
+      "type": "bar",
+      "categories": [
+        "2023",
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028"
+      ],
+      "series": [
+        {
+          "name": "Ad Spend ($b)",
+          "data": [
+            23.4,
+            28.8,
+            33.4,
+            37.7,
+            42.2,
+            46.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "YoY Growth (%)",
+          "data": [
+            19,
+            13,
+            12,
+            11,
+            9
+          ],
+          "type": "line"
+        }
+      ],
+      "description": "US Connected TV advertising spend is projected to grow from $23.4 billion in 2023 to $46.9 billion in 2028, nearly doubling over the period. Year-over-year growth rates are decelerating from 19% (2023-2024) down to 9% (2027-2028), indicating a maturing but still rapidly expanding market."
+    },
+    {
+      "original_src": "/visuals/canada/communications-media/chart-2.jpeg",
+      "title": "BN Analyst Stock Ratings — Canadian Communications & Media Coverage",
+      "type": "bar",
+      "categories": [
+        "DIS",
+        "CMCSA",
+        "WBD",
+        "CHTR",
+        "T",
+        "VZ",
+        "TMUS"
+      ],
+      "series": [
+        {
+          "name": "Stock Price (USD)",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Target Price (USD)",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst coverage table from BN showing stock ratings for major US communications and media companies. Most stocks carry a Sector Weight (SW) rating except AT&T which has an Overweight (OW) rating with a $36 target. Charter (CHTR) and T-Mobile (TMUS) have the highest stock prices at $215.88 and $210.03 respectively, while WBD trades lowest at $27.46."
+    },
+    {
+      "original_src": "/visuals/canada/communications-media/chart-3.jpeg",
+      "title": "EBITDA, Revenue & Valuation Forecast (FY ends 12/31)",
+      "type": "bar",
+      "categories": [
+        "F2025A",
+        "1Q26E",
+        "2Q26E",
+        "3Q26E",
+        "4Q26E",
+        "F2026E",
+        "F2027E"
+      ],
+      "series": [
+        {
+          "name": "EBITDA (M)",
+          "data": [
+            8744,
+            2086.3,
+            2141.7,
+            2375.1,
+            2252.1,
+            8855.2,
+            8899.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Cons. EBITDA (M)",
+          "data": [
+            null,
+            1979,
+            2055.7,
+            2318,
+            2134.4,
+            8627.1,
+            8605.5
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous EBITDA (M)",
+          "data": [
+            8729.7,
+            2053.2,
+            2099.1,
+            2414.6,
+            2247.6,
+            8814.4,
+            8672
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Revenue (M)",
+          "data": [
+            37296,
+            9023.8,
+            9473.8,
+            9446.4,
+            10014.3,
+            37958.3,
+            38239.9
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Previous Revenue (M)",
+          "data": [
+            37313.7,
+            9046.2,
+            9008.7,
+            8675.8,
+            9410.7,
+            36141.3,
+            36656.4
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "EV/EBITDA (x)",
+          "data": [
+            11.4,
+            null,
+            null,
+            null,
+            null,
+            11.3,
+            11.2
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Financial forecast table showing EBITDA and Revenue estimates for fiscal years 2025A through 2027E, with quarterly breakdowns for 2026. EBITDA is projected to grow from $8,744M (F2025A) to $8,899.5M (F2027E), while Revenue increases from $37,296M to $38,239.9M. EV/EBITDA valuation remains stable around 11.2-11.4x."
+    },
+    {
+      "original_src": "/visuals/canada/communications-media/chart-4.jpeg",
+      "title": "Analyst Ratings & Price Targets — Communications & Media Companies",
+      "type": "bar",
+      "categories": [
+        "DIS",
+        "CMCSA",
+        "WBD",
+        "CHTR",
+        "T",
+        "VZ",
+        "TMUS"
+      ],
+      "series": [
+        {
+          "name": "Stock Price",
+          "data": [
+            96.38,
+            28.71,
+            27.46,
+            215.88,
+            28.99,
+            50.2,
+            210.03
+          ],
+          "type": "bar"
+        },
+        {
+          "name": "Price Target",
+          "data": [
+            null,
+            null,
+            null,
+            null,
+            36,
+            null,
+            null
+          ],
+          "type": "bar"
+        }
+      ],
+      "description": "Analyst ratings table from BN (Bernstein) covering 7 major US communications and media companies. Most stocks are rated Sector Weight (SW), with AT&T being the sole Overweight (OW) rating with a $36 price target. AT&T is highlighted for superior customer satisfaction and fiber/wireless competitive positioning, while Disney, Comcast, and Warner Bros. face engagement headwinds in streaming."
+    }
+  ],
+  "trends": [],
+  "opportunities": [],
+  "challenges": [],
+  "news_items": [],
+  "financial_highlights": [],
+  "top_companies": [],
+  "synthesis": ""
+}

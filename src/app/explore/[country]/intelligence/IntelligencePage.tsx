@@ -65,11 +65,12 @@ function getSourceUrl(source: { document_title?: string | null; organization?: s
 }
 
 /** Show linked top companies for a finding with impact details */
-function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source }: {
+function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source, allFindings }: {
   finding: { linked_top_companies?: number[]; affected_companies?: AffectedCompany[] };
   topCompanies: TopCompany[];
   onSelectCompany: (idx: number) => void;
   source?: { document_title?: string | null; organization?: string | null; url?: string | null } | null;
+  allFindings?: { affected_companies?: AffectedCompany[] }[];
 }) {
   const sourceUrl = source?.url && source.url.startsWith('http') ? source.url : null;
   const sourceName = source?.organization || source?.document_title || '';
@@ -85,7 +86,20 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source }: 
       const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
       return na === nc || na.includes(nc) || nc.includes(na);
     });
-    return { co, tcIdx, impact: ac?.impact || 'neutral' as const, detail: ac?.detail || `${co.sector} · ${co.revenue} · Referenced in ${co.linked_findings.trends.length + co.linked_findings.opportunities.length + co.linked_findings.challenges.length} findings` };
+    // If no direct match, search ALL findings for an impact detail about this company
+    let detail = ac?.detail || '';
+    let impact = ac?.impact || 'neutral' as const;
+    if (!ac && allFindings) {
+      for (const f of allFindings) {
+        const match = f.affected_companies?.find((a: AffectedCompany) => {
+          const na2 = a.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+          const nc2 = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+          return na2 === nc2 || na2.includes(nc2) || nc2.includes(na2);
+        });
+        if (match?.detail) { detail = match.detail; impact = match.impact; break; }
+      }
+    }
+    return { co, tcIdx, impact, detail };
   }).filter(Boolean) as { co: TopCompany; tcIdx: number; impact: string; detail: string }[];
 
   if (items.length === 0) return null;
@@ -496,7 +510,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <DescriptionBullets text={trends[activeTrend].d} accent="#A100FF" />
 
                       {/* Linked companies with impact */}
-                      <LinkedCompanyChips finding={trends[activeTrend]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={trends[activeTrend].source} />
+                      <LinkedCompanyChips finding={trends[activeTrend]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={trends[activeTrend].source} allFindings={[...trends, ...opps, ...challenges]} />
 
                       {/* Source via AlphaSense */}
                       {trends[activeTrend].source?.document_title && (() => {
@@ -593,14 +607,38 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                 onScrollToSection={(anchor) => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
               />
             )}
-            {/* PDF charts recreated as ECharts (from Claude vision analysis) */}
-            {activeData?.transformed_charts && activeData.transformed_charts.length > 0 && (
-              <TransformedChartsSection charts={activeData.transformed_charts} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
-            )}
-            {/* Extracted PDF images fallback (if any, and no transformed versions) */}
-            {activeData?.images && activeData.images.length > 0 && (!activeData.transformed_charts || activeData.transformed_charts.length === 0) && (
-              <VisualIntelligenceSection images={activeData.images} onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')} />
-            )}
+            {/* Report Charts — Coming Soon teaser */}
+            {(activeData?.transformed_charts?.length || activeData?.images?.length) ? (
+              <section style={{ marginBottom: 48, position: 'relative' }}>
+                <SectionRule label="Report Charts" accent="#A100FF" />
+                <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 8 }}>
+                  {/* Blurred preview of charts */}
+                  <div style={{ filter: 'blur(6px)', opacity: .3, pointerEvents: 'none', padding: '24px 0' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                      {[1, 2, 3, 4].map(i => (
+                        <div key={i} style={{ background: 'rgb(var(--ink) / .02)', border: `1px solid rgb(var(--ink) / .06)`, padding: 20, height: 180 }}>
+                          <div style={{ width: '60%', height: 8, background: 'rgb(var(--ink) / .06)', marginBottom: 12 }} />
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: 120 }}>
+                            {[40, 65, 50, 80, 70, 90].map((h, j) => (
+                              <div key={j} style={{ flex: 1, height: `${h}%`, background: i % 2 === 0 ? 'rgba(161,0,255,.15)' : 'rgba(96,165,250,.15)', borderRadius: '3px 3px 0 0' }} />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Coming Soon overlay */}
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+                    <div style={{ background: 'rgba(161,0,255,.08)', border: '1px solid rgba(161,0,255,.15)', backdropFilter: 'blur(4px)', padding: '16px 32px', textAlign: 'center' }}>
+                      <span className="ms" style={{ fontSize: 20, color: '#A100FF', display: 'block', marginBottom: 6 }}>auto_awesome</span>
+                      <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em' }}>Report Charts</div>
+                      <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .3)', marginTop: 4 }}>Interactive chart recreation from AlphaSense PDF</div>
+                      <div style={{ fontSize: 7, fontWeight: 800, color: '#A100FF', letterSpacing: '.1em', textTransform: 'uppercase', marginTop: 8 }}>Coming Soon</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            ) : null}
           </>
         )}
 
@@ -656,7 +694,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
                       <DescriptionBullets text={challenges[activeChallenge].d} accent="#f87171" />
 
-                      <LinkedCompanyChips finding={challenges[activeChallenge]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={challenges[activeChallenge].source} />
+                      <LinkedCompanyChips finding={challenges[activeChallenge]} topCompanies={topCompanies} onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }} source={challenges[activeChallenge].source} allFindings={[...trends, ...opps, ...challenges]} />
 
                       {challenges[activeChallenge].source?.document_title && (() => {
                         const url = getSourceUrl(challenges[activeChallenge].source);
@@ -742,65 +780,33 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         {/* Synthesis moved to hero — removed from here */}
 
         {/* ════════════════════════════════════════
-            NEWS — Coming Soon (newspaper style)
+            NEWS — Elegant Coming Soon
            ════════════════════════════════════════ */}
-        <section id="sec-6" style={{
-          margin: '0 -48px', marginBottom: 0, scrollMarginTop: 56,
-          background: '#ede8dc', color: '#1a1a1a',
-          padding: '48px 48px 56px',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          {/* Newsprint grain texture */}
-          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: .4 }}>
-            <filter id="newsprint"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
-            <rect width="100%" height="100%" filter="url(#newsprint)" opacity="0.06" />
-          </svg>
-
-          {/* Aged paper edge stains */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: 60, height: '100%', background: 'linear-gradient(to right, rgba(180,160,120,.08), transparent)', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: '100%', background: 'linear-gradient(to left, rgba(180,160,120,.08), transparent)', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 30, background: 'linear-gradient(to bottom, rgba(180,160,120,.06), transparent)', pointerEvents: 'none' }} />
-
-          {/* Large NEWS watermark */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 'clamp(120px, 18vw, 260px)', fontWeight: 900, opacity: .035, letterSpacing: '-.06em', lineHeight: .8, pointerEvents: 'none', color: '#1a1a1a', fontFamily: "'Georgia','Times New Roman',serif" }}>NEWS</div>
-
-          <div style={{ position: 'relative', zIndex: 2, maxWidth: 1300, margin: '0 auto' }}>
-            {/* Newspaper masthead */}
-            <div style={{ textAlign: 'center', marginBottom: 24, borderBottom: '3px double rgba(0,0,0,.2)', paddingBottom: 20 }}>
-              {/* Top double rule */}
-              <div style={{ height: 2, background: '#1a1a1a', marginBottom: 2 }} />
-              <div style={{ height: 1, background: 'rgba(0,0,0,.3)', marginBottom: 12 }} />
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 6 }}>
-                <span style={{ fontSize: 6, fontWeight: 700, letterSpacing: '.2em', color: 'rgba(0,0,0,.25)' }}>VOL. I</span>
-                <span style={{ color: 'rgba(0,0,0,.15)' }}>·</span>
-                <span style={{ fontSize: 6, fontWeight: 700, letterSpacing: '.15em', color: 'rgba(0,0,0,.25)' }}>ACCSENSE INTELLIGENCE</span>
-                <span style={{ color: 'rgba(0,0,0,.15)' }}>·</span>
-                <span style={{ fontSize: 6, fontWeight: 700, letterSpacing: '.15em', color: 'rgba(0,0,0,.25)' }}>COMPASS EDITION</span>
-              </div>
-
-              <h2 style={{ fontSize: 40, fontWeight: 900, letterSpacing: '-.03em', textTransform: 'uppercase', color: '#1a1a1a', fontFamily: "'Georgia','Times New Roman',serif", lineHeight: .9 }}>The AccSense Daily</h2>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 8 }}>
-                <div style={{ flex: 1, maxWidth: 100, height: 1, background: 'rgba(0,0,0,.12)' }} />
-                <span style={{ fontSize: 6, fontWeight: 600, letterSpacing: '.15em', color: 'rgba(0,0,0,.3)' }}>MARKET INTELLIGENCE · BROKER RESEARCH · REGULATORY FILINGS</span>
-                <div style={{ flex: 1, maxWidth: 100, height: 1, background: 'rgba(0,0,0,.12)' }} />
-              </div>
-            </div>
-
-            {/* Coming soon content */}
-            <div style={{ textAlign: 'center', padding: '40px 0 20px' }}>
-              <span className="ms" style={{ fontSize: 36, color: 'rgba(0,0,0,.08)' }}>newspaper</span>
-              <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: '-.02em', color: '#1a1a1a', marginTop: 12 }}>Coming Soon</div>
-              <p style={{ fontSize: 10, color: 'rgba(0,0,0,.35)', lineHeight: 1.7, maxWidth: 400, margin: '8px auto 0' }}>
-                Live news feed powered by AlphaSense real-time monitoring. Breaking market intelligence, regulatory updates, and sector-specific alerts delivered as they happen.
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16 }}>
-                {['Breaking News', 'Market Alerts', 'Regulatory Updates', 'Earnings Coverage'].map(tag => (
-                  <span key={tag} style={{ fontSize: 7, fontWeight: 700, padding: '3px 10px', background: 'rgba(0,0,0,.04)', border: '1px solid rgba(0,0,0,.08)', color: 'rgba(0,0,0,.3)', letterSpacing: '.03em' }}>{tag}</span>
+        <section id="sec-6" style={{ margin: '0 -48px', marginBottom: 0, scrollMarginTop: 56, position: 'relative', overflow: 'hidden' }}>
+          {/* Blurred newspaper preview */}
+          <div style={{ filter: 'blur(4px)', opacity: .15, pointerEvents: 'none', background: light ? '#f5f0e8' : '#1a1814', padding: '48px 48px 56px' }}>
+            <div style={{ textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
+              <div style={{ height: 2, background: 'rgb(var(--ink) / .2)', marginBottom: 8 }} />
+              <div style={{ fontSize: 36, fontWeight: 900, letterSpacing: '-.03em', fontFamily: "'Georgia',serif" }}>The AccSense Daily</div>
+              <div style={{ height: 1, background: 'rgb(var(--ink) / .1)', marginTop: 8, marginBottom: 20 }} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+                {[1, 2, 3].map(i => (
+                  <div key={i}>
+                    <div style={{ height: 8, background: 'rgb(var(--ink) / .08)', marginBottom: 8, width: '80%' }} />
+                    <div style={{ height: 5, background: 'rgb(var(--ink) / .04)', marginBottom: 4 }} />
+                    <div style={{ height: 5, background: 'rgb(var(--ink) / .04)', marginBottom: 4 }} />
+                    <div style={{ height: 5, background: 'rgb(var(--ink) / .04)', width: '60%' }} />
+                  </div>
                 ))}
               </div>
             </div>
+          </div>
+          {/* Coming Soon overlay */}
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2, background: light ? 'rgba(245,240,232,.85)' : 'rgba(10,10,10,.85)', backdropFilter: 'blur(2px)' }}>
+            <span className="ms" style={{ fontSize: 28, color: 'rgb(var(--ink) / .08)', marginBottom: 8 }}>newspaper</span>
+            <div style={{ fontSize: 14, fontWeight: 900, letterSpacing: '-.01em', color: 'var(--t1)' }}>The AccSense Daily</div>
+            <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .25)', marginTop: 4, maxWidth: 300, textAlign: 'center', lineHeight: 1.6 }}>Live intelligence feed powered by AlphaSense real-time monitoring</div>
+            <div style={{ fontSize: 7, fontWeight: 800, color: '#A100FF', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 12, padding: '4px 14px', border: '1px solid rgba(161,0,255,.2)' }}>Coming Soon</div>
           </div>
         </section>
       </main>
@@ -1091,13 +1097,23 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           });
           const totalImpacts = impactCounts.positive + impactCounts.negative + impactCounts.neutral;
 
-          // Helper to find impact detail for this company in a finding
+          // Helper to find impact detail for this company — search direct match first, then all findings
           const getImpactForFinding = (f: { affected_companies?: AffectedCompany[] }) => {
-            return f.affected_companies?.find((c: AffectedCompany) => {
-              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-              return na === nc || na.includes(nc) || nc.includes(na);
-            });
+            const fuzzy = (a: string, b: string) => {
+              const na = a.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const nb = b.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              return na === nb || na.includes(nb) || nb.includes(na);
+            };
+            // Direct match on this finding
+            const direct = f.affected_companies?.find((c: AffectedCompany) => fuzzy(c.name, co.name));
+            if (direct) return direct;
+            // Fallback: search ALL findings for any mention of this company
+            const allF = [...trends, ...opps, ...challenges];
+            for (const af of allF) {
+              const match = af.affected_companies?.find((c: AffectedCompany) => fuzzy(c.name, co.name));
+              if (match) return match;
+            }
+            return undefined;
           };
 
           return (
