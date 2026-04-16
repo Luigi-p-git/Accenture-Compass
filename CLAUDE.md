@@ -6,8 +6,8 @@ Accenture Compass is an interactive strategic intelligence platform with two mai
 - **Compass Dashboard** — World map → Region → Country → Topics (Talent, Industries, Financials, Macro, Trends)
 - **AccSense Magazine** — Interactive editorial intelligence report powered by AlphaSense data
 
-**Current version:** 0.4.2 (Phase 1 complete + AccSense Magazine + AlphaSense Pipeline + Robin AI + AI Structuring + Cross-Reference System + ECharts Data Viz + PDF Link Extraction + Unified Admin)
-**Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4 + Framer Motion 12.38 + D3-geo + Zustand + Recharts + ECharts + jsPDF + pdfjs-dist + clsx + tailwind-merge
+**Current version:** 0.4.4 (Phase 1 complete + PPTX Export + Citation Pipeline + Tour Guide + FAQ + Robin AI Enhancements + Executive Summary)
+**Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4 + Framer Motion 12.38 + D3-geo + Zustand + ECharts + pptxgenjs + pdfjs-dist + clsx + tailwind-merge
 **Design system:** Stitch (Accenture dark theme) + Editorial broadsheet (Magazine)
 
 ## Running the App
@@ -43,7 +43,10 @@ npm run start     # Start production server
 | `src/components/layout/` | Header, Sidebar, PageTransition |
 | `src/lib/alphasenseParser.ts` | Tri-mode parser: block + legacy + lenient; `preProcessText()`, `transformToTrendsData()` |
 | `src/lib/aiStructure.ts` | File-based Claude CLI proxy: saves input to `.tmp/`, spawns `claude -p` with Read/Write/Bash |
-| `src/lib/intelligenceReport.ts` | PDF report generator (jsPDF, dark theme) |
+| `src/lib/intelligencePresentation.ts` | **PPTX report generator** (pptxgenjs, light/dark themes, Graphik font) |
+| `src/lib/intelligenceReport.ts` | Legacy PDF report generator (jsPDF, replaced by PPTX) |
+| `src/components/intelligence/TourGuide.tsx` | Interactive tour guide — SVG spotlight, panel demos, keyboard nav |
+| `src/components/intelligence/FAQModal.tsx` | FAQ modal — editorial accordion design |
 | `src/lib/utils.ts` | cn() utility (clsx + tailwind-merge) |
 | `src/lib/store.ts` | Zustand state (lens, sidebar, theme) |
 | `src/lib/pdfExport.ts` | Branded Accenture PDF generator (older) |
@@ -253,9 +256,39 @@ TrendsData: challenges[], opportunities[], trends[], synthesis, source, news_ite
 - Industry-specific data: files at `trends/{country}/{industry-slug}.json`
 - Magazine header: 3 cascading selectors (Region › Country › Industry) with slot-machine spinners
 - `window.history.replaceState` for seamless country/industry switching (no remount)
-- PDF generation: jsPDF with dark theme, cover page, section headers
+- PPTX export: pptxgenjs with light/dark themes, Graphik font, sources appendix
+- `CitText` component: renders `[N]` citation brackets as inline named links via `_citation_urls` map
+- `stripCit()`: strips `[N]` from display text; `fmtRev()`: formats raw revenue numbers
+- **No cross-finding fallback**: detail text only from the specific finding, never from other findings
+- **No fake links**: only show real `docid=` URLs, never fallback search URLs or fuzzy-matched links
 - Company logos: Google favicons (`https://www.google.com/s2/favicons?domain=...&sz=64`)
 - Data sanitizer in `/api/data`: auto-fixes string→number, 1-based→0-based indices, auto-generates missing logo_urls
+
+## Citation Pipeline (v0.4.4)
+
+End-to-end system for traceable source links from AlphaSense PDFs:
+
+1. **External Converter App** (separate Claude.ai artifact) reads AlphaSense PDF:
+   - Extracts text via pdf.js
+   - Extracts clickable URLs from PDF annotations via `getAnnotations()`
+   - Builds `_citation_urls` map: `{ "72": "https://research.alpha-sense.com/?docid=..." }`
+   - Claude API structures JSON with `citation_id` on every finding
+   - Auto-merges URLs into `source.url` fields
+
+2. **Admin** receives JSON with pre-filled URLs:
+   - `_citation_urls` map preserved in saved data
+   - Backfills any missing `source.url` from the map
+   - No PDF attachment needed if converter already filled URLs
+
+3. **Rendering** via `CitText` component:
+   - Text with `[N]` brackets → split on brackets → look up in `panelCitMap` → render named link
+   - `panelCitMap` built from: `_citation_urls` + findings' `source.citation_id` + news' `citation_id`
+   - No URL → bracket stripped silently (no fake link)
+
+**Key rules:**
+- Only include `[N]` in `key_initiatives`/`recent_moves` when visible in the PDF text
+- Findings/news MUST have `citation_id` (they always have citations in the PDF)
+- `affected_companies` ↔ `linked_findings` must be bidirectionally consistent
 
 ## Data Available
 
