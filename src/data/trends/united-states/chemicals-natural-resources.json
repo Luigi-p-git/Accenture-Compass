@@ -2,35 +2,36 @@
   "trends": [
     {
       "t": "Rapid Scale-Up of Advanced Molecular Recycling Capacities",
-      "tag": "Sustainability",
-      "d": "The U.S. chemicals sector is aggressively expanding chemical and molecular recycling infrastructure to process hard-to-recycle waste plastics into virgin-equivalent feedstocks. In 2024, the world's largest polyester molecular recycling facility began operations, marking a significant milestone in circular material production. Companies are deploying proprietary catalytic chemical recycling technologies such as MoReTec, which achieves high plastic-to-plastic yields of over 80%. Novel dissolution recycling processes are also being commercialized to return waste polypropylene to near-virgin condition using specific combinations of solvent, temperature, and pressure. This pivot toward circularity decouples economic growth from scarce resource consumption while allowing manufacturers to meet stringent corporate sustainability goals, targeting 250 million lbs of annual recycling output and 800k tons of recycled polymer.",
-      "ic": "eco",
+      "tag": "Technology",
+      "d": "The U.S. chemicals sector is aggressively expanding chemical and molecular recycling infrastructure to process hard-to-recycle waste plastics into virgin-equivalent feedstocks. In 2024, the world's largest polyester molecular recycling facility began operations, marking a significant milestone in circular material production. Companies are deploying proprietary catalytic chemical recycling technologies, such as MoReTec, which can achieve high plastic-to-plastic yields of over 80 percent. Novel dissolution recycling processes are being commercialized to return waste polypropylene to a near-virgin condition using specific combinations of solvent, temperature, and pressure. This pivot toward circularity decouples economic growth from scarce resource consumption while allowing manufacturers to meet stringent corporate sustainability goals.",
+      "ic": "recycling",
       "source": {
         "document_title": "Annual Report FY 2025",
         "organization": "Eastman Chemical Co",
         "document_type": "Major SEC Filings",
         "date": "2026-02-13",
-        "url": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse21904&hl=fse21904&page=1",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 304
       },
       "affected_companies": [
         {
           "name": "Eastman Chemical Co",
           "ticker": "EMN",
           "impact": "positive",
-          "detail": "Scaling the world's largest polyester molecular recycling facility to process hard-to-recycle plastics into virgin-equivalent feedstocks."
+          "detail": "Scaling the world's largest polyester molecular recycling facility to process hard-to-recycle plastics [1]"
         },
         {
           "name": "LyondellBasell Industries NV",
           "ticker": "LYB",
           "impact": "positive",
-          "detail": "Deploying proprietary MoReTec technology to achieve high plastic-to-plastic yields exceeding 80%."
+          "detail": "Deploying proprietary MoReTec technology to achieve high plastic-to-plastic yields of over 80 percent [2]"
         },
         {
           "name": "PureCycle Technologies Inc",
           "ticker": "PCT",
           "impact": "positive",
-          "detail": "Commercializing patented dissolution recycling for polypropylene, returning waste material to near-virgin condition."
+          "detail": "Commercializing patented dissolution recycling for polypropylene to return waste to near-virgin condition [3]"
         }
       ],
       "key_metrics": [
@@ -50,40 +51,41 @@
     {
       "t": "Proliferation of State-Level Extended Producer Responsibility Laws",
       "tag": "Sustainability",
-      "d": "Regulatory frameworks across the United States are rapidly evolving as multiple state governments enact Extended Producer Responsibility (EPR) mandates targeting consumer packaging. States including California, Colorado, Oregon, and Maine have formally adopted EPR laws that shift the financial burden of post-consumer waste management and recycling infrastructure directly onto product manufacturers. These regulations require producers to register with centralized responsibility organizations, report detailed packaging data, and pay eco-modulated fees based on material weight, recyclability, and post-consumer recycled content. This legislative push is fundamentally altering packaging design criteria, forcing consumer goods companies and chemical suppliers to rapidly integrate higher volumes of recycled resins. Compliance with these fragmented, state-by-state mandates is significantly increasing operational complexity and administrative costs across the domestic packaging value chain, with a national recycling target of 50% and plastic waste reduction goal of 200k tons.",
+      "d": "Regulatory frameworks across the United States are rapidly evolving as multiple state governments enact Extended Producer Responsibility (EPR) mandates targeting consumer packaging. States including California, Colorado, Oregon, and Maine have formally adopted EPR laws that shift the financial burden of post-consumer waste management and recycling infrastructure directly onto product manufacturers. These regulations typically require producers to register with centralized responsibility organizations, report detailed packaging data, and pay eco-modulated fees based on material weight, recyclability, and post-consumer recycled content. This legislative push is fundamentally altering packaging design criteria, forcing consumer goods companies and chemical suppliers to rapidly integrate higher volumes of recycled resins. Compliance with these fragmented, state-by-state mandates is significantly increasing operational complexity and administrative costs across the domestic packaging value chain.",
       "ic": "account_balance",
       "source": {
         "document_title": "Annual Report FY 2025",
         "organization": "Mannatech Inc",
         "document_type": "Major SEC Filings",
         "date": "2026-04-15",
-        "url": "https://research.alpha-sense.com/?docid=0001437749-26-012430&scope=ANYWHERE&stmt=fse70140&hl=fse70140&page=3",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 542
       },
       "affected_companies": [
         {
           "name": "Waste Management Inc",
           "ticker": "WM",
           "impact": "positive",
-          "detail": "Increased demand for advanced recycling facility infrastructure and recovered commodities driven by EPR legislation."
+          "detail": "Increased demand for advanced recycling facility infrastructure and recovered commodities driven by EPR legislation [9]"
         },
         {
           "name": "Waste Connections Inc",
           "ticker": "WCN",
           "impact": "positive",
-          "detail": "Legislative funding supporting statewide recycling infrastructure improvements benefiting Waste Connections operations."
+          "detail": "Legislative funding supporting statewide recycling infrastructure improvements [6]"
         },
         {
           "name": "Mohawk Industries Inc",
           "ticker": "MHK",
           "impact": "negative",
-          "detail": "Facing increased operational complexity and significant administrative compliance costs from fragmented state EPR mandates."
+          "detail": "Facing increased operational complexity and administrative compliance costs from fragmented EPR mandates [8]"
         },
         {
           "name": "Sherwin-Williams Co",
           "ticker": "SHW",
           "impact": "negative",
-          "detail": "Required to redesign packaging architectures to comply with eco-modulated fee structures imposed by state EPR laws."
+          "detail": "Forced to redesign packaging to comply with eco-modulated EPR fees and recycled resin integration requirements [7]"
         }
       ],
       "key_metrics": [
@@ -105,46 +107,59 @@
     {
       "t": "Strategic Decoupling and Tariffs Reshaping Chemical Sourcing",
       "tag": "Trade",
-      "d": "The global chemical supply chain is undergoing a structural realignment as U.S. manufacturers actively diversify their sourcing away from traditional Chinese suppliers. Current projections indicate that imports of Chinese chemicals into the United States will fall by as much as 30% due to escalating trade fragmentation and the imposition of new tariffs. Retaliatory trade measures and elevated export controls have pushed U.S. tariff rates to their highest levels since World War II, fundamentally reshaping global trade flows. In response, chemical buyers are executing 'friendshoring' strategies to secure regional alternatives, though this transition frequently results in higher landed costs and reduced operational flexibility. Consequently, Chinese export capacity is being redirected toward European and ASEAN markets, intensifying price competition globally while U.S. firms prioritize supply chain resilience over immediate cost savings, with supply chain localization investment reaching $1.2B.",
-      "ic": "warning",
+      "d": "The global chemical supply chain is undergoing a structural realignment as U.S. manufacturers actively diversify their sourcing away from traditional Chinese suppliers. Current projections indicate that imports of Chinese chemicals into the United States will fall by as much as 30 percent due to escalating trade fragmentation and the imposition of new tariffs. Retaliatory trade measures and elevated export controls have pushed U.S. tariff rates to their highest levels since World War II, fundamentally reshaping global trade flows. In response, chemical buyers are executing 'friendshoring' strategies to secure regional alternatives, though this transition frequently results in higher landed costs and reduced operational flexibility. Consequently, Chinese export capacity is being redirected toward European and ASEAN markets, intensifying price competition globally while U.S. firms prioritize supply chain resilience over immediate cost savings.",
+      "ic": "trending_up",
       "source": {
         "document_title": "Chemical Industry Spend Outlook: Strategic Priorities Taking Shape in 2026",
         "organization": "GEP",
         "document_type": "Regulatory/Web News",
         "date": "2026-02-16",
-        "url": "https://research.alpha-sense.com/?docid=WEB-a34c39f3f764391f1eca6c9d82452d81&scope=ANYWHERE&stmt=fse1995&hl=fse1995&page=1",
-        "headline": null
+        "url": "https://research.alpha-sense.com/?docid=WEB-a34c39f3f764391f1eca6c9d82452d81&scope=ANYWHERE&stmt=fse2312&hl=fse2312&page=1",
+        "headline": null,
+        "citation_id": 15
       },
       "affected_companies": [
         {
           "name": "NextNRG Inc",
-          "ticker": null,
+          "ticker": "NXXT",
           "impact": "negative",
-          "detail": "Elevated U.S. tariff rates increasing costs across the energy supply chain and limiting sourcing flexibility."
+          "detail": "Elevated U.S. tariff rates increasing costs across the energy supply chain [11]"
         },
         {
-          "name": "Newmont Corp",
-          "ticker": "NEM",
+          "name": "Deepak Nitrite Ltd",
+          "ticker": "DEEPAKNTR",
           "impact": "neutral",
-          "detail": "Navigating shifting global sourcing dynamics as trade fragmentation reshapes mineral supply routes."
+          "detail": "Benefiting from localized sourcing trends despite raw material cost swings [13]"
         },
         {
           "name": "Southern Copper Corp",
           "ticker": "SCCO",
-          "impact": "neutral",
-          "detail": "Benefiting from localized sourcing trends despite raw material cost swings driven by tariff escalation."
+          "impact": "negative",
+          "detail": "Supply chain realignment increasing procurement costs as friendshoring strategies elevate landed costs [14]"
+        },
+        {
+          "name": "Newmont Corp",
+          "ticker": "NEM",
+          "impact": "negative",
+          "detail": "Global sourcing disruptions from trade fragmentation affecting critical materials procurement [15]"
         },
         {
           "name": "Freeport-McMoRan Inc",
           "ticker": "FCX",
-          "impact": "neutral",
-          "detail": "Global supply chain reconfiguration affects procurement strategies for mining equipment and inputs."
+          "impact": "negative",
+          "detail": "Trade fragmentation and elevated tariff rates disrupting supply chain planning for critical mining inputs [12]"
+        },
+        {
+          "name": "Anglogold Ashanti PLC",
+          "ticker": "AU",
+          "impact": "negative",
+          "detail": "Friendshoring strategies increasing operational costs for materials procurement [14]"
         }
       ],
       "key_metrics": [
         {
-          "metric": "Chinese Chemical Import Volume Reduction",
-          "value": "30%",
+          "metric": "Chinese Chemical Import Volume",
+          "value": "70%",
           "change": "-30%"
         },
         {
@@ -164,40 +179,41 @@
     {
       "t": "Geopolitical Volatility Amplifying U.S. Natural Gas Feedstock Advantage",
       "tag": "Market",
-      "d": "Escalating geopolitical conflicts in the Middle East and associated supply chain stresses have severely disrupted global energy markets, creating a distinct competitive edge for domestic chemical producers. Because U.S. manufacturers of plastics, fertilizers, and basic chemicals utilize cheaper domestic natural gas as a primary input, they retain a structural cost advantage over international peers reliant on volatile oil-derived naphtha. Investors are aggressively pressing bullish exposure in U.S. commodity chemical equities as the market structurally bids up secure, advantaged molecules over vulnerable international supplies. This targeted positioning reflects a strategic preference to express the energy supply shock theme via a structural cost advantage rather than direct crude beta. Options trading demonstrates that market participants are actively adding upside exposure to capitalize on these enduring margin tailwinds, with call volume up 15% and the domestic natural gas advantage spread reaching $12.50.",
+      "d": "Escalating geopolitical conflicts in the Middle East and associated supply chain stresses have severely disrupted global energy markets, creating a distinct competitive edge for domestic chemical producers. Because U.S. manufacturers of plastics, fertilizers, and basic chemicals utilize cheaper domestic natural gas as a primary input, they retain a structural cost advantage over international peers reliant on volatile oil-derived naphtha. Investors are aggressively pressing bullish exposure in U.S. commodity chemical equities as the market structurally bids up secure, advantaged molecules over vulnerable international supplies. This targeted positioning reflects a strategic preference to express the energy supply shock theme via a structural cost advantage rather than direct crude beta. The flow of options trading demonstrates that market participants are actively adding upside exposure to capitalize on these enduring margin tailwinds.",
       "ic": "bolt",
       "source": {
         "document_title": "New Lows, 5% Pullback, March 12 Seasonality",
         "organization": "Susquehanna Financial Group",
         "document_type": "Broker Research",
         "date": "2026-03-12",
-        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse9757&hl=fse9757.fse9982&page=9",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 1080
       },
       "affected_companies": [
         {
           "name": "Dow Inc",
           "ticker": "DOW",
           "impact": "positive",
-          "detail": "Options trading indicating bullish sentiment due to structural natural gas cost advantages over naphtha-based international competitors."
+          "detail": "Options trading indicating bullish sentiment due to structural gas cost advantages over naphtha-reliant peers [18]"
         },
         {
           "name": "LSB Industries Inc",
           "ticker": "LXU",
           "impact": "positive",
-          "detail": "Benefiting from constrained global supply and elevated pricing for ammonia derivative fertilizers amid geopolitical disruption."
+          "detail": "Benefiting from constrained global supply and elevated pricing for ammonia derivative fertilizers [18]"
         },
         {
           "name": "Linde PLC",
           "ticker": "LIN",
           "impact": "positive",
-          "detail": "Industrial gas operations benefit from structural price pass-through mechanisms and superior backlog visibility in a tight supply environment."
+          "detail": "Industrial gas operations benefiting from structural U.S. natural gas cost advantage and bullish investor positioning [19]"
         },
         {
           "name": "Air Products and Chemicals Inc",
           "ticker": "APD",
           "impact": "positive",
-          "detail": "Clean hydrogen and industrial gas business benefits from elevated energy pricing and structural demand for domestic feedstocks."
+          "detail": "Clean hydrogen and industrial gas portfolio benefits from structural domestic feedstock cost advantage [20]"
         }
       ],
       "key_metrics": [
@@ -220,40 +236,47 @@
     {
       "t": "Escalating Regulatory Action Targeting PFAS Contamination",
       "tag": "Sustainability",
-      "d": "The widespread contamination of drinking water supplies by per- and polyfluoroalkyl substances (PFAS), commonly known as 'forever chemicals,' has triggered a wave of stringent federal and state regulatory actions. The U.S. Environmental Protection Agency is enforcing new limits, leading to heightened exposure to testing, remediation, and litigation costs for major chemical manufacturers and waste management operators. Several U.S. states have also preemptively passed laws restricting the use of PFAS in specific applications such as food packaging materials, forcing immediate product reformulations. This regulatory pivot has catalyzed significant investment in advanced water treatment solutions, with companies developing next-generation sorbent technologies designed to remove these persistent contaminants efficiently. The shifting landscape presents substantial liability risks for legacy chemical producers but robust growth opportunities for environmental remediation and specialized filtration firms, with the water treatment technology market reaching $8.5B and remediation compliance costs at $2.4B.",
-      "ic": "shield",
+      "d": "The widespread contamination of drinking water supplies by per- and polyfluoroalkyl substances (PFAS), commonly known as 'forever chemicals,' has triggered a wave of stringent federal and state regulatory actions. The U.S. Environmental Protection Agency is enforcing new limits, leading to heightened exposure to testing, remediation, and litigation costs for major chemical manufacturers and waste management operators. Several U.S. states have also preemptively passed laws restricting the use of PFAS in specific applications, such as food packaging materials, forcing immediate product reformulations. This regulatory pivot has catalyzed significant investment in advanced water treatment solutions, with companies developing next-generation sorbent technologies designed to remove these persistent contaminants efficiently. The shifting landscape presents substantial liability risks for legacy chemical producers but robust growth opportunities for environmental remediation and specialized filtration firms.",
+      "ic": "warning",
       "source": {
-        "document_title": "Annual Report 2025",
+        "document_title": "Annual Report FY 2025",
         "organization": "Waste Management Inc",
         "document_type": "Major SEC Filings",
         "date": "2026-03-31",
-        "url": "https://research.alpha-sense.com/?docid=GDS-69cdf75376a5502928013bcd&scope=ANYWHERE&stmt=fse381735&hl=fse381735.fse381897&page=102",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 531
       },
       "affected_companies": [
         {
           "name": "Waste Management Inc",
           "ticker": "WM",
           "impact": "negative",
-          "detail": "Increased exposure to remediation and litigation costs at disposal facilities due to PFAS contamination enforcement."
+          "detail": "Increased exposure to remediation and litigation costs at disposal facilities from PFAS contamination [24]"
+        },
+        {
+          "name": "Birchtech Corp",
+          "ticker": "PRIVATE",
+          "impact": "positive",
+          "detail": "Growing addressable market for next-generation PFAS sorbent technologies driven by strict EPA limits [25]"
         },
         {
           "name": "Sealed Air Corp",
           "ticker": "SEE",
           "impact": "negative",
-          "detail": "Forced to redesign and reformulate food packaging materials to meet state-level PFAS use restrictions."
+          "detail": "Forced to redesign and reformulate food packaging materials to meet state PFAS restrictions [27]"
         },
         {
           "name": "Corteva Inc",
           "ticker": "CTVA",
           "impact": "negative",
-          "detail": "Absorbing significant legal and settlement costs tied to legacy chemical contamination from PFAS-related litigation."
+          "detail": "Legacy PFAS contamination exposure creating remediation liabilities and compliance costs [28]"
         },
         {
           "name": "Ecolab Inc",
           "ticker": "ECL",
           "impact": "positive",
-          "detail": "Growing addressable market for advanced water treatment and filtration technologies as PFAS remediation investment accelerates."
+          "detail": "Advanced water treatment technology portfolio positioned to capture growing demand from PFAS remediation mandates [25]"
         }
       ],
       "key_metrics": [
@@ -279,41 +302,42 @@
       "t": "Accelerating Mega-Mergers and Portfolio Consolidation",
       "p": "$31.1B combined deal value",
       "timeline": "Near-term (0-12mo)",
-      "d": "The U.S. natural resources and chemicals sector is experiencing a wave of massive consolidation as companies seek scale and strategic realignment. Devon Energy Corp's definitive agreement to acquire Coterra Energy Inc in a stock-for-stock merger of equals is valued at approximately $21.4 billion, creating a dominant player in oil and natural gas development with enhanced geographic reach and operational efficiencies. Simultaneously, Berkshire Hathaway Inc has moved to acquire Occidental Chemical Corp from Occidental Petroleum Corp for $9.7 billion in cash, signaling strong private interest in cash-generative downstream assets. These mega-deals reflect a broader industry strategy where capital-rich entities are aggressively absorbing competitors to build resilience against commodity volatility and secure long-term market share. The Devon/Coterra deal value stands at $25.2B including synergies and the Berkshire/OxyChem deal at $9.7B.",
+      "d": "The U.S. natural resources and chemicals sector is experiencing a wave of massive consolidation as companies seek scale and strategic realignment. Devon Energy Corp entered a definitive agreement to acquire Coterra Energy Inc in a stock-for-stock merger of equals valued at approximately $21.4 billion, aimed at creating a dominant player in oil and natural gas development with enhanced geographic reach and operational efficiencies. Simultaneously, Berkshire Hathaway Inc moved to acquire Occidental Chemical Corp from Occidental Petroleum Corp for $9.7 billion in cash, signaling strong private interest in cash-generative downstream assets. These mega-deals reflect a broader industry strategy where capital-rich entities are aggressively absorbing competitors to build resilience against commodity volatility and secure long-term market share.",
       "ic": "show_chart",
       "priority": 3,
       "source": {
         "document_title": "M&A Deals",
-        "organization": "FactSet",
+        "organization": "Financial Data",
         "document_type": "M&A Deals",
         "date": "2026-04-16",
-        "url": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse111483&hl=fse111483&page=4",
-        "headline": null
+        "url": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse21904&hl=fse21904&page=1",
+        "headline": null,
+        "citation_id": 1
       },
       "affected_companies": [
         {
           "name": "Devon Energy Corp",
           "ticker": "DVN",
           "impact": "positive",
-          "detail": "Significantly expanding scale and resource base through the $21.4B stock-for-stock merger with Coterra Energy."
+          "detail": "Significantly expanding scale and resource base through the $21.4B merger with Coterra Energy [31]"
         },
         {
           "name": "Coterra Energy Inc",
           "ticker": "CTRA",
           "impact": "positive",
-          "detail": "Combining assets with Devon to form a highly competitive, geographically diversified oil and gas entity."
+          "detail": "Combining assets to form a highly competitive oil and gas entity with enhanced geographic reach [31]"
         },
         {
           "name": "Occidental Petroleum Corp",
           "ticker": "OXY",
           "impact": "neutral",
-          "detail": "Monetizing chemical assets for $9.7B to optimize overall corporate portfolio structure and reduce downstream exposure."
+          "detail": "Monetizing chemical assets for $9.7B to optimize overall corporate portfolio structure [31]"
         }
       ],
       "key_metrics": [
         {
           "metric": "Devon/Coterra Deal Value",
-          "value": "$25.2B",
+          "value": "$21.4B",
           "change": "+100%"
         },
         {
@@ -332,26 +356,27 @@
       ]
     },
     {
-      "t": "Commercial Scaling of Catalytic Chemical Recycling at Industrial Scale",
-      "p": "$800k ton annual target market",
+      "t": "Commercial Scaling of Catalytic Chemical Recycling",
+      "p": "800k ton annual polymer target by 2030",
       "timeline": "Medium-term (1-3yr)",
-      "d": "Major chemical producers are aggressively transitioning proprietary chemical recycling technologies from pilot phases to commercial-scale industrial operations. LyondellBasell Industries NV is advancing the construction of its MoReTec-1 plant, its first industrial-scale catalytic chemical recycling facility, designed with the flexibility to operate under 100% renewable power. This facility aims to convert post-consumer plastic waste into virgin-equivalent feedstock, achieving exceptionally high plastic-to-plastic yields while substantially reducing greenhouse gas emissions compared to traditional fossil fuel-based production methods. The successful deployment of this infrastructure is critical for LyondellBasell to achieve its ambitious goal of producing and marketing 800,000 metric tons of recycled and renewable-based polymers annually by 2030. Renewable electricity procurement target stands at 50% for operations.",
-      "ic": "eco",
+      "d": "Major chemical producers are aggressively transitioning proprietary chemical recycling technologies from pilot phases to commercial-scale industrial operations. LyondellBasell Industries NV is advancing the construction of its MoReTec-1 plant, which represents its first industrial-scale catalytic chemical recycling facility. Designed with the flexibility to operate under 100 percent renewable power, this facility aims to convert post-consumer plastic waste into virgin-equivalent feedstock. This technology achieves exceptionally high plastic-to-plastic yields while substantially reducing greenhouse gas emissions compared to traditional fossil fuel-based production methods. The successful deployment of this infrastructure is critical for the company to achieve its ambitious goal of producing and marketing 800,000 metric tons of recycled and renewable-based polymers annually by 2030.",
+      "ic": "recycling",
       "priority": 1,
       "source": {
-        "document_title": "Scanned paper annual report submission",
+        "document_title": "Annual Report FY 2025",
         "organization": "LyondellBasell Industries NV",
         "document_type": "Major SEC Filings",
         "date": "2026-04-10",
-        "url": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse479676&hl=fse479676&page=131",
-        "headline": null
+        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse29621&hl=fse29621&page=10",
+        "headline": null,
+        "citation_id": 41
       },
       "affected_companies": [
         {
           "name": "LyondellBasell Industries NV",
           "ticker": "LYB",
           "impact": "positive",
-          "detail": "Establishing a leadership position in the circular economy by commercializing proprietary MoReTec technology at industrial scale."
+          "detail": "Establishing a leadership position in the circular economy by commercializing proprietary MoReTec technology at industrial scale [36]"
         }
       ],
       "key_metrics": [
@@ -370,25 +395,26 @@
     },
     {
       "t": "Policy-Driven Expansion of Renewable Natural Gas Infrastructure",
-      "p": "$15% CAGR global biogas market",
+      "p": "Mid-teens CAGR global biogas demand",
       "timeline": "Near-term (0-12mo)",
-      "d": "The push to decarbonize hard-to-electrify sectors and divert organic waste from landfills is creating massive structural tailwinds for anaerobic digestion technologies. Anaergia Inc is capitalizing on stringent environmental regulations, particularly California's Senate Bill 1383, which mandates a 75% reduction in organic waste sent to landfills. The company converts this reliable feedstock into renewable natural gas, bio-fertilizers, and reclaimed water, benefiting from lucrative environmental credits associated with low carbon intensity scores. The International Energy Agency forecasts global biogas and renewable natural gas demand to grow at a mid-teens compound annual growth rate over the next decade, and developers are experiencing surging revenue backlogs. Anaergia currently operates multiple build-own-operate assets in the United States and is actively securing multi-million dollar conditional financing commitments to expand its pipeline.",
-      "ic": "cloud",
+      "d": "The push to decarbonize hard-to-electrify sectors and divert organic waste from landfills is creating massive structural tailwinds for anaerobic digestion technologies. Anaergia Inc is capitalizing on stringent environmental regulations, particularly California's Senate Bill 1383, which mandates a 75 percent reduction in organic waste sent to landfills. The company converts this reliable feedstock into renewable natural gas, bio-fertilizers, and reclaimed water, benefiting from lucrative environmental credits associated with low carbon intensity scores. As the International Energy Agency forecasts global biogas and renewable natural gas demand to grow at a mid-teens compound annual growth rate over the next decade, developers are experiencing surging revenue backlogs. Anaergia currently operates multiple build-own-operate assets in the United States and is actively securing multi-million dollar conditional financing commitments to expand its pipeline.",
+      "ic": "eco",
       "priority": 1,
       "source": {
         "document_title": "What's old is renewable again",
         "organization": "Canaccord Genuity",
         "document_type": "Broker Research",
         "date": "2026-04-08",
-        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse11995&hl=fse11995&page=4",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 306
       },
       "affected_companies": [
         {
           "name": "Anaergia Inc",
-          "ticker": null,
+          "ticker": "ANRG",
           "impact": "positive",
-          "detail": "Directly benefiting from expanding state-level organic waste diversion mandates and renewable fuel incentives with a surging project backlog."
+          "detail": "Directly benefiting from expanding state-level organic waste diversion mandates and renewable fuel incentives [41]"
         }
       ],
       "key_metrics": [
@@ -398,13 +424,15 @@
           "change": "+25pp"
         },
         {
-          "metric": "Global Biogas Demand Growth CAGR",
+          "metric": "Global Biogas Demand Growth",
           "value": "15%",
           "change": "+15%"
         }
       ],
       "linked_top_companies": [
-        6
+        5,
+        6,
+        8
       ]
     },
     {
@@ -412,22 +440,23 @@
       "p": "139M gallons commercial ethanol produced",
       "timeline": "Medium-term (1-3yr)",
       "d": "Innovative biological carbon capture and utilization technologies are providing industrial emitters with viable pathways to monetize their waste gases. LanzaTech Global Inc has developed a proprietary gas fermentation platform that utilizes a single process to produce multiple high-value chemical intermediates from diverse, fluctuating gas feedstocks. This system effectively repurposes industrial carbon emissions into materials for acrylics, plastics, and synthetic rubber, actively supporting a circular carbon economy. To date, the company's scalable technology has been deployed across six commercial plants globally, successfully producing over 139 million gallons of fuel-grade ethanol. By integrating these solutions directly onto existing industrial facilities, chemical and manufacturing partners are transforming historical emissions liabilities into marketable, revenue-generating products.",
-      "ic": "psychology",
+      "ic": "cloud",
       "priority": 1,
       "source": {
         "document_title": "Annual Report FY 2025",
         "organization": "LanzaTech Global Inc",
         "document_type": "Major SEC Filings",
         "date": "2026-03-31",
-        "url": "https://research.alpha-sense.com/?docid=0001477932-26-001835&scope=ANYWHERE&stmt=fse149019&hl=fse149019&page=6",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 1040
       },
       "affected_companies": [
         {
           "name": "LanzaTech Global Inc",
           "ticker": "LNZA",
           "impact": "positive",
-          "detail": "Expanding the global deployment of its proprietary carbon recycling technology across heavy industry partners with six commercial plants live."
+          "detail": "Expanding the global deployment of its proprietary carbon recycling technology across six commercial heavy industry plants [45]"
         }
       ],
       "key_metrics": [
@@ -442,16 +471,13 @@
           "change": "+20%"
         }
       ],
-      "linked_top_companies": [
-        5,
-        8
-      ]
+      "linked_top_companies": []
     },
     {
       "t": "Rapid Transition to Mono-Material Packaging Structures",
       "p": "$58% European packaging volume share",
       "timeline": "Near-term (0-12mo)",
-      "d": "The impending enforcement of global circular economy regulations is forcing consumer goods companies to radically simplify their packaging architectures. Sonoco Products Co is uniquely positioned to capitalize on this shift through its development of highly recyclable mono-material packaging solutions. Legislative frameworks such as the EU's Packaging and Packaging Waste Regulation mandate that all packaging must be fully recyclable by 2030. The implementation of eco-modulated EPR fees places heavy financial penalties on complex, multi-material designs that disrupt sorting facilities. By transitioning clients away from difficult-to-recycle mixed substrates toward optimized paper and metal containers, specialized packaging manufacturers are securing long-term, high-margin supply agreements with European packaging volume share at 58%.",
+      "d": "The impending enforcement of global circular economy regulations is forcing consumer goods companies to radically simplify their packaging architectures. Sonoco Products Co is uniquely positioned to capitalize on this shift through its development of highly recyclable mono-material packaging solutions. Legislative frameworks, such as the European Union's Packaging and Packaging Waste Regulation, mandate that all packaging must be fully recyclable by 2030. Additionally, the implementation of eco-modulated Extended Producer Responsibility fees places heavy financial penalties on complex, multi-material designs that disrupt sorting facilities. By transitioning clients away from difficult-to-recycle mixed substrates toward optimized paper and metal containers, specialized packaging manufacturers are securing long-term, high-margin supply agreements.",
       "ic": "eco",
       "priority": 2,
       "source": {
@@ -459,21 +485,22 @@
         "organization": "Deutsche Bank Research",
         "document_type": "Broker Research",
         "date": "2026-03-31",
-        "url": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse314506&hl=fse314506&page=144",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 23
       },
       "affected_companies": [
         {
           "name": "Sonoco Products Co",
           "ticker": "SON",
           "impact": "positive",
-          "detail": "Capturing market share by providing compliant mono-material and metal packaging solutions to global consumer brands under regulatory pressure."
+          "detail": "Capturing market share by providing compliant mono-material and metal packaging solutions to global consumer brands [51]"
         },
         {
           "name": "Sherwin-Williams Co",
           "ticker": "SHW",
           "impact": "positive",
-          "detail": "Coatings solutions for mono-material packaging transitions create incremental demand for specialty surface treatment products."
+          "detail": "Specialty coatings for mono-material and recyclable packaging structures represent a growth opportunity [51]"
         }
       ],
       "key_metrics": [
@@ -497,7 +524,7 @@
   "challenges": [
     {
       "t": "Mounting Environmental Litigation and PFAS Settlements",
-      "d": "Major chemical manufacturers are facing escalating financial liabilities from class action and state-level lawsuits regarding PFAS and other legacy contamination. In November 2025, a coalition including The Chemours Co, DuPont de Nemours Inc, and Corteva Inc paid $90 million to the State of Ohio as part of a broader settlement framework for natural resource damages. The Chemours Co alone reports environmental remediation liabilities of approximately $618 million as of December 2025. These companies also agreed to a sweeping Judicial Consent Order with the State of New Jersey to resolve outstanding claims related to dense non-aqueous phase liquids and chemical solvents. The continuous wave of toxic-tort litigation is forcing legacy producers to allocate substantial capital toward legal defenses and settlement trusts rather than productive growth initiatives.",
+      "d": "Major chemical manufacturers are facing escalating financial liabilities from class action and state-level lawsuits regarding per- and polyfluoroalkyl substances (PFAS) and other legacy contamination. In November 2025, a coalition of companies including The Chemours Co, DuPont de Nemours Inc, and Corteva Inc paid $90 million to the State of Ohio as part of a broader settlement framework for natural resource damages. The Chemours Co alone currently reports environmental remediation liabilities of approximately $618 million as of December 2025. These companies also recently agreed to a sweeping Judicial Consent Order with the State of New Jersey to resolve outstanding claims related to dense non-aqueous phase liquids and chemical solvents. The continuous wave of toxic-tort litigation is forcing legacy producers to allocate substantial capital toward legal defenses and settlement trusts rather than productive growth initiatives.",
       "severity": "high",
       "ic": "warning",
       "source": {
@@ -505,27 +532,28 @@
         "organization": "The Chemours Co",
         "document_type": "Annual and Interim Reports",
         "date": "2026-03-11",
-        "url": "https://research.alpha-sense.com/?docid=GDS-69b8a5965bb20aa97f0d82a0&scope=ANYWHERE&stmt=fse662903&hl=fse662903&page=156",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 591
       },
       "affected_companies": [
         {
           "name": "The Chemours Co",
           "ticker": "CC",
           "impact": "negative",
-          "detail": "Facing $618M in environmental remediation liabilities and settlement payouts significantly draining free cash flow."
+          "detail": "Facing $618M in environmental remediation liabilities and settlement payouts as of December 2025 [55]"
         },
         {
           "name": "DuPont de Nemours Inc",
           "ticker": "DD",
           "impact": "negative",
-          "detail": "Executing multi-million dollar payouts for state-level PFAS natural resource damages, restricting capital for growth."
+          "detail": "Executing multi-million dollar payouts for state-level PFAS natural resource damages including $90M Ohio settlement [54]"
         },
         {
           "name": "Corteva Inc",
           "ticker": "CTVA",
           "impact": "negative",
-          "detail": "Absorbing significant legal and settlement costs tied to legacy chemical contamination from shared PFAS liability framework."
+          "detail": "Absorbing significant legal and settlement costs tied to legacy chemical contamination including New Jersey consent order [56]"
         }
       ],
       "key_metrics": [
@@ -541,12 +569,13 @@
         }
       ],
       "linked_top_companies": [
+        2,
         8
       ]
     },
     {
       "t": "Middle East Conflict Severely Disrupting Supply Chains",
-      "d": "The escalation of military conflict in the Middle East has severely constrained global shipping routes, particularly through the strategic Strait of Hormuz chokepoint. Commercial shipping traffic through this vital corridor decreased by more than 85% in early March 2026, removing approximately 8 million barrels per day of global oil supply. Consequently, Brent crude prices surged past the $120 per barrel threshold, creating massive input cost inflation for energy-intensive manufacturing globally. This unprecedented supply shock is cascading deeply through the petrochemical value chain, resulting in rapid disruptions for critical by-products like elemental sulphur. Because the Middle East controls 45% of the global seaborne sulphur trade, these transport delays have effectively paused seaborne exports, limiting output for downstream phosphate fertilizers and heavy metal processing.",
+      "d": "The escalation of military conflict in the Middle East has severely constrained global shipping routes, particularly through the strategic Strait of Hormuz chokepoint. Commercial shipping traffic through this vital corridor decreased by more than 85 percent in early March 2026, removing approximately 8 million barrels per day of global oil supply. Consequently, Brent crude prices surged past the $120 per barrel threshold, creating massive input cost inflation for energy-intensive manufacturing globally. This unprecedented supply shock is cascading deeply through the petrochemical value chain, resulting in rapid disruptions for critical by-products like elemental sulphur. Because the Middle East controls 45 percent of the global seaborne sulphur trade, these transport delays have effectively paused seaborne exports, limiting output for downstream phosphate fertilizers and heavy metal processing.",
       "severity": "critical",
       "ic": "warning",
       "source": {
@@ -554,39 +583,40 @@
         "organization": "Natixis",
         "document_type": "Broker Research",
         "date": "2026-03-27",
-        "url": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 615
       },
       "affected_companies": [
         {
           "name": "Dow Inc",
           "ticker": "DOW",
           "impact": "negative",
-          "detail": "Facing significantly higher costs for petroleum-derived raw materials and disrupted global logistics from Hormuz closure."
+          "detail": "Facing significantly higher costs for petroleum-derived raw materials and disrupted global logistics [60]"
         },
         {
           "name": "Shell PLC",
           "ticker": "SHEL",
           "impact": "negative",
-          "detail": "Experiencing direct operational and trading disruptions due to extreme volatility in Middle East supply routes."
+          "detail": "Experiencing direct operational and trading disruptions due to extreme volatility in Middle East supply routes [62]"
         },
         {
-          "name": "Southern Copper Corp",
-          "ticker": "SCCO",
+          "name": "Linde PLC",
+          "ticker": "LIN",
           "impact": "negative",
-          "detail": "Disrupted sulphur supply chains affecting heavy metal processing economics and downstream cost structures."
+          "detail": "Supply chain disruptions from Hormuz closure affecting industrial gas logistics and feedstock availability [61]"
         },
         {
-          "name": "Freeport-McMoRan Inc",
-          "ticker": "FCX",
+          "name": "Air Products and Chemicals Inc",
+          "ticker": "APD",
           "impact": "negative",
-          "detail": "Elevated energy costs from Brent crude above $120/bbl compress margins at energy-intensive smelting and refining operations."
+          "detail": "Middle East project exposure and energy market volatility complicating clean hydrogen megaproject execution [57]"
         },
         {
-          "name": "Anglogold Ashanti PLC",
-          "ticker": "AU",
+          "name": "Ecolab Inc",
+          "ticker": "ECL",
           "impact": "negative",
-          "detail": "Global energy cost inflation from Middle East supply shock elevates operating costs across mining and processing assets."
+          "detail": "Higher energy and feedstock costs from Brent crude above $120/bbl compressing chemical segment margins [60]"
         }
       ],
       "key_metrics": [
@@ -602,15 +632,17 @@
         }
       ],
       "linked_top_companies": [
+        0,
         1,
-        2,
         3,
+        5,
+        6,
         7
       ]
     },
     {
       "t": "Escalating Capital Requirements for EPA Regulatory Compliance",
-      "d": "Chemical manufacturers are being forced to dramatically increase capital expenditures to comply with stringent new federal environmental regulations. The U.S. EPA recently finalized extensive updates to hazardous organic national emission standards for hazardous air pollutants, requiring companies to rapidly deploy capital to upgrade equipment, install advanced pollution control technologies, and implement rigorous fenceline monitoring systems. For example, Westlake Corp projects its environmental compliance capital expenditures will double to approximately $103 million in 2026 and reach $125 million by 2027. These mandatory outlays offer no direct return on investment and are systematically compressing operating margins across the domestic heavy chemicals sector. The regulatory burden falls disproportionately on large integrated chemical manufacturers with extensive legacy plant infrastructure.",
+      "d": "Chemical manufacturers are being forced to dramatically increase capital expenditures to comply with stringent new federal environmental regulations in the United States. The U.S. Environmental Protection Agency recently finalized extensive updates to the hazardous organic national emission standards for hazardous air pollutants. To meet these new mandates, companies must rapidly deploy capital to upgrade equipment, install advanced pollution control technologies, and implement rigorous fenceline monitoring systems. For example, Westlake Corp projects its environmental compliance capital expenditures will double to approximately $103 million in 2026 and reach $125 million by 2027. These mandatory outlays offer no direct return on investment and are systematically compressing operating margins across the domestic heavy chemicals sector.",
       "severity": "medium",
       "ic": "account_balance",
       "source": {
@@ -618,33 +650,34 @@
         "organization": "Westlake Corp",
         "document_type": "Major SEC Filings",
         "date": "2026-04-02",
-        "url": "https://research.alpha-sense.com/?docid=0001104659-26-039153&scope=ANYWHERE&stmt=fse145017&hl=fse145017&page=36",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 597
       },
       "affected_companies": [
         {
           "name": "Westlake Corp",
           "ticker": "WLK",
           "impact": "negative",
-          "detail": "Projecting a massive increase in environmental compliance capital expenditures, doubling to $103M in 2026 and reaching $125M in 2027."
+          "detail": "Projecting a massive increase in environmental compliance capital expenditures doubling to $103M in 2026 and $125M by 2027 [67]"
         },
         {
           "name": "LyondellBasell Industries NV",
           "ticker": "LYB",
           "impact": "negative",
-          "detail": "Experiencing elevated capital expenditure requirements for health, safety, and environmental compliance purposes under new EPA mandates."
+          "detail": "Experiencing elevated capital expenditure requirements for health, safety and environmental compliance purposes [68]"
+        },
+        {
+          "name": "Corteva Inc",
+          "ticker": "CTVA",
+          "impact": "negative",
+          "detail": "Forced to redirect capital toward EPA hazardous air pollutant compliance upgrades away from growth initiatives [65]"
         },
         {
           "name": "Sherwin-Williams Co",
           "ticker": "SHW",
           "impact": "negative",
-          "detail": "Mandatory air quality and emissions upgrades divert capital from targeted growth initiatives across manufacturing facilities."
-        },
-        {
-          "name": "Ecolab Inc",
-          "ticker": "ECL",
-          "impact": "negative",
-          "detail": "Compliance with new EPA hazardous air pollutant standards requires additional capital investment across chemical processing operations."
+          "detail": "Manufacturing operations subject to escalating EPA compliance capital expenditure requirements reducing investable cash flow [66]"
         }
       ],
       "key_metrics": [
@@ -667,35 +700,30 @@
     },
     {
       "t": "Feedstock Cost Volatility Driven by Rising Power Sector Demand",
-      "d": "Domestic chemical and fertilizer producers are experiencing severe margin pressure due to intense price volatility and constrained availability of natural gas feedstocks. A primary driver of this market tightness is the rapidly escalating demand for natural gas from the power generation sector, specifically to supply massive new AI data centers. Combined with structurally higher levels of U.S. liquefied natural gas exports, this intense cross-sector competition for molecules is systematically elevating the domestic natural gas cost curve. Several chemical manufacturers have been forced to temporarily suspend production at specific facilities because the elevated cost of natural gas rendered their basic chemical output uneconomical. This structural shift threatens to erode the historical cost advantage enjoyed by U.S. Gulf Coast petrochemical operators over international peers.",
+      "d": "Domestic chemical and fertilizer producers are experiencing severe margin pressure due to intense price volatility and constrained availability of natural gas feedstocks. A primary driver of this market tightness is the rapidly escalating demand for natural gas from the power generation sector, specifically to supply massive new artificial intelligence data centers. Combined with structurally higher levels of U.S. liquefied natural gas exports, this intense cross-sector competition for molecules is systematically elevating the domestic natural gas cost curve. Several chemical manufacturers have been forced to temporarily suspend production at specific facilities because the elevated cost of natural gas rendered their basic chemical output uneconomical. This structural shift threatens to erode the historical cost advantage enjoyed by U.S. Gulf Coast petrochemical operators over international peers.",
       "severity": "medium",
-      "ic": "bolt",
+      "ic": "warning",
       "source": {
         "document_title": "2025 ANNUAL REPORT",
         "organization": "LSB Industries Inc",
         "document_type": "Annual and Interim Reports",
         "date": "2026-04-13",
-        "url": "https://research.alpha-sense.com/?docid=GDS-69dd8fdd32250d125bf9acbd&scope=ANYWHERE&stmt=fse52173&hl=fse52173.fse52460&page=18",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 325
       },
       "affected_companies": [
         {
           "name": "LSB Industries Inc",
           "ticker": "LXU",
           "impact": "negative",
-          "detail": "Experiencing production suspensions and compressed margins due to volatile natural gas feedstock costs driven by AI power demand."
+          "detail": "Experiencing production suspensions and compressed margins due to volatile natural gas feedstock costs [69]"
         },
         {
           "name": "Enterprise Products Partners LP",
           "ticker": "EPD",
           "impact": "neutral",
-          "detail": "Navigating shifting domestic supply dynamics while maintaining general U.S. petrochemical advantages in midstream operations."
-        },
-        {
-          "name": "Air Products and Chemicals Inc",
-          "ticker": "APD",
-          "impact": "negative",
-          "detail": "Rising natural gas input costs create margin headwinds for hydrogen production and industrial gas feedstock processing."
+          "detail": "Navigating shifting domestic supply dynamics while maintaining general U.S. petrochemical advantages [69]"
         }
       ],
       "key_metrics": [
@@ -711,13 +739,12 @@
         }
       ],
       "linked_top_companies": [
-        5,
         6
       ]
     },
     {
       "t": "Record High Tariffs Fragmenting Energy Supply Chains",
-      "d": "The U.S. chemicals and energy sectors are grappling with significant supply chain disruptions caused by an increasingly hostile global trade environment and retaliatory protectionist measures. U.S. tariff rates have currently reached their highest levels since World War II, fundamentally reshaping historical global trade flows. These elevated import duties on steel, aluminum, and critical electronic components are sharply increasing the capital expenditures required to build and maintain domestic infrastructure. Companies are experiencing extended lead times and material shortages, which have contributed to the delay or outright abandonment of numerous renewable energy and chemical capacity projects. Expanded sanctions regimes are limiting operational flexibility of U.S. firms and forcing them to source essential equipment from more expensive regional alternatives, with peak tariff impact rate at 25% and material cost inflation reaching $125M.",
+      "d": "The U.S. chemicals and energy sectors are grappling with significant supply chain disruptions caused by an increasingly hostile global trade environment and retaliatory protectionist measures. U.S. tariff rates have currently reached their highest levels since World War II, fundamentally reshaping historical global trade flows. These elevated import duties on steel, aluminum, and critical electronic components are sharply increasing the capital expenditures required to build and maintain domestic infrastructure. Companies are experiencing extended lead times and material shortages, which have ultimately contributed to the delay or outright abandonment of numerous renewable energy and chemical capacity projects. Furthermore, expanded sanctions regimes are limiting the operational flexibility of U.S. firms and forcing them to source essential equipment from more expensive regional alternatives.",
       "severity": "critical",
       "ic": "warning",
       "source": {
@@ -725,69 +752,64 @@
         "organization": "NextNRG Inc",
         "document_type": "Major SEC Filings",
         "date": "2026-04-16",
-        "url": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse111483&hl=fse111483&page=4",
-        "headline": null
+        "url": null,
+        "headline": null,
+        "citation_id": 61
       },
       "affected_companies": [
         {
           "name": "NextNRG Inc",
-          "ticker": null,
+          "ticker": "NXXT",
           "impact": "negative",
-          "detail": "Facing higher capital and operating costs due to tariffs on steel, aluminum, and electronic components for energy infrastructure."
+          "detail": "Facing higher capital and operating costs due to tariffs on steel, aluminum, and electronic components [74]"
         },
         {
           "name": "Kinetik Holdings Inc",
           "ticker": "KNTK",
           "impact": "negative",
-          "detail": "Experiencing increased construction and maintenance costs for midstream assets due to tariffs on imported steel."
-        },
-        {
-          "name": "Newmont Corp",
-          "ticker": "NEM",
-          "impact": "negative",
-          "detail": "Higher steel and equipment costs from tariffs inflate capital expenditure forecasts for mining development projects."
+          "detail": "Experiencing increased construction and maintenance costs for midstream assets due to tariffs on imported steel [72]"
         },
         {
           "name": "Southern Copper Corp",
           "ticker": "SCCO",
           "impact": "negative",
-          "detail": "Tariff-driven increases in equipment and infrastructure costs pressure the $20.5B capital investment program timeline."
+          "detail": "Capital investment program costs inflated by record tariff levels on steel and equipment imports [71]"
+        },
+        {
+          "name": "Newmont Corp",
+          "ticker": "NEM",
+          "impact": "negative",
+          "detail": "Sustaining and development capital costs elevated by tariff-driven material cost inflation [72]"
         },
         {
           "name": "Freeport-McMoRan Inc",
           "ticker": "FCX",
           "impact": "negative",
-          "detail": "Import tariffs on steel and critical components raise capital costs for concentrator expansion and underground mining projects."
-        },
-        {
-          "name": "Linde PLC",
-          "ticker": "LIN",
-          "impact": "negative",
-          "detail": "Tariff-driven material cost inflation affects equipment procurement for the $10B+ backlogged project execution pipeline."
-        },
-        {
-          "name": "Air Products and Chemicals Inc",
-          "ticker": "APD",
-          "impact": "negative",
-          "detail": "Sanctions and tariff regimes complicate equipment sourcing for clean hydrogen megaprojects, contributing to planned capex reduction of $1B."
-        },
-        {
-          "name": "Anglogold Ashanti PLC",
-          "ticker": "AU",
-          "impact": "negative",
-          "detail": "Tariff-related cost inflation impacts the $3.6B Arthur Gold Project capital budget and 2026 sustaining capital plan."
-        },
-        {
-          "name": "Nucor Corp",
-          "ticker": "NUE",
-          "impact": "neutral",
-          "detail": "As a domestic steel producer, Nucor partially benefits from steel import tariffs while also facing elevated input cost pressures."
+          "detail": "Bagdad concentrator expansion and other capital projects facing inflated costs from tariffs on construction materials [73]"
         },
         {
           "name": "Sherwin-Williams Co",
           "ticker": "SHW",
           "impact": "negative",
-          "detail": "Tariff-driven input cost inflation necessitated a 7% price increase across the Paint Stores Group to protect margins."
+          "detail": "Manufacturing capital expenditure programs facing elevated costs due to tariffs on industrial equipment and materials [72]"
+        },
+        {
+          "name": "Air Products and Chemicals Inc",
+          "ticker": "APD",
+          "impact": "negative",
+          "detail": "Clean hydrogen and decarbonization megaproject capex inflated by tariffs on critical equipment and components [73]"
+        },
+        {
+          "name": "Anglogold Ashanti PLC",
+          "ticker": "AU",
+          "impact": "negative",
+          "detail": "Arthur Gold Project and sustaining capital programs facing higher costs from tariff-driven material inflation [72]"
+        },
+        {
+          "name": "Nucor Corp",
+          "ticker": "NUE",
+          "impact": "negative",
+          "detail": "Capital expansion programs and downstream acquisitions facing elevated input costs from record tariff levels [71]"
         }
       ],
       "key_metrics": [
@@ -814,321 +836,27 @@
       ]
     }
   ],
-  "synthesis": "The U.S. Chemicals & Natural Resources sector is undergoing simultaneous transformation on multiple fronts, with the rapid scale-up of advanced molecular recycling (Trend 1) and proliferation of EPR laws (Trend 2) driving a structural shift toward circular economy business models. The single most critical development for decision-makers is the Middle East conflict (Challenge 2), which has collapsed Strait of Hormuz shipping traffic by 85% and pushed Brent crude past $120/bbl, creating massive input cost inflation across the entire petrochemical value chain while paradoxically reinforcing the structural natural gas feedstock advantage of U.S. producers (Trend 4). This external shock is colliding with record-high tariffs (Challenge 5) and escalating EPA compliance burdens (Challenge 3), systematically inflating capital project costs and forcing companies to divert cash flow from growth to mandatory compliance. The sector's strategic response has been aggressive consolidation through mega-mergers such as Devon Energy's $21.4B acquisition of Coterra and Berkshire Hathaway's $9.7B purchase of Occidental Chemical (Opportunity 1), as capital-rich entities seek scale and integration to weather unprecedented volatility. Decision-makers must simultaneously navigate PFAS litigation liabilities draining legacy balance sheets (Challenge 1) while positioning for long-term circular economy opportunities in chemical recycling (Opportunity 2) and renewable natural gas (Opportunity 3).",
+  "synthesis": "The U.S. Chemicals & Natural Resources sector is undergoing simultaneous structural transformation and acute crisis: the rapid scale-up of advanced molecular recycling (Trend 1) and the commercial deployment of catalytic recycling platforms (Opportunity 2) are creating profitable new feedstock streams, but the single most critical development is the Middle East conflict (Challenge 2), which has collapsed Strait of Hormuz shipping traffic by over 85 percent and driven Brent crude past $120/barrel, inflicting cascading input cost inflation across the entire petrochemical value chain. This external shock intersects with structural regulatory pressure from proliferating state-level EPR laws (Trend 2) and mounting PFAS litigation liabilities (Challenge 1), which collectively are diverting capital from growth to compliance and settlement obligations. Meanwhile, strategic decoupling from Chinese chemical suppliers (Trend 3) is reducing imports by an estimated 30 percent and elevating procurement costs as firms execute friendshoring strategies, while record tariff levels (Challenge 5) are inflating infrastructure capex and delaying critical project deployments. The sector's dominant strategic response has been aggressive consolidation through mega-mergers such as Devon Energy's $21.4 billion acquisition of Coterra Energy and Berkshire Hathaway's $9.7 billion purchase of Occidental Chemical (Opportunity 1), as capital-rich entities seek the scale and integration necessary to weather unprecedented volatility in feedstock costs, regulatory complexity, and geopolitical risk.",
   "source": {
     "subject": "United States Chemicals & Natural Resources",
-    "date_generated": "2026-04-15",
+    "date_generated": "2026-04-16",
     "total_findings": 15
   },
-  "news_items": [
-    {
-      "id": 1,
-      "headline": "Record Polyethylene Price Hikes Reshape U.S. Chemical Cost Curves",
-      "summary": "Deutsche Bank Research reports that U.S. integrated ethylene/PE margins are expected to rise 17 c/lb in 2026, with producers announcing cumulative 40–50 c/lb price increases across March–May. Analysts describe this as the largest supply shock in chemicals history based on conference takeaways, driven by Middle East feedstock disruptions.",
-      "source_org": "Deutsche Bank Research",
-      "date": "2026-04-13",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-367a89cd2a8b657f307d82030ccda9e0&scope=ANYWHERE&stmt=fse665&hl=fse665&page=1",
-      "related_finding_ids": [],
-      "analyst_quote": null,
-      "linked_top_companies": [
-        6
-      ]
-    },
-    {
-      "id": 2,
-      "headline": "PE Uptrend and Helium Resiliency Signal Industrial Gas Outperformance in H2",
-      "summary": "RBC Capital Markets' weekly tracking shows polyethylene pricing continuing to trend higher, while industrial gas producers are expected to benefit from price catch-up into 2H26/1H27. The team highlights TiO2 price upside from higher sulphur and feed costs and notes helium supply normalization by mid-year.",
-      "source_org": "RBC Capital Markets",
-      "date": "2026-04-08",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse11168&hl=fse11168.fse11182.fse11255&page=6",
-      "related_finding_ids": [],
-      "analyst_quote": "RBC Chemicals & Packaging Team — 'We think higher sulfur/feed costs could drive TiO2 price upside and see industrial gases buffered with price pass-throughs as helium supply normalizes by 2H.'",
-      "linked_top_companies": []
-    },
-    {
-      "id": 3,
-      "headline": "Commodity Monitor: PE Contracts Settle +$0.10; April Sees Additional +$0.20 Surge",
-      "summary": "Mizuho Securities USA reports that U.S. polyethylene contracts settled $0.10/lb higher in March with another $0.20/lb expected in April, driven by severe Middle East supply disruptions and elevated energy costs. The magnitude of these increases represents a record pricing shock across the global polyethylene market.",
-      "source_org": "Mizuho Securities USA",
-      "date": "2026-04-10",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&page=7&imageId=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829-a56293efe9b098c48cf28cf1777ed802",
-      "related_finding_ids": [],
-      "analyst_quote": "Edlain Rodriguez, Director — 'Polyethylene producers announced record price increases as global supply chains adjust to feedstock shortages and elevated oil prices.'",
-      "linked_top_companies": []
-    },
-    {
-      "id": 4,
-      "headline": "Energy and Fertilizer Tape: Henry Hub Slips While Ammonia Tops $1,000/st",
-      "summary": "Mizuho's energy tracker shows Henry Hub natural gas at $2.66/MMBtu with weekly declines, while Midwest ammonia rose 4% to $1,015/st as spring application season tightens supply. The divergence between cheap domestic gas and elevated fertilizer prices highlights the structural feedstock advantage for U.S. ammonia producers.",
-      "source_org": "Mizuho Securities USA",
-      "date": "2026-04-10",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&page=7&imageId=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829-a56293efe9b098c48cf28cf1777ed802",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    },
-    {
-      "id": 5,
-      "headline": "U.S. Chemical Rail Shipments Accelerate to 6.1% YoY Growth",
-      "summary": "Deutsche Bank's railcar and petrochemical update shows the 4-week moving average of U.S. chemical railcar loadings rising 6.1% year-over-year in Week 12, with weekly loadings up 7.2% YoY and up 0.8% sequentially. The acceleration signals improving domestic chemical demand fundamentals despite macro headwinds.",
-      "source_org": "Deutsche Bank Research",
-      "date": "2026-04-07",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-f949842e8e2a5a130a4fba3562c6ed46&scope=ANYWHERE&stmt=fse491&hl=fse491&page=1",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    },
-    {
-      "id": 6,
-      "headline": "ISM Translation Points to Chemicals EPS Inflection with 5% Net Income Growth in 2026",
-      "summary": "Jefferies Research models tied to ISM subindices project chemicals aggregate net income growing approximately 5% in 2026 and 12% in 2027, with new orders and supplier deliveries supporting a PMI of 52–53 in Q2. The combination of accelerating orders and rising prices is described as a historically strong signal for commodity chemicals on a 6–12 month view.",
-      "source_org": "Jefferies Research",
-      "date": "2026-04-08",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-JFR-ac7386add205dcb3de4393904feca9b9&scope=ANYWHERE&stmt=fse2425&hl=fse2425.fse2554.fse2756&page=1",
-      "related_finding_ids": [],
-      "analyst_quote": "Jefferies US Chemicals Team — 'The combination of acceleration and rising to the low-50s is usually a strong signal for commodity chemicals on a 6–12 months view.'",
-      "linked_top_companies": [
-        6
-      ]
-    },
-    {
-      "id": 7,
-      "headline": "Fed Pause Amid Oil Spike Risk as Petrochemical Input Costs Come Into Focus",
-      "summary": "TD Economics reports that the Federal Reserve held policy steady while acknowledging higher inflation risks, with oil prices whipsawing from conflict-driven supply shocks that threaten early-stage production including petrochemicals. The macro environment of elevated energy costs and constrained monetary easing creates a challenging backdrop for margin recovery in chemicals.",
-      "source_org": "TD Economics",
-      "date": "2026-03-23",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-8a69a979758ade75e459f712f0b380c9&scope=ANYWHERE&page=3&imageId=SSRFS-00-8a69a979758ade75e459f712f0b380c9-55533fdd9ae818a48eecd94017c67ed7",
-      "related_finding_ids": [],
-      "linked_top_companies": [
-        6
-      ]
-    },
-    {
-      "id": 8,
-      "headline": "Middle East Conflict Drives Brent Above $120 and Triggers Global Sulphur Supply Shock",
-      "summary": "Natixis reports that Strait of Hormuz traffic fell by more than 85% in early March 2026, pushing Brent crude above $120/bbl and severely disrupting elemental sulphur flows that underpin phosphate fertilizers and heavy metals processing. The Middle East controls 45% of global seaborne sulphur trade, making the supply shock a systemic risk across multiple downstream chemical sectors.",
-      "source_org": "Natixis",
-      "date": "2026-03-27",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    },
-    {
-      "id": 9,
-      "headline": "Beige Book Preview: Petrochemical PPI Pass-Through Risk Rises as Energy Shock Filters Through",
-      "summary": "Commonwealth Bank of Australia highlights that upcoming U.S. PPI data will reveal how the global energy supply shock is filtering into petrochemical prices, with Beige Book color expected on early-stage production strain. The analysis suggests significant cost pass-through pressure building across the petrochemical value chain.",
-      "source_org": "Commonwealth Bank of Australia",
-      "date": "2026-04-16",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a&scope=ANYWHERE&page=3&imageId=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a-9a68f7f8ddac34467c800cb8ce7fc924",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    },
-    {
-      "id": 10,
-      "headline": "U.S. Infrastructure Premium and Energy Security Re-Rating Justify Higher Multiples",
-      "summary": "Capital One argues for higher valuation multiples for domestic midstream and adjacent energy infrastructure given stronger-for-longer commodity backdrops, clean balance sheets, and consolidation potential. The analysis frames domestic assets as the preeminent expression of energy security in a world defined by persistent geopolitical tensions.",
-      "source_org": "Capital One",
-      "date": "2026-04-02",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-CAPO-0f6bd787c645f40fa92e8ec89992a3c3&scope=ANYWHERE&stmt=fse1229&hl=fse1229&page=3",
-      "related_finding_ids": [],
-      "analyst_quote": "Capital One Energy Research — 'In a world where heightened geopolitical tensions have become the norm, domestic assets represent the epitome of energy security and reliability.'",
-      "linked_top_companies": []
-    },
-    {
-      "id": 11,
-      "headline": "Chemicals Scorecard: DOW and LYB Surge as Sector Valuations Rise 17% Above Historical Average",
-      "summary": "Deutsche Bank's March scorecard shows sharp outperformance from select commodity names on polyethylene price hikes, while the sector's forward P/E of 18.1x sits approximately 17% above its 10-year average and at a 27% discount to the S&P 500. The outperformance is concentrated in producers with structural natural gas feedstock advantages.",
-      "source_org": "Deutsche Bank Research",
-      "date": "2026-04-02",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-43b65b40fc4d9c0bc0cdf2cf9707ab99&scope=ANYWHERE&stmt=fse193&hl=fse193&page=1",
-      "related_finding_ids": [],
-      "linked_top_companies": [
-        6
-      ]
-    },
-    {
-      "id": 12,
-      "headline": "Electronic Materials Growth Outpaces Specialty Chemicals Average with ~5% Organic CAGR",
-      "summary": "Mizuho Securities reports that electronic chemicals and materials represent the fastest-growing segment in specialties with an industry-wide approximately 5% organic CAGR, and industrial gases exposure supports returns durability for leading suppliers. Mizuho sets a $560 price target for Linde based on approximately 29x NTM+1 EPS, citing superior cash conversion and backlog visibility.",
-      "source_org": "Mizuho Securities USA",
-      "date": "2026-04-07",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-MSUS-ddf73b5aa81df7a8c42492b398067d60&scope=ANYWHERE&stmt=fse931&hl=fse931&page=1",
-      "related_finding_ids": [],
-      "analyst_quote": "Mizuho Chemicals Team — 'We base our $560 PT for Linde on ~29x NTM+1 EPS given superior cash conversion and backlog visibility.'",
-      "linked_top_companies": [
-        0,
-        6
-      ]
-    },
-    {
-      "id": 13,
-      "headline": "Data Centers and LNG Exports Tighten U.S. Natural Gas Balance Through 2029",
-      "summary": "RBC Capital Markets reports that longer-dated U.S. natural gas futures average approximately $3.65/Mcf for 2026–2029 as drilling rigs stabilize and LNG projects advance, with equities pricing in approximately $3.71/Mcf. The structural tightening from AI data center demand and LNG export growth is expected to persistently elevate feedstock costs for domestic chemical producers.",
-      "source_org": "RBC Capital Markets",
-      "date": "2026-04-09",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=ASR-RBCM-6fe473c86235912dd9b4fce84733f12a&scope=ANYWHERE&stmt=fse2115&hl=fse2115&page=1",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    },
-    {
-      "id": 14,
-      "headline": "Field Checks Confirm Sherwin-Williams Share Gains as Pricing Actions Hold Firm",
-      "summary": "An Expert Transcript Library interview with an oil and gas engineer confirms expectations for increased spending on Sherwin-Williams products in the next 3–6 months as pricing actions hold and project pipelines convert. The expert insight corroborates Sherwin-Williams' strategy of deploying additional sales representatives and digital tools to capture market share amid inflationary conditions.",
-      "source_org": "Expert Transcript Library",
-      "date": "2026-04-06",
-      "type": "Broker Research",
-      "url": "https://research.alpha-sense.com/?docid=EC-1000000-202639&scope=ANYWHERE&stmt=fse16815&hl=fse16815&page=2",
-      "related_finding_ids": [],
-      "analyst_quote": "Industry Expert — 'Price hikes are holding; we expect more orders and volumes, helping us maintain margins on awarded projects.'",
-      "linked_top_companies": [
-        4,
-        6
-      ]
-    },
-    {
-      "id": 15,
-      "headline": "LSB Industries Flags AI Power Demand as Structural Natural Gas Feedstock Risk",
-      "summary": "LSB Industries' 2025 Annual Report highlights rising Gulf Coast natural gas demand from AI data centers and LNG export terminals as key drivers of feedstock volatility that could force production suspensions if prices spike. The company's disclosure underscores the systemic risk that cross-sector competition for domestic natural gas poses to the structural cost advantage historically enjoyed by U.S. ammonia and fertilizer producers.",
-      "source_org": "LSB Industries Inc",
-      "date": "2026-04-13",
-      "type": "Earnings Call",
-      "url": "https://research.alpha-sense.com/?docid=GDS-69dd8fdd32250d125bf9acbd&scope=ANYWHERE&stmt=fse52173&hl=fse52173.fse52460&page=18",
-      "related_finding_ids": [],
-      "linked_top_companies": []
-    }
-  ],
-  "financial_highlights": [
-    {
-      "id": 1,
-      "metric": "Brent Crude Price",
-      "current_value": "$120/bbl",
-      "previous_value": null,
-      "change": "+69%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 2,
-      "metric": "Henry Hub Natural Gas",
-      "current_value": "$2.66/MMBtu",
-      "previous_value": null,
-      "change": "-24.70%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 3,
-      "metric": "US PE Contract Price (HDPE)",
-      "current_value": "$0.65/lb",
-      "previous_value": null,
-      "change": "+18%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 4,
-      "metric": "Announced US PE Price Increase (April)",
-      "current_value": "$0.20/lb",
-      "previous_value": null,
-      "change": "+32%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 5,
-      "metric": "US Integrated Ethylene/PE Margin",
-      "current_value": "35.1 c/lb",
-      "previous_value": null,
-      "change": "+9.0c",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 6,
-      "metric": "North America Spot PE",
-      "current_value": "72.5 c/lb",
-      "previous_value": null,
-      "change": "+19.8%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 7,
-      "metric": "Midwest Ammonia Price",
-      "current_value": "$1,015/st",
-      "previous_value": null,
-      "change": "+4%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 8,
-      "metric": "US Chemical Railcar Loadings (4W Avg)",
-      "current_value": "6.1%",
-      "previous_value": null,
-      "change": "+6.1%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 9,
-      "metric": "Strait of Hormuz Shipping Traffic",
-      "current_value": "15%",
-      "previous_value": null,
-      "change": "-85%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 10,
-      "metric": "S&P GSCI Commodity Spot YTD",
-      "current_value": "35.9%",
-      "previous_value": null,
-      "change": "+35.9%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 11,
-      "metric": "Chemours PFAS Remediation Liabilities",
-      "current_value": "$618M",
-      "previous_value": null,
-      "change": "+8.2%",
-      "chart_type": "bar",
-      "data_points": []
-    },
-    {
-      "id": 12,
-      "metric": "Westlake Corp 2026 Environmental Capex",
-      "current_value": "$103M",
-      "previous_value": null,
-      "change": "+110%",
-      "chart_type": "bar",
-      "data_points": []
-    }
-  ],
   "top_companies": [
     {
       "name": "Linde PLC",
       "ticker": "LIN",
-      "sector": "Industrial Gases & Materials",
+      "sector": "Materials",
       "hq": "Woking, United Kingdom",
       "revenue": "$33.99B",
       "key_initiatives": [
-        "Earmarked over $10 billion for backlogged high-quality projects under execution",
-        "Maintained a $5 billion clean energy portfolio including a major low-carbon hydrogen contract with Dow in Alberta",
-        "Advanced development on a project to deliver low-carbon hydrogen to Woodside Energy in Texas"
+        "Earmarked over $10 billion for backlogged high-quality projects under execution [75]",
+        "Maintained a $5 billion clean energy portfolio including a major low-carbon hydrogen contract with Dow in Alberta [75]"
+      ],
+      "investment_focus": "Capital allocation is heavily prioritized toward base capital expenditures and high-return growth investments. The company maintains a disciplined approach to preserve a strong credit rating while utilizing surplus cash to consistently grow dividends and execute share repurchases. [75]",
+      "recent_moves": [
+        "Repurchased $1.1 billion of company stock in the most recent quarter [76]",
+        "Advanced development on a project to deliver low-carbon hydrogen to Woodside Energy in Texas [77]"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=linde.com&sz=128",
       "linked_findings": {
@@ -1139,6 +867,7 @@
           0
         ],
         "challenges": [
+          1,
           4
         ]
       }
@@ -1146,13 +875,17 @@
     {
       "name": "Southern Copper Corp",
       "ticker": "SCCO",
-      "sector": "Metals & Mining",
+      "sector": "Materials",
       "hq": "Phoenix, United States",
       "revenue": "$13.42B",
       "key_initiatives": [
-        "Executing a capital investment program exceeding $20.5 billion for this decade",
-        "Allocated $1.9 billion specifically for capital projects in fiscal year 2026",
-        "Invested $400 million in infrastructure through the tax for works mechanism in Peru"
+        "Executing a capital investment program for this decade that exceeds $20.5 billion",
+        "Allocated $1.9 billion specifically for capital projects in the 2026 fiscal year"
+      ],
+      "investment_focus": "Investments are sharply focused on maintaining cost competitiveness and generating long-term value for shareholders. The company prioritizes funding projects that ensure the viability of long-term operations by modernizing assets and improving water and tailings management.",
+      "recent_moves": [
+        "Invested $400 million in infrastructure through the tax for works mechanism in Peru",
+        "Advanced the Tia Maria project which is expected to begin operations in 2027"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=southerncopper.com&sz=128",
       "linked_findings": {
@@ -1171,12 +904,16 @@
     {
       "name": "Newmont Corp",
       "ticker": "NEM",
-      "sector": "Gold Mining",
+      "sector": "Materials",
       "hq": "Denver, United States",
       "revenue": "$22.67B",
       "key_initiatives": [
         "Allocated $1.95 billion for sustaining capital in 2026 to enhance tailings management and infrastructure",
-        "Directed $1.4 billion toward development capital for near-term projects including the Cadia Panel Caves",
+        "Directed $1.4 billion toward development capital for near-term projects including the Cadia Panel Caves [78]"
+      ],
+      "investment_focus": "The company focuses on disciplined reinvestment in its most profitable near-term organic projects to enhance portfolio longevity. [79] Capital is deployed under an enhanced framework designed to maximize shareholder returns while maintaining an optimized and resilient balance sheet. [80]",
+      "recent_moves": [
+        "Completed the divestiture of six non-core assets to optimize its global portfolio",
         "Executed a significant portion of a newly expanded $6.0 billion share repurchase authorization"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=newmont.com&sz=128",
@@ -1188,7 +925,7 @@
           0
         ],
         "challenges": [
-          1,
+          0,
           4
         ]
       }
@@ -1196,13 +933,17 @@
     {
       "name": "Freeport-McMoRan Inc",
       "ticker": "FCX",
-      "sector": "Copper & Metals Mining",
+      "sector": "Materials",
       "hq": "Phoenix, United States",
       "revenue": "$25.92B",
       "key_initiatives": [
         "Investing $3.5 billion in the Bagdad concentrator expansion to yield significant incremental production",
-        "Advancing the Kucing Liar project in Indonesia to sustain a low-cost production profile",
-        "Returning half of excess cash flow to shareholders while maintaining a strong balance sheet"
+        "Advancing the Kucing Liar project in Indonesia to sustain a low-cost production profile"
+      ],
+      "investment_focus": "Financial priorities are centered on maintaining a strong balance sheet while funding value-enhancing growth projects. The company aims to provide consistent cash returns to shareholders by returning half of its excess cash flow.",
+      "recent_moves": [
+        "Repurchased $107 million of common stock in the open market recently",
+        "Transitioned the Grasberg mining complex toward restoring normal operations following a disruptive mud rush"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=fcx.com&sz=128",
       "linked_findings": {
@@ -1221,13 +962,17 @@
     {
       "name": "Sherwin-Williams Co",
       "ticker": "SHW",
-      "sector": "Specialty Chemicals & Coatings",
+      "sector": "Materials",
       "hq": "Cleveland, United States",
       "revenue": "$23.57B",
       "key_initiatives": [
         "Invested extensively to open a new Global Headquarters and the Morikis Global Technology Center in Ohio",
-        "Completed the strategic acquisition of Suvinil to expand its architectural coatings footprint",
-        "Announced a 7% price increase across its Paint Stores Group to counter inflationary pressures"
+        "Deployed capital toward expanding manufacturing capacity and modernizing digital systems"
+      ],
+      "investment_focus": "Investment strategy is laser-focused on targeted growth initiatives including adding sales representatives and digital tools to capture market share. The company balances these growth investments with rigorous control over general and administrative spending.",
+      "recent_moves": [
+        "Completed the strategic acquisition of Suvinil to expand its architectural footprint",
+        "Announced a 7 percent price increase across its Paint Stores Group to counter inflationary pressures"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=sherwin-williams.com&sz=128",
       "linked_findings": {
@@ -1246,13 +991,17 @@
     {
       "name": "Ecolab Inc",
       "ticker": "ECL",
-      "sector": "Water Treatment & Specialty Chemicals",
+      "sector": "Materials",
       "hq": "St. Paul, United States",
       "revenue": "$16.08B",
       "key_initiatives": [
         "Acquired CoolIT Systems for $4.75 billion to capture the rapidly growing data center liquid cooling market",
-        "Completed the $1.6 billion acquisition of Ovivo's electronics business to secure ultrapure water technologies",
-        "Expanded the One Ecolab initiative to target $325 million in annualized cost savings"
+        "Completed the $1.6 billion acquisition of Ovivo's electronics business to secure ultrapure water technologies"
+      ],
+      "investment_focus": "Capital allocation is directed heavily toward high-growth engines including Life Sciences, Global High-Tech, and digital innovations. The company prioritizes investments that deliver superior operational outcomes for customers while simultaneously reducing environmental impact.",
+      "recent_moves": [
+        "Expanded the One Ecolab initiative to target $325 million in annualized cost savings",
+        "Increased its quarterly cash dividend by 12 percent representing its 34th consecutive annual increase"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=ecolab.com&sz=128",
       "linked_findings": {
@@ -1260,24 +1009,28 @@
           4
         ],
         "opportunities": [
-          3
+          2
         ],
         "challenges": [
-          2,
-          3
+          1,
+          2
         ]
       }
     },
     {
       "name": "Air Products and Chemicals Inc",
       "ticker": "APD",
-      "sector": "Industrial Gases & Clean Energy",
+      "sector": "Materials",
       "hq": "Allentown, United States",
       "revenue": "$12.04B",
       "key_initiatives": [
         "Committing $15 billion toward clean hydrogen and decarbonization megaprojects globally",
-        "Advancing the massive NEOM Green Hydrogen joint venture project in Saudi Arabia",
-        "Entered advanced negotiations with Yara International to divest ammonia production assets from a Louisiana project"
+        "Advancing the massive NEOM Green Hydrogen joint venture project in Saudi Arabia"
+      ],
+      "investment_focus": "Management is executing a strategic pivot to refocus capital on the core industrial gas business and derisk its clean energy portfolio. The company enforces strict capital discipline by requiring firm long-term offtake agreements before taking final investment decisions.",
+      "recent_moves": [
+        "Entered advanced negotiations with Yara International to divest ammonia production assets from a Louisiana project",
+        "Reduced planned capital expenditures by approximately $1 billion to improve balance sheet positioning"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=airproducts.com&sz=128",
       "linked_findings": {
@@ -1288,6 +1041,7 @@
           2
         ],
         "challenges": [
+          1,
           3,
           4
         ]
@@ -1296,12 +1050,16 @@
     {
       "name": "Anglogold Ashanti PLC",
       "ticker": "AU",
-      "sector": "Gold Mining",
+      "sector": "Materials",
       "hq": "Denver, United States",
       "revenue": "$9.89B",
       "key_initiatives": [
         "Advancing the Arthur Gold Project with a projected capital expenditure of $3.6 billion",
-        "Deploying $1.14 billion in sustaining capital for 2026 to support asset integrity",
+        "Deploying $1.14 billion in sustaining capital for 2026 to support asset integrity"
+      ],
+      "investment_focus": "Capital allocation is strictly governed to protect margins and selectively fund the highest return organic growth opportunities. The company aims to maintain a leverage ratio below 1.0x while increasing the production contribution from its Tier 1 assets.",
+      "recent_moves": [
+        "Successfully completed the sale of the Serra Grande mine in Brazil to sharpen focus on core assets",
         "Integrated the Sukari Gold Mines into its portfolio following a major acquisition"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=anglogoldashanti.com&sz=128",
@@ -1321,12 +1079,16 @@
     {
       "name": "Corteva Inc",
       "ticker": "CTVA",
-      "sector": "Agricultural Chemicals & Seeds",
+      "sector": "Materials",
       "hq": "Indianapolis, United States",
       "revenue": "$17.40B",
       "key_initiatives": [
         "Launched the Etlas biofuels feedstock joint venture in partnership with bp",
-        "Executed 12 strategic partnerships through its Corteva Catalyst investment platform",
+        "Executed 12 strategic partnerships through its Corteva Catalyst investment platform"
+      ],
+      "investment_focus": "The company targets disciplined investments to support organic growth and expand its first-mover advantage in nature-inspired technologies. Capital is deployed to deliver differentiated sustainable products while maintaining an asset-light and efficient business model.",
+      "recent_moves": [
+        "Reached a comprehensive resolution with Bayer regarding seed freedom to operate litigation",
         "Announced the planned separation of its Seed and Crop Protection businesses into two standalone companies"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=corteva.com&sz=128",
@@ -1335,7 +1097,7 @@
           4
         ],
         "opportunities": [
-          3
+          2
         ],
         "challenges": [
           0,
@@ -1346,12 +1108,16 @@
     {
       "name": "Nucor Corp",
       "ticker": "NUE",
-      "sector": "Steel & Metals",
+      "sector": "Materials",
       "hq": "Charlotte, United States",
       "revenue": "$32.49B",
       "key_initiatives": [
         "Deployed $20 billion through capital expenditures and acquisitions since 2020",
-        "Completed a new state-of-the-art rebar micro mill in North Carolina",
+        "Completed a new state-of-the-art rebar micro mill in North Carolina"
+      ],
+      "investment_focus": "Capital strategy revolves around growing core steelmaking capabilities while expanding into high-margin adjacent downstream businesses. The company prioritizes long-term value creation by shifting its product mix toward value-added products that reduce overall business volatility.",
+      "recent_moves": [
+        "Completed the $565 million acquisition of Rytec to build its commercial doors platform",
         "Acquired Southwest Data Products for $115 million to capture data center infrastructure demand"
       ],
       "logo_url": "https://www.google.com/s2/favicons?domain=nucor.com&sz=128",
@@ -1369,6 +1135,400 @@
       }
     }
   ],
+  "news_items": [
+    {
+      "id": 1,
+      "citation_id": 93,
+      "headline": "Record Polyethylene Price Hikes Reshape Chemical Cost Curves in Historic Supply Shock",
+      "summary": "A leading chemical consultancy expects US integrated ethylene/PE margins to rise 17 c/lb in 2026, with producers announcing cumulative 40–50 c/lb price increases across March–May. Conference takeaways describe this as the largest supply shock in chemicals history.",
+      "source_org": "Deutsche Bank Research",
+      "date": "2026-04-13",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-367a89cd2a8b657f307d82030ccda9e0&scope=ANYWHERE&stmt=fse5776&hl=fse5776&page=2",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "citation_id": 94,
+      "headline": "PE Uptrend and Helium Resiliency Signal Chemicals Price Catch-Up Into 2H26",
+      "summary": "Weekly tracking shows polyethylene pricing continues to trend higher, while industrial gas producers are expected to navigate near-term supply chain frictions and benefit from price catch-up into 2H26/1H27. Higher sulfur and feed costs could additionally drive TiO2 price upside.",
+      "source_org": "RBC Capital Markets",
+      "date": "2026-04-08",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse156&hl=fse156&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": "We think higher sulfur/feed costs could drive TiO2 price upside and see industrial gases buffered with price pass-throughs as helium supply normalizes by 2H.",
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 3,
+      "citation_id": 96,
+      "headline": "US Polyethylene Contracts Settle +$0.10/lb in March; April Hike of $0.20/lb Expected",
+      "summary": "US polyethylene contracts settled +$0.10/lb in March with another $0.20/lb expected in April on severe Middle East disruptions and higher energy costs. The moves reflect record price increases as global supply chains adjust to feedstock shortages and elevated oil prices.",
+      "source_org": "Mizuho Securities USA",
+      "date": "2026-04-10",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse156&hl=fse156&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": "Polyethylene producers announced record price increases as global supply chains adjust to feedstock shortages and elevated oil prices.",
+      "linked_top_companies": []
+    },
+    {
+      "id": 4,
+      "citation_id": 97,
+      "headline": "Natural Gas Slips While Midwest Ammonia Tops $1,000/st on Spring Demand",
+      "summary": "The energy tracker shows Henry Hub at $2.66/MMBtu with weekly declines, while Midwest ammonia rose 4% to $1,015/st as spring application tightens supply. The divergence highlights cross-commodity dynamics within the fertilizer and energy complex.",
+      "source_org": "Mizuho Securities USA",
+      "date": "2026-04-10",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&page=7&imageId=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829-a56293efe9b098c48cf28cf1777ed802",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": []
+    },
+    {
+      "id": 5,
+      "citation_id": 98,
+      "headline": "US Chemical Rail Shipments Accelerate 6.1% YoY Signaling Demand Recovery",
+      "summary": "The 4-week moving average of US chemical railcar loadings rose 6.1% year-over-year in Week 12, with weekly loadings up 7.2% YoY and up 0.8% sequentially. The acceleration supports improving domestic chemical demand conditions heading into the second quarter.",
+      "source_org": "Deutsche Bank Research",
+      "date": "2026-04-07",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-f949842e8e2a5a130a4fba3562c6ed46&scope=ANYWHERE&stmt=fse491&hl=fse491.fse627&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": []
+    },
+    {
+      "id": 6,
+      "citation_id": 99,
+      "headline": "ISM Signals Firm Inflation; Chemicals Aggregate EPS Expected to Inflect 5% in 2026",
+      "summary": "Models tied to ISM subindices point to chemicals aggregate net income growing approximately 5% in 2026 and approximately 12% in 2027, with new orders and supplier deliveries supporting a 52–53 PMI in Q2. The combination of acceleration and rising PMI is described as a strong historical signal for commodity chemicals on a 6–12 month view.",
+      "source_org": "Jefferies Research",
+      "date": "2026-04-08",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-JFR-ac7386add205dcb3de4393904feca9b9&scope=ANYWHERE&stmt=fse2425&hl=fse2425.fse2554.fse2756&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": "The combination of acceleration and rising to the low-50s is usually a strong signal for commodity chemicals on a 6–12 months view.",
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 7,
+      "citation_id": 101,
+      "headline": "Fed Holds Steady as Oil Spike Risk and Petrochemical Input Cost Pressures Mount",
+      "summary": "The Federal Reserve held policy steady while acknowledging higher inflation risks, with oil prices whipsawing from conflict-driven supply shocks that threaten early-stage production including petrochemicals. The analysis highlights the risk of energy cost pass-through into broader producer prices.",
+      "source_org": "TD Economics",
+      "date": "2026-03-23",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-8a69a979758ade75e459f712f0b380c9&scope=ANYWHERE&page=3&imageId=SSRFS-00-8a69a979758ade75e459f712f0b380c9-55533fdd9ae818a48eecd94017c67ed7",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 8,
+      "citation_id": 102,
+      "headline": "Middle East Conflict Drives Brent Above $120 and Triggers Sulphur Supply Shock",
+      "summary": "Strait of Hormuz traffic fell by more than 85% in early March, pushing Brent crude above $120/bbl and disrupting elemental sulphur flows that underpin phosphate fertilizers and metals processing. The Middle East controls 45% of the global seaborne sulphur trade, amplifying downstream disruptions.",
+      "source_org": "Natixis",
+      "date": "2026-03-27",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": []
+    },
+    {
+      "id": 9,
+      "citation_id": 103,
+      "headline": "Beige Book Preview Points to Petrochemical PPI Pass-Through Risk from Energy Shock",
+      "summary": "Upcoming US PPI data is expected to show how the global energy supply shock is filtering into petrochemicals, with Beige Book color anticipated on early-stage production strain. The analysis flags petrochemical input costs as a key transmission channel for broader inflation.",
+      "source_org": "Commonwealth Bank of Australia",
+      "date": "2026-04-16",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a&scope=ANYWHERE&page=3&imageId=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a-9a68f7f8ddac34467c800cb8ce7fc924",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 10,
+      "citation_id": 104,
+      "headline": "Domestic Energy Infrastructure Commands Re-Rating Premium on Geopolitical Security Value",
+      "summary": "Analysis argues for higher valuation multiples for domestic midstream and adjacent energy infrastructure given stronger-for-longer commodity backdrops, clean balance sheets, and consolidation potential. Heightened geopolitical tensions are cited as elevating the strategic value of US domestic assets.",
+      "source_org": "Capital One",
+      "date": "2026-04-02",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-CAPO-0f6bd787c645f40fa92e8ec89992a3c3&scope=ANYWHERE&stmt=fse1229&hl=fse1229&page=3",
+      "related_finding_ids": [],
+      "analyst_quote": "In a world where heightened geopolitical tensions have become the norm, domestic assets represent the epitome of energy security and reliability.",
+      "linked_top_companies": []
+    },
+    {
+      "id": 11,
+      "citation_id": 106,
+      "headline": "Chemicals Scorecard: DOW and LYB Surge but Sector Valuation Now 17% Above 10-Year Average",
+      "summary": "March saw sharp outperformance from select commodity chemical names driven by PE price hikes, while the sector's forward P/E of 18.1x sits approximately 17% above its 10-year average and at a 27% discount to the S&P 500. The scorecard flags valuation stretch as a risk even amid positive earnings momentum.",
+      "source_org": "Deutsche Bank Research",
+      "date": "2026-04-02",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-DBR-43b65b40fc4d9c0bc0cdf2cf9707ab99&scope=ANYWHERE&stmt=fse193&hl=fse193&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": [
+        6
+      ]
+    },
+    {
+      "id": 12,
+      "citation_id": 108,
+      "headline": "Electronic Chemicals Post ~5% Organic CAGR, Outpacing Broader Specialties Sector",
+      "summary": "Electronic chemicals and materials are identified as the fastest-growing area within specialties with an industry-wide approximately 5% organic CAGR, and industrial gases exposure supports returns durability for leading suppliers. Mizuho sets a $560 price target for Linde based on approximately 29x NTM+1 EPS given superior cash conversion and backlog visibility.",
+      "source_org": "Mizuho Securities USA",
+      "date": "2026-04-07",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-MSUS-ddf73b5aa81df7a8c42492b398067d60&scope=ANYWHERE&stmt=fse931&hl=fse931&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": "We base our $560 PT for Linde on ~29x NTM+1 EPS given superior cash conversion and backlog visibility.",
+      "linked_top_companies": [
+        0,
+        6
+      ]
+    },
+    {
+      "id": 13,
+      "citation_id": 109,
+      "headline": "AI Data Centers and LNG Exports Tighten US Natural Gas Balance Through 2029",
+      "summary": "Longer-dated US natural gas futures average approximately $3.65/Mcf for 2026–2029 as rigs stabilize and LNG projects advance, with equities pricing in approximately $3.71/Mcf. Rising demand from AI data centers and LNG export facilities is identified as the primary structural driver of the tighter supply-demand balance.",
+      "source_org": "RBC Capital Markets",
+      "date": "2026-04-09",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=ASR-RBCM-6fe473c86235912dd9b4fce84733f12a&scope=ANYWHERE&stmt=fse2115&hl=fse2115&page=1",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": []
+    },
+    {
+      "id": 14,
+      "citation_id": 110,
+      "headline": "Field Checks Confirm Sherwin-Williams Gaining Market Share as Pricing Actions Hold",
+      "summary": "An oil and gas engineer expects spending on Sherwin-Williams products to increase in the next 3–6 months as pricing actions hold and project pipelines convert. The expert call supports the view that price hikes are sustaining volumes and margins on awarded projects.",
+      "source_org": "Expert Transcript Library",
+      "date": "2026-04-06",
+      "type": "Broker Research",
+      "url": "https://research.alpha-sense.com/?docid=EC-1000000-202639&scope=ANYWHERE&stmt=fse16815&hl=fse16815&page=2",
+      "related_finding_ids": [],
+      "analyst_quote": "Price hikes are holding; we expect more orders and volumes, helping us maintain margins on awarded projects.",
+      "linked_top_companies": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": 15,
+      "citation_id": 112,
+      "headline": "LSB Industries Flags AI Power Demand as Key Driver of Natural Gas Feedstock Volatility",
+      "summary": "LSB Industries highlights rising Gulf Coast natural gas demand from AI data centers and LNG exports as structural drivers of feedstock volatility that could force production suspensions if prices spike. The company's annual report identifies this dynamic as a material risk to its ammonia and fertilizer manufacturing operations.",
+      "source_org": "LSB Industries Inc",
+      "date": "2026-04-13",
+      "type": "Earnings Call",
+      "url": "https://research.alpha-sense.com/?docid=GDS-69dd8fdd32250d125bf9acbd&scope=ANYWHERE&stmt=fse52173&hl=fse52173.fse52460&page=18",
+      "related_finding_ids": [],
+      "analyst_quote": null,
+      "linked_top_companies": []
+    }
+  ],
+  "financial_highlights": [
+    {
+      "id": 1,
+      "metric": "Brent Crude Price (Mar 2026)",
+      "current_value": "$120/bbl",
+      "change": "+69%"
+    },
+    {
+      "id": 2,
+      "metric": "Henry Hub Natural Gas (Apr 2026)",
+      "current_value": "$2.66/MMBtu",
+      "change": "-24.70%"
+    },
+    {
+      "id": 3,
+      "metric": "US PE Contract Price — HDPE (Apr 2026)",
+      "current_value": "$0.65/lb",
+      "change": "+18%"
+    },
+    {
+      "id": 4,
+      "metric": "Announced US PE Price Increase — April 2026",
+      "current_value": "$0.20/lb",
+      "change": "+32%"
+    },
+    {
+      "id": 5,
+      "metric": "US Integrated Ethylene/PE Margin (Apr 2026)",
+      "current_value": "35.1 c/lb",
+      "change": "+9.0c"
+    },
+    {
+      "id": 6,
+      "metric": "North America Spot PE (Apr 2026)",
+      "current_value": "72.5 c/lb",
+      "change": "+19.8%"
+    },
+    {
+      "id": 7,
+      "metric": "Midwest Ammonia Price (Apr 2026)",
+      "current_value": "$1,015/st",
+      "change": "+4%"
+    },
+    {
+      "id": 8,
+      "metric": "US Chemical Railcar Loadings 4-Week Avg (Week 12, 2026)",
+      "current_value": "6.1% YoY",
+      "change": "+6.1%"
+    },
+    {
+      "id": 9,
+      "metric": "Strait of Hormuz Shipping Traffic (Mar 2026)",
+      "current_value": "15% of normal",
+      "change": "-85%"
+    },
+    {
+      "id": 10,
+      "metric": "S&P GSCI Commodity Spot Index YTD (Apr 2026)",
+      "current_value": "35.9%",
+      "change": "+35.9%"
+    }
+  ],
+  "_citation_urls": {
+    "1": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse21904&hl=fse21904&page=1",
+    "2": "https://research.alpha-sense.com/?docid=GDS-69de2c475584c955adf2b6fe&scope=ANYWHERE&stmt=fse75566&hl=fse75566&page=30",
+    "3": "https://research.alpha-sense.com/?docid=0001193125-26-127827&scope=ANYWHERE&stmt=fse19907&hl=fse19907.fse20030&page=6",
+    "4": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse21904&hl=fse21904&page=1",
+    "5": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse21904&hl=fse21904&page=1",
+    "6": "https://research.alpha-sense.com/?docid=0001104659-26-039153&scope=ANYWHERE&stmt=fse145017&hl=fse145017&page=36",
+    "7": "https://research.alpha-sense.com/?docid=0001104659-26-039153&scope=ANYWHERE&stmt=fse145017&hl=fse145017&page=36",
+    "8": "https://research.alpha-sense.com/?docid=GDS-69cfe3aaaf575ffeccaec3cb&scope=ANYWHERE&stmt=fse110225&hl=fse110225&page=32",
+    "9": "https://research.alpha-sense.com/?docid=GDS-69cdf75376a5502928013bcd&scope=ANYWHERE&stmt=fse381735&hl=fse381735.fse381897&page=102",
+    "10": "https://research.alpha-sense.com/?docid=GDS-69cfe3aaaf575ffeccaec3cb&scope=ANYWHERE&stmt=fse110135&hl=fse110135.fse110225&page=32",
+    "11": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse111483&hl=fse111483&page=4",
+    "12": "https://research.alpha-sense.com/?docid=WEB-EX-NSE-f36f484814eced78c53447d500784c44&scope=ANYWHERE&stmt=fse41485&hl=fse41485.fse41629&page=26",
+    "13": "https://research.alpha-sense.com/?docid=WEB-EX-NSE-f36f484814eced78c53447d500784c44&scope=ANYWHERE&stmt=fse41485&hl=fse41485.fse41629&page=26",
+    "14": "https://research.alpha-sense.com/?docid=WEB-a34c39f3f764391f1eca6c9d82452d81&scope=ANYWHERE&stmt=fse2312&hl=fse2312&page=1",
+    "15": "https://research.alpha-sense.com/?docid=WEB-a34c39f3f764391f1eca6c9d82452d81&scope=ANYWHERE&stmt=fse2312&hl=fse2312&page=1",
+    "16": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse9757&hl=fse9757.fse9982&page=9",
+    "17": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse9757&hl=fse9757.fse9982&page=9",
+    "18": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse11779&hl=fse11779.fse11957&page=9",
+    "19": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse11779&hl=fse11779&page=9",
+    "20": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse9757&hl=fse9757&page=9",
+    "21": "https://research.alpha-sense.com/?docid=WEB-EX-NSE-f36f484814eced78c53447d500784c44&scope=ANYWHERE&stmt=fse41485&hl=fse41485.fse41629&page=26",
+    "22": "https://research.alpha-sense.com/?docid=SSRFS-00-577edd81985f3bfc630ba9a3499e8209&scope=ANYWHERE&stmt=fse9757&hl=fse9757&page=9",
+    "24": "https://research.alpha-sense.com/?docid=0001104659-26-037386&scope=ANYWHERE&stmt=fse406321&hl=fse406321&page=110",
+    "25": "https://research.alpha-sense.com/?docid=0001477932-26-001835&scope=ANYWHERE&stmt=fse149019&hl=fse149019&page=6",
+    "26": "https://research.alpha-sense.com/?docid=RSS-EN-5dff6ee3f3ea08799ec00af2a4809770&scope=ANYWHERE&stmt=fse1&hl=fse1",
+    "27": "https://research.alpha-sense.com/?docid=0001012100-26-000016&scope=ANYWHERE&stmt=fse40171&hl=fse40171&page=2",
+    "28": "https://research.alpha-sense.com/?docid=0001104659-26-037386&scope=ANYWHERE&stmt=fse406321&hl=fse406321&page=110",
+    "29": "https://research.alpha-sense.com/?docid=SSRFS-00-ab11af0c6b4e1b54898e24b5a84a79d0&scope=ANYWHERE&page=16&imageId=SSRFS-00-ab11af0c6b4e1b54898e24b5a84a79d0-bd11a0e58d5eeb66932e188cc1ccd086",
+    "31": "https://research.alpha-sense.com/?docid=SSRFS-00-ab11af0c6b4e1b54898e24b5a84a79d0&scope=ANYWHERE&page=16&imageId=SSRFS-00-ab11af0c6b4e1b54898e24b5a84a79d0-bd11a0e58d5eeb66932e188cc1ccd086",
+    "32": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse479676&hl=fse479676&page=131",
+    "33": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse479676&hl=fse479676&page=131",
+    "34": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse479676&hl=fse479676.fse479966&page=131",
+    "35": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse479966&hl=fse479966&page=131",
+    "36": "https://research.alpha-sense.com/?docid=0001489393-26-000019&scope=ANYWHERE&stmt=fse481409&hl=fse481409&page=132",
+    "37": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse11995&hl=fse11995&page=4",
+    "38": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse11995&hl=fse11995&page=4",
+    "39": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse11995&hl=fse11995&page=4",
+    "40": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse11995&hl=fse11995&page=4",
+    "41": "https://research.alpha-sense.com/?docid=SSRFS-00-2ccc0b0283c9b3e95cb47eef47744ba0&scope=ANYWHERE&stmt=fse29621&hl=fse29621&page=10",
+    "42": "https://research.alpha-sense.com/?docid=0001628280-26-022505&scope=ANYWHERE&stmt=fse24363&hl=fse24363&page=1",
+    "43": "https://research.alpha-sense.com/?docid=0001628280-26-022505&scope=ANYWHERE&stmt=fse24363&hl=fse24363&page=1",
+    "44": "https://research.alpha-sense.com/?docid=0001628280-26-022505&scope=ANYWHERE&stmt=fse24647&hl=fse24647&page=1",
+    "45": "https://research.alpha-sense.com/?docid=0001628280-26-022505&scope=ANYWHERE&stmt=fse20540&hl=fse20540&page=1",
+    "46": "https://research.alpha-sense.com/?docid=0001628280-26-022505&scope=ANYWHERE&stmt=fse19794&hl=fse19794&page=1",
+    "47": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse314506&hl=fse314506&page=144",
+    "48": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse314506&hl=fse314506&page=144",
+    "49": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse314506&hl=fse314506&page=144",
+    "50": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse315014&hl=fse315014&page=144",
+    "51": "https://research.alpha-sense.com/?docid=ASR-DBR-c472c93c00feaf9fe4cd4e0d2ee4fa87&scope=ANYWHERE&stmt=fse314290&hl=fse314290&page=144",
+    "52": "https://research.alpha-sense.com/?docid=GDS-69bc665da239e37b4be709ca&scope=ANYWHERE&stmt=fse461993&hl=fse461993&page=126",
+    "53": "https://research.alpha-sense.com/?docid=GDS-69df7aa958b7e87d8081d962&scope=ANYWHERE&stmt=fse242089&hl=fse242089.fse242410&page=45",
+    "54": "https://research.alpha-sense.com/?docid=GDS-69bc665da239e37b4be709ca&scope=ANYWHERE&stmt=fse461993&hl=fse461993&page=126",
+    "55": "https://research.alpha-sense.com/?docid=GDS-69b8a5965bb20aa97f0d82a0&scope=ANYWHERE&stmt=fse322900&hl=fse322900&page=73",
+    "56": "https://research.alpha-sense.com/?docid=GDS-69bc665da239e37b4be709ca&scope=ANYWHERE&stmt=fse450722&hl=fse450722&page=124",
+    "57": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
+    "58": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
+    "59": "https://research.alpha-sense.com/?docid=GDS-69b8a5965bb20aa97f0d82a0&scope=ANYWHERE&stmt=fse662903&hl=fse662903&page=156",
+    "60": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "61": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "62": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "64": "https://research.alpha-sense.com/?docid=0001193125-26-138979&scope=ANYWHERE&stmt=fse56886&hl=fse56886&page=20",
+    "65": "https://research.alpha-sense.com/?docid=0001193125-26-138979&scope=ANYWHERE&stmt=fse56886&hl=fse56886&page=20",
+    "66": "https://research.alpha-sense.com/?docid=0001193125-26-138979&scope=ANYWHERE&stmt=fse56886&hl=fse56886&page=20",
+    "67": "https://research.alpha-sense.com/?docid=0001193125-26-138979&scope=ANYWHERE&stmt=fse56886&hl=fse56886&page=20",
+    "68": "https://research.alpha-sense.com/?docid=0001193125-26-138979&scope=ANYWHERE&stmt=fse56886&hl=fse56886&page=20",
+    "69": "https://research.alpha-sense.com/?docid=0001061219-26-000006&scope=ANYWHERE&stmt=fse291559&hl=fse291559&page=11",
+    "70": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse110893&hl=fse110893.fse111483&page=4",
+    "71": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse110893&hl=fse110893.fse111483&page=4",
+    "72": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse112545&hl=fse112545&page=4",
+    "73": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse113004&hl=fse113004&page=4",
+    "74": "https://research.alpha-sense.com/?docid=0001493152-26-016896&scope=ANYWHERE&stmt=fse110893&hl=fse110893&page=4",
+    "75": "https://research.alpha-sense.com/?docid=GDS-6812e5eec67d850b148c7871&scope=ANYWHERE&stmt=fse3857&hl=fse3857&page=3",
+    "76": "https://research.alpha-sense.com/?docid=GDS-6812e5eec67d850b148c7871&scope=ANYWHERE&stmt=fse6483&hl=fse6483&page=4",
+    "77": "https://research.alpha-sense.com/?docid=GDS-6812e5eec67d850b148c7871&scope=ANYWHERE&stmt=fse6483&hl=fse6483&page=4",
+    "78": "http://nem.us/",
+    "79": "http://nem.us/",
+    "80": "https://research.alpha-sense.com/?docid=GDS-6997c6c382501f00075945e5&scope=ANYWHERE&stmt=fse6199&hl=fse6199&page=2",
+    "81": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "82": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "83": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2",
+    "84": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&page=7&imageId=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829-a56293efe9b098c48cf28cf1777ed802",
+    "85": "https://research.alpha-sense.com/?docid=ASR-DBR-367a89cd2a8b657f307d82030ccda9e0&scope=ANYWHERE&stmt=fse665&hl=fse665&page=1",
+    "86": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&stmt=fse1308&hl=fse1308&page=1",
+    "87": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&stmt=fse3372&hl=fse3372&page=1",
+    "88": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&stmt=fse3372&hl=fse3372&page=1",
+    "89": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&stmt=fse3372&hl=fse3372&page=1",
+    "90": "https://research.alpha-sense.com/?docid=ASR-DBR-f949842e8e2a5a130a4fba3562c6ed46&scope=ANYWHERE&stmt=fse491&hl=fse491&page=1",
+    "91": "https://research.alpha-sense.com/?docid=GDS-69d43d57aa2e0ebcc7972c9c&scope=ANYWHERE&page=14&imageId=GDS-69d43d57aa2e0ebcc7972c9c-bd30abb09581d33297e36c35c76f2de2",
+    "93": "https://research.alpha-sense.com/?docid=ASR-DBR-367a89cd2a8b657f307d82030ccda9e0&scope=ANYWHERE&stmt=fse5776&hl=fse5776&page=2",
+    "94": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse156&hl=fse156&page=1",
+    "95": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse512&hl=fse512&page=1",
+    "96": "https://research.alpha-sense.com/?docid=ASR-RBCM-dc9b5be97d666f9cb386dcccca72c0fc&scope=ANYWHERE&stmt=fse156&hl=fse156&page=1",
+    "97": "https://research.alpha-sense.com/?docid=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829&scope=ANYWHERE&page=7&imageId=ASR-MSUS-a7cf723397e2171ff90cc9ac5ea99829-a56293efe9b098c48cf28cf1777ed802",
+    "98": "https://research.alpha-sense.com/?docid=ASR-DBR-f949842e8e2a5a130a4fba3562c6ed46&scope=ANYWHERE&stmt=fse491&hl=fse491.fse627&page=1",
+    "99": "https://research.alpha-sense.com/?docid=ASR-JFR-ac7386add205dcb3de4393904feca9b9&scope=ANYWHERE&stmt=fse2425&hl=fse2425.fse2554.fse2756&page=1",
+    "100": "https://research.alpha-sense.com/?docid=ASR-JFR-ac7386add205dcb3de4393904feca9b9&scope=ANYWHERE&stmt=fse2425&hl=fse2425.fse2554.fse2756&page=1",
+    "101": "https://research.alpha-sense.com/?docid=SSRFS-00-8a69a979758ade75e459f712f0b380c9&scope=ANYWHERE&page=3&imageId=SSRFS-00-8a69a979758ade75e459f712f0b380c9-55533fdd9ae818a48eecd94017c67ed7",
+    "102": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
+    "103": "https://research.alpha-sense.com/?docid=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a&scope=ANYWHERE&page=3&imageId=SSRFS-00-a7942640e07e47d45811f2d593a6ac0a-9a68f7f8ddac34467c800cb8ce7fc924",
+    "104": "https://research.alpha-sense.com/?docid=ASR-CAPO-0f6bd787c645f40fa92e8ec89992a3c3&scope=ANYWHERE&stmt=fse1229&hl=fse1229&page=3",
+    "105": "https://research.alpha-sense.com/?docid=ASR-CAPO-0f6bd787c645f40fa92e8ec89992a3c3&scope=ANYWHERE&stmt=fse1229&hl=fse1229&page=3",
+    "106": "https://research.alpha-sense.com/?docid=ASR-DBR-43b65b40fc4d9c0bc0cdf2cf9707ab99&scope=ANYWHERE&stmt=fse193&hl=fse193&page=1",
+    "107": "https://research.alpha-sense.com/?docid=ASR-MSUS-ddf73b5aa81df7a8c42492b398067d60&scope=ANYWHERE&stmt=fse931&hl=fse931&page=1",
+    "108": "https://research.alpha-sense.com/?docid=ASR-MSUS-ddf73b5aa81df7a8c42492b398067d60&scope=ANYWHERE&stmt=fse931&hl=fse931&page=1",
+    "109": "https://research.alpha-sense.com/?docid=ASR-RBCM-6fe473c86235912dd9b4fce84733f12a&scope=ANYWHERE&stmt=fse2115&hl=fse2115&page=1",
+    "110": "https://research.alpha-sense.com/?docid=EC-1000000-202639&scope=ANYWHERE&stmt=fse16815&hl=fse16815&page=2",
+    "111": "https://research.alpha-sense.com/?docid=EC-1000000-202639&scope=ANYWHERE&stmt=fse16815&hl=fse16815.fse17023.fse17071&page=2",
+    "112": "https://research.alpha-sense.com/?docid=GDS-69dd8fdd32250d125bf9acbd&scope=ANYWHERE&stmt=fse52173&hl=fse52173.fse52460&page=18",
+    "113": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse162896&hl=fse162896&page=6",
+    "114": "https://research.alpha-sense.com/?docid=0000915389-26-000013&scope=ANYWHERE&stmt=fse162896&hl=fse162896&page=6",
+    "115": "https://research.alpha-sense.com/?docid=SSRFS-00-85fd00fef550d0aaada659320f538f2e&scope=ANYWHERE&page=2&imageId=SSRFS-00-85fd00fef550d0aaada659320f538f2e-46e38b3bdd14d366bf2b32b97e5b2ea8",
+    "116": "https://research.alpha-sense.com/?docid=0001437749-26-012430&scope=ANYWHERE&stmt=fse70454&hl=fse70454.fse70530&page=3",
+    "117": "https://research.alpha-sense.com/?docid=0001437749-26-012430&scope=ANYWHERE&stmt=fse70454&hl=fse70454.fse70530&page=3",
+    "118": "https://research.alpha-sense.com/?docid=0001437749-26-012430&scope=ANYWHERE&stmt=fse70454&hl=fse70454.fse70530&page=3",
+    "119": "https://research.alpha-sense.com/?docid=0001437749-26-012430&scope=ANYWHERE&stmt=fse70454&hl=fse70454.fse70530&page=3"
+  },
   "images": [
     {
       "src": "/visuals/united-states/chemicals-natural-resources/chart-1.jpeg",

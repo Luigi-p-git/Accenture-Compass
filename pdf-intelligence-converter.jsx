@@ -124,8 +124,9 @@ HOW TO FIND THE RIGHT CITATION NUMBER:
 - The Citations section at the end lists: [N] Organization • Date • "Document Title"
 - Match the citation that best corresponds to the finding's primary source
 - Use citation numbers that appear as CLICKABLE LINKS in the body text (these are typically lower numbers that appear inline near facts and figures)
-- For key_initiatives and recent_moves: preserve the citation bracket inline, e.g. "Expanded into new market segment [14]"
-- EVERY finding MUST have a citation_id — do not skip any
+- For key_initiatives and recent_moves: ONLY include [N] brackets if you can see them explicitly in the PDF text near that company's section. If a company's section has NO citation brackets, leave the text without brackets. Do NOT invent or guess citation numbers.
+- EVERY finding (trend/opportunity/challenge) MUST have a citation_id — these always have citations in the PDF
+- news_items MUST have citation_id — these always have citations in the PDF
 
 FINANCIAL HIGHLIGHTS — DATA QUALITY:
 - Only include ACTUAL reported figures — not forecasts or analyst estimates
@@ -133,12 +134,21 @@ FINANCIAL HIGHLIGHTS — DATA QUALITY:
 - For market prices or indices: use the specific date-anchored value from the document
 - 8-12 financial_highlights
 
+CROSS-REFERENCE CONSISTENCY — CRITICAL:
+The affected_companies arrays and the top_companies linked_findings MUST be perfectly bidirectional. This means:
+
+1. If top_companies[2].linked_findings.trends includes index 0, then trends[0].affected_companies MUST include that company with name, ticker, impact, and a detail sentence.
+2. Conversely, if trends[0].affected_companies mentions "Linde PLC", then the Linde entry in top_companies.linked_findings.trends MUST include index 0.
+3. EVERY company in top_companies MUST appear in at least one finding's affected_companies array with a "detail" sentence explaining the specific impact on that company.
+4. The "detail" field is MANDATORY for every entry in affected_companies — it must be a specific, data-driven sentence (e.g. "Facing $618M in remediation liabilities" NOT just "Affected by this trend").
+5. Do NOT list a company in linked_findings if it does not also appear in that finding's affected_companies.
+
 GENERAL RULES:
 - linked_findings use 0-BASED INDICES into the trends/opportunities/challenges arrays
-- logo_url: use Google favicon with the company's REAL website domain
+- logo_url: MUST be a quoted string, e.g. "https://www.google.com/s2/favicons?domain=linde.com&sz=128"
 - Extract ALL findings — do not skip any
-- severity based on how many companies are affected
-- priority = count of linked companies for that opportunity
+- severity based on how many companies are in that challenge's affected_companies (4+=critical, 3=high, 2=medium, 0-1=low)
+- priority = count of affected companies for that opportunity
 - 10 top_companies minimum with investment_focus and recent_moves
 - 10-15 news_items with analyst quotes where available`;
 

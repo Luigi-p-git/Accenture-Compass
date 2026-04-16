@@ -7,7 +7,7 @@ import { feature } from 'topojson-client';
 import type { TrendsData, TrendsChallenge, TrendsOpportunity, TrendsTrend, NewsItem, FinancialHighlight, TopCompany, AffectedCompany, TransformedChart } from '@/types';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { parseChartValue } from '@/lib/alphasenseParser';
-import { generateIntelligenceReport } from '@/lib/intelligenceReport';
+import { generateIntelligencePresentation } from '@/lib/intelligencePresentation';
 import HeaderSelector, { REGION_COUNTRIES } from '@/components/intelligence/HeadlineSelector';
 import { useCompassStore } from '@/lib/store';
 import RobinChat, { type RobinFocus } from '@/components/intelligence/RobinChat';
@@ -16,6 +16,50 @@ import TourGuide, { type TourAction } from '@/components/intelligence/TourGuide'
 
 const ease = [0.4, 0, 0.2, 1] as const;
 const sevColor = (s: string) => s === 'critical' ? '#ef4444' : s === 'high' ? '#f87171' : s === 'medium' ? '#fbbf24' : '#60a5fa';
+/** Strip citation brackets [N] from display text */
+const stripCit = (s: string) => s?.replace(/\s*\[\d+\]\s*/g, ' ').trim() || '';
+/** Format revenue — handles raw numbers, formatted strings, or "$X,XXX,XXX,XXX" */
+const fmtRev = (r: string | number | undefined): string => {
+  if (!r) return '';
+  if (typeof r === 'string') {
+    // Already formatted like "$33.99B" — pass through
+    if (/[KMBT]$/i.test(r.trim())) return r;
+    // Raw number string like "$33,986,000,000" — parse and format
+    const n = parseFloat(String(r).replace(/[$,\s]/g, ''));
+    if (isNaN(n)) return r;
+    if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+    if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+    if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+    if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`;
+    return r;
+  }
+  // Numeric type
+  const n = Number(r);
+  if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`;
+  return `$${n}`;
+};
+
+/** Render text with [N] citations as inline named links */
+function CitText({ text, citMap, style }: { text: string; citMap: Map<number, { url: string; name: string }>; style?: React.CSSProperties }) {
+  if (!text) return null;
+  const parts = text.split(/(\[\d+\])/g);
+  return (
+    <span style={style}>
+      {parts.map((part, i) => {
+        const m = part.match(/^\[(\d+)\]$/);
+        if (m) {
+          const entry = citMap.get(parseInt(m[1]));
+          if (entry?.url) return <a key={i} href={entry.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginLeft: 2 }}>{entry.name || 'Source'} ↗</a>;
+          return null;
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </span>
+  );
+}
 
 /** Split description into 2-3 sentence chunks and render as editorial arrow points */
 function DescriptionBullets({ text, accent = '#A100FF' }: { text: string; accent?: string }) {
@@ -63,9 +107,6 @@ function CompanyLogo({ name, logoUrl, size = 36 }: { name: string; logoUrl?: str
 function getSourceUrl(source: { document_title?: string | null; organization?: string | null; url?: string | null } | undefined): string | null {
   if (!source) return null;
   if (source.url && source.url.startsWith('http')) return source.url;
-  // Fallback: build AlphaSense search URL from metadata
-  const q = source.document_title || source.organization;
-  if (q) return `https://research.alpha-sense.com/?q=${encodeURIComponent(q)}&scope=ANYWHERE`;
   return null;
 }
 
@@ -86,24 +127,15 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source, al
     const co = topCompanies[tcIdx];
     if (!co) return null;
     // Find impact detail from affected_companies via fuzzy match
+    const cleanName = (s: string) => s.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
     const ac = finding.affected_companies?.find(a => {
-      const na = a.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-      const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+      const na = cleanName(a.name);
+      const nc = cleanName(co.name);
       return na === nc || na.includes(nc) || nc.includes(na);
     });
-    // If no direct match, search ALL findings for an impact detail about this company
-    let detail = ac?.detail || '';
-    let impact = ac?.impact || 'neutral' as const;
-    if (!ac && allFindings) {
-      for (const f of allFindings) {
-        const match = f.affected_companies?.find((a: AffectedCompany) => {
-          const na2 = a.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-          const nc2 = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-          return na2 === nc2 || na2.includes(nc2) || nc2.includes(na2);
-        });
-        if (match?.detail) { detail = match.detail; impact = match.impact; break; }
-      }
-    }
+    // Only use detail from THIS finding's affected_companies — no cross-finding fallback
+    const detail = ac?.detail || '';
+    const impact = ac?.impact || 'neutral' as const;
     return { co, tcIdx, impact, detail };
   }).filter(Boolean) as { co: TopCompany; tcIdx: number; impact: string; detail: string }[];
 
@@ -123,13 +155,12 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source, al
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ fontSize: 10, fontWeight: 800 }}>{co.name}</span>
-                <span style={{ fontSize: 7, color: 'rgb(var(--ink) / .2)' }}>{co.revenue}</span>
+                <span style={{ fontSize: 7, color: 'rgb(var(--ink) / .2)' }}>{fmtRev(co.revenue)}</span>
                 <span style={{ fontSize: 10, color: impact === 'positive' ? '#34d399' : impact === 'negative' ? '#f87171' : '#fbbf24' }}>
                   {impact === 'positive' ? '↑' : impact === 'negative' ? '↓' : '→'}
                 </span>
               </div>
-              {detail && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .35)', lineHeight: 1.5, marginTop: 2 }}>{detail}</div>}
-              {sourceUrl && <a href={sourceUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 3, display: 'inline-block' }}>Source: {sourceName ? sourceName.substring(0, 40) + (sourceName.length > 40 ? '...' : '') : 'AlphaSense'} ↗</a>}
+              {detail && <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .35)', lineHeight: 1.5, marginTop: 2 }}>{stripCit(detail)}</div>}
             </div>
           </div>
         ))}
@@ -207,7 +238,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
   const challenges = [...(activeData?.challenges ?? [])].sort((a, b) => (sevOrder[a.severity] ?? 9) - (sevOrder[b.severity] ?? 9));
   const synthesis = activeData?.synthesis ?? '';
   const newsItems = activeData?.news_items ?? [];
-  const financials = activeData?.financial_highlights ?? [];
+  const financials = (activeData?.financial_highlights ?? []).filter(f => !f.metric.toLowerCase().includes('brent crude'));
   const topCompanies = activeData?.top_companies ?? [];
   const total = activeData?.source?.total_findings ?? (trends.length + opps.length + challenges.length);
   const date = activeData?.source?.date_generated ?? new Date().toISOString().split('T')[0];
@@ -353,7 +384,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4, delay: .4, ease }}
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: .97 }}
-                    onClick={() => generateIntelligenceReport(activeData, selCountry !== 'All Countries' ? selCountry : country, selIndustry)}
+                    onClick={() => generateIntelligencePresentation(activeData, selCountry !== 'All Countries' ? selCountry : country, selIndustry, theme)}
                     style={{
                       width: 170, padding: 0, border: 'none', cursor: 'pointer',
                       background: 'transparent', position: 'relative',
@@ -376,8 +407,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                       <div style={{ position: 'absolute', bottom: -1, left: -1, width: 8, height: 8, borderBottom: '2px solid #60a5fa', borderLeft: '2px solid #60a5fa' }} />
                       <div style={{ position: 'absolute', bottom: -1, right: -1, width: 8, height: 8, borderBottom: '2px solid #60a5fa', borderRight: '2px solid #60a5fa' }} />
 
-                      <span className="ms" style={{ fontSize: 12, color: '#60a5fa' }}>picture_as_pdf</span>
-                      <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.14em', color: a(.7) }}>GENERATE REPORT</span>
+                      <span className="ms" style={{ fontSize: 12, color: '#60a5fa' }}>slideshow</span>
+                      <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.14em', color: a(.7) }}>EXPORT PPTX</span>
                     </div>
                   </motion.button>
                 )}
@@ -851,7 +882,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                         <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.name}</span>
                         {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: a(.2), flexShrink: 0 }}>{co.ticker}</span>}
                       </div>
-                      <div style={{ fontSize: 8, color: a(.3), marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}{co.revenue ? ` · ${co.revenue}` : ''}</div>
+                      <div style={{ fontSize: 8, color: a(.3), marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}{co.revenue ? ` · ${fmtRev(co.revenue)}` : ''}</div>
                     </div>
                     <div style={{ display: 'flex', gap: 4, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: 200 }}>
                       {tCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(161,0,255,.06)', color: '#A100FF' }}>{tCount} trend{tCount > 1 ? 's' : ''}</span>}
@@ -1124,8 +1155,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                     <div style={{ fontSize: 7, fontWeight: 900, color: 'rgb(var(--ink) / .15)', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 8 }}>Company Impact</div>
                     {item.affected_companies.map((co, ci) => {
                       const tcIdx = topCompanies.findIndex(tc => {
-                        const na = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-                        const nb = tc.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+                        const na = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
+                        const nb = tc.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
                         return na === nb || na.includes(nb) || nb.includes(na);
                       });
                       return (
@@ -1144,7 +1175,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                             {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: 'rgb(var(--ink) / .2)' }}>{co.ticker}</span>}
                             {tcIdx >= 0 && <span style={{ fontSize: 8, color: 'rgb(var(--ink) / .15)' }}>→</span>}
                           </div>
-                          <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .3)', lineHeight: 1.5, marginTop: 2 }}>{co.detail}</div>
+                          <div style={{ fontSize: 8, color: 'rgb(var(--ink) / .3)', lineHeight: 1.5, marginTop: 2 }}>{stripCit(co.detail)}</div>
                         </div>
                       </div>
                       );
@@ -1181,6 +1212,27 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           const linkedO = co.linked_findings.opportunities.map(id => opps[id]).filter(Boolean);
           const linkedC = co.linked_findings.challenges.map(id => challenges[id]).filter(Boolean);
 
+          // Global citation → { url, name } map for resolving [N] brackets in any text
+          const panelCitMap = new Map<number, { url: string; name: string }>();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const gcu = (activeData as any)?._citation_urls;
+          if (gcu && typeof gcu === 'object') { for (const [k, v] of Object.entries(gcu)) { if (typeof v === 'string' && (v as string).startsWith('http')) panelCitMap.set(parseInt(k), { url: v as string, name: '' }); } }
+          // Findings have richer source info (org name)
+          [...trends, ...opps, ...challenges].forEach(f => { if (f.source?.citation_id && f.source?.url) panelCitMap.set(f.source.citation_id, { url: f.source.url, name: f.source.organization || f.source.document_title || '' }); });
+          // News items
+          (newsItems || []).forEach(n => { if (n.citation_id && n.url) panelCitMap.set(n.citation_id, { url: n.url, name: n.source_org || '' }); });
+          // For citations only in _citation_urls (no org name), try to find the name from the company's own source
+          // The company we're viewing likely has its name as the org for its own citations
+          if (gcu) {
+            for (const [k] of panelCitMap) {
+              const entry = panelCitMap.get(k);
+              if (entry && !entry.name) {
+                // Check if this citation belongs to the current company (common for [72], [73] etc)
+                entry.name = co.name.split(/\s+/).slice(0, 2).join(' ');
+              }
+            }
+          }
+
           // Impact summary: count positive/negative/neutral across all linked findings
           const allLinkedFindings = [
             ...linkedT.map(f => ({ f, cat: 'trends' as const })),
@@ -1190,8 +1242,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           const impactCounts = { positive: 0, negative: 0, neutral: 0 };
           allLinkedFindings.forEach(({ f }) => {
             const ac = f.affected_companies?.find((c: AffectedCompany) => {
-              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
+              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
               return na === nc || na.includes(nc) || nc.includes(na);
             });
             if (ac) impactCounts[ac.impact as keyof typeof impactCounts]++;
@@ -1203,8 +1255,8 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           const impactGroups: Record<string, string[]> = { positive: [], neutral: [], negative: [] };
           allLinkedFindings.forEach(({ f }) => {
             const ac = f.affected_companies?.find((c: AffectedCompany) => {
-              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
+              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
               return na === nc || na.includes(nc) || nc.includes(na);
             });
             const impact = (ac?.impact as string) || 'neutral';
@@ -1215,20 +1267,12 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           // Helper to find impact detail for this company — search direct match first, then all findings
           const getImpactForFinding = (f: { affected_companies?: AffectedCompany[] }) => {
             const fuzzy = (a: string, b: string) => {
-              const na = a.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
-              const nb = b.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const na = a.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
+              const nb = b.toLowerCase().replace(/\b(inc|corp|co|ltd|plc|nv|lp|llc|sa|ag|industries|holdings|partners)\b\.?/g, '').replace(/\s+/g, ' ').trim();
               return na === nb || na.includes(nb) || nb.includes(na);
             };
-            // Direct match on this finding
-            const direct = f.affected_companies?.find((c: AffectedCompany) => fuzzy(c.name, co.name));
-            if (direct) return direct;
-            // Fallback: search ALL findings for any mention of this company
-            const allF = [...trends, ...opps, ...challenges];
-            for (const af of allF) {
-              const match = af.affected_companies?.find((c: AffectedCompany) => fuzzy(c.name, co.name));
-              if (match) return match;
-            }
-            return undefined;
+            // Only match from THIS finding's affected_companies — no cross-finding fallback
+            return f.affected_companies?.find((c: AffectedCompany) => fuzzy(c.name, co.name));
           };
 
           return (
@@ -1257,7 +1301,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                 {co.revenue && (
                   <div style={{ padding: '10px 0', borderTop: `1px solid ${a(.08)}`, borderBottom: `1px solid ${a(.08)}`, marginBottom: 16 }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: a(.2), letterSpacing: '.12em', textTransform: 'uppercase' }}>Revenue</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-.02em', marginTop: 2 }}>{co.revenue}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-.02em', marginTop: 2 }}>{fmtRev(co.revenue)}</div>
                   </div>
                 )}
 
@@ -1265,18 +1309,18 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                 {co.investment_focus && (
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: '#34d399', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Investment Focus</div>
-                    <p style={{ fontSize: 10, color: a(.45), lineHeight: 1.7 }}>{co.investment_focus}</p>
+                    <p style={{ fontSize: 10, color: a(.45), lineHeight: 1.7 }}><CitText text={co.investment_focus} citMap={panelCitMap} /></p>
                   </div>
                 )}
 
-                {/* Recent Moves */}
+                {/* Recent Moves — citations rendered as inline links */}
                 {co.recent_moves && co.recent_moves.length > 0 && (
                   <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: '#fbbf24', letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 6 }}>Recent Moves</div>
                     {co.recent_moves.map((move, mi) => (
-                      <div key={mi} style={{ display: 'flex', gap: 8, padding: '4px 0' }}>
-                        <span style={{ color: '#fbbf24', fontSize: 10, marginTop: 2, flexShrink: 0, opacity: .6 }}>→</span>
-                        <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{move}</span>
+                      <div key={mi} style={{ display: 'flex', gap: 8, padding: '4px 0', alignItems: 'baseline' }}>
+                        <span style={{ color: '#fbbf24', fontSize: 10, flexShrink: 0, opacity: .6 }}>→</span>
+                        <CitText text={move} citMap={panelCitMap} style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }} />
                       </div>
                     ))}
                   </div>
@@ -1328,36 +1372,19 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   );
                 })()}
 
-                {/* Key Investments */}
+                {/* Key Investments — citations rendered as inline links */}
                 {co.key_initiatives.length > 0 && (() => {
-                  // Build a pool of source URLs from all linked findings for this company
-                  const allLinkedSources = [...linkedT, ...linkedO, ...linkedC]
-                    .filter(f => f.source?.url)
-                    .map(f => ({ url: f.source!.url!, org: f.source!.organization || '', title: f.t }));
                   return (
                   <div style={{ marginBottom: 18, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                       <div style={{ fontSize: 7, fontWeight: 900, color: '#60a5fa', letterSpacing: '.15em', textTransform: 'uppercase' }}>Key Investments</div>
-                      <div style={{ fontSize: 6, color: a(.15) }}>AlphaSense research</div>
                     </div>
                     {co.key_initiatives.map((init, ii) => {
-                      // Try to find a source for this initiative by matching words to linked findings
-                      const initWords = init.toLowerCase().split(/\s+/).filter(w => w.length > 4);
-                      const matchedSource = allLinkedSources.find(s => {
-                        const fWords = s.title.toLowerCase().split(/\s+/);
-                        return initWords.filter(w => fWords.some(fw => fw.includes(w) || w.includes(fw))).length >= 2;
-                      }) || allLinkedSources[ii % allLinkedSources.length]; // fallback: round-robin
                       return (
-                        <div key={ii} style={{ display: 'flex', gap: 8, padding: '5px 0', borderBottom: ii < co.key_initiatives.length - 1 ? `1px solid ${a(.03)}` : 'none' }}>
-                          <div style={{ width: 4, height: 4, marginTop: 5, background: '#60a5fa', flexShrink: 0 }} />
+                        <div key={ii} style={{ display: 'flex', gap: 8, padding: '5px 0', borderBottom: ii < co.key_initiatives.length - 1 ? `1px solid ${a(.03)}` : 'none', alignItems: 'baseline' }}>
+                          <div style={{ width: 4, height: 4, background: '#60a5fa', flexShrink: 0, borderRadius: 1, position: 'relative', top: -1 }} />
                           <div style={{ flex: 1 }}>
-                            <span style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }}>{init.replace(/\s*\[\d+\]\s*/g, ' ').trim()}</span>
-                            {matchedSource && (
-                              <a href={matchedSource.url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                                style={{ display: 'block', fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2 }}>
-                                {matchedSource.org.substring(0, 30)} ↗
-                              </a>
-                            )}
+                            <CitText text={init} citMap={panelCitMap} style={{ fontSize: 10, color: a(.5), lineHeight: 1.5 }} />
                           </div>
                         </div>
                       );
@@ -1384,7 +1411,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                             </span>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{t.t}</span>
-                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}><CitText text={impact.detail} citMap={panelCitMap} /></div>}
                               {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{t.source?.organization ? t.source.organization.substring(0, 30) : 'Source'} ↗</a>}
                             </div>
                           </div>
@@ -1412,7 +1439,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                             </span>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{o.t}</span>
-                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}><CitText text={impact.detail} citMap={panelCitMap} /></div>}
                               {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{o.source?.organization ? o.source.organization.substring(0, 30) : 'Source'} ↗</a>}
                             </div>
                           </div>
@@ -1443,7 +1470,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                                 <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.4 }}>{c.t}</span>
                                 <span style={{ fontSize: 7, fontWeight: 800, padding: '1px 4px', marginLeft: 6, background: `${sevColor(c.severity)}15`, color: sevColor(c.severity), textTransform: 'uppercase' }}>{c.severity}</span>
                               </div>
-                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}>{impact.detail}</div>}
+                              {impact?.detail && <div style={{ fontSize: 8, color: a(.3), lineHeight: 1.5, marginTop: 2 }}><CitText text={impact.detail} citMap={panelCitMap} /></div>}
                               {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 2, display: 'inline-block' }}>{c.source?.organization ? c.source.organization.substring(0, 30) : 'Source'} ↗</a>}
                             </div>
                           </div>
@@ -2044,9 +2071,6 @@ function BrokerAnalysisSection({ newsItems, onExpand, topCompanies, onSelectComp
 
       {/* ── Crest Masthead ── */}
       <div style={{ padding: '32px 48px 24px', textAlign: 'center', borderBottom: '1px solid rgb(var(--ink) / .08)', position: 'relative' }}>
-        {/* Center spine line through crest — dark mode only */}
-        {!light && <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgb(var(--ink) / .08)', pointerEvents: 'none' }} />}
-
         <div style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
           {/* Top ornamental line */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
@@ -2082,10 +2106,6 @@ function BrokerAnalysisSection({ newsItems, onExpand, topCompanies, onSelectComp
 
       {/* ── Articles Grid (paginated) ── */}
       <div style={{ padding: '28px 48px 20px', position: 'relative' }}>
-        {/* Center spine continues — dark mode only */}
-        {!light && <div style={{ position: 'absolute', top: 0, left: '50%', width: 1, height: '100%', background: 'rgb(var(--ink) / .08)', pointerEvents: 'none' }} />}
-        {/* Spine shadow */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 20, height: '100%', background: light ? 'linear-gradient(to right, transparent, rgba(161,0,255,.02) 45%, rgba(161,0,255,.04) 50%, rgba(161,0,255,.02) 55%, transparent)' : 'linear-gradient(to right, transparent, rgba(0,0,0,.06) 45%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.06) 55%, transparent)', pointerEvents: 'none' }} />
 
         <AnimatePresence mode="wait">
           <motion.div

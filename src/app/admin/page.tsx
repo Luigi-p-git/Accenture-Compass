@@ -208,7 +208,7 @@ export default function AdminPage() {
   const [alphaIndustry, setAlphaIndustry] = useState('');
   const [alphaTimeframe, setAlphaTimeframe] = useState('12 Months');
   // Step 2: Conversion
-  const [alphaInputMode, setAlphaInputMode] = useState<'paste' | 'pdf' | 'json'>('paste');
+  const [alphaInputMode] = useState<'paste' | 'pdf' | 'json'>('json');
   const [alphaInput, setAlphaInput] = useState('');
   const [alphaJsonInput, setAlphaJsonInput] = useState('');
   const alphaPdfRef = useRef<HTMLInputElement>(null);
@@ -576,58 +576,41 @@ export default function AdminPage() {
                       {/* Left: JSON / Text paste */}
                       <div>
                         <div style={{ display: 'flex', background: 'var(--s1)', border: '1px solid var(--s2)', borderRadius: 6, padding: 2, marginBottom: 8 }}>
-                          {([['json', 'data_object', 'Paste JSON'], ['paste', 'content_paste', 'Paste Text']] as const).map(([key, ic, label]) => (
-                            <button key={key} onClick={() => setAlphaInputMode(key as 'paste' | 'pdf' | 'json')} style={{
-                              flex: 1, padding: '5px 0', borderRadius: 4, border: 'none', cursor: 'pointer',
-                              fontSize: 8, fontWeight: 800, letterSpacing: '.04em',
-                              background: alphaInputMode === key ? 'var(--p)' : 'transparent',
-                              color: alphaInputMode === key ? '#fff' : 'var(--t3)',
-                              transition: 'all .2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3,
-                            }}>
-                              <span className="ms" style={{ fontSize: 11 }}>{ic}</span>{label}
-                            </button>
-                          ))}
+                          <div style={{
+                            flex: 1, padding: '5px 0', borderRadius: 4,
+                            fontSize: 8, fontWeight: 800, letterSpacing: '.04em',
+                            background: 'var(--p)', color: '#fff',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3,
+                          }}>
+                            <span className="ms" style={{ fontSize: 11 }}>data_object</span>Paste JSON
+                          </div>
                         </div>
-                        {alphaInputMode === 'json' ? (
-                          <textarea
-                            value={alphaJsonInput}
-                            onChange={e => {
-                              const val = e.target.value;
-                              setAlphaJsonInput(val); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false);
-                              // Auto-detect country + industry from pasted JSON
-                              try {
-                                const subjectMatch = val.match(/"subject"\s*:\s*"([^"]+)"/);
-                                if (subjectMatch) {
-                                  const s = subjectMatch[1].toLowerCase();
-                                  const allC = Object.values(ALPHA_REGIONS).flat();
-                                  const cm = allC.find((c: string) => s.includes(c.toLowerCase()));
-                                  if (cm) setAlphaTargetCountry(cm.toLowerCase().replace(/\s+/g, '-'));
-                                  const im = ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').find(ind => s.includes(ind.toLowerCase()));
-                                  if (im) setAlphaTargetIndustry(im.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
-                                }
-                              } catch { /* ignore parse errors during typing */ }
-                            }}
-                            placeholder='Paste JSON here — supports both formats:&#10;&#10;{ "trends": [...], "top_companies": [...] }&#10;&#10;{ "findings": [...], "synthesis": "..." }'
-                            style={{
-                              width: '100%', height: 140, padding: '10px 12px', borderRadius: 8,
-                              background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
-                              fontSize: 9, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
-                              resize: 'vertical', outline: 'none',
-                            }}
-                          />
-                        ) : (
-                          <textarea
-                            value={alphaInput}
-                            onChange={e => { setAlphaInput(e.target.value); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false); }}
-                            placeholder="Paste AlphaSense text output here...&#10;&#10;EMERGING TRENDS&#10;&#10;1. Finding title&#10;Description: ..."
-                            style={{
-                              width: '100%', height: 140, padding: '10px 12px', borderRadius: 8,
-                              background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
-                              fontSize: 9, fontFamily: "'Inter',sans-serif", lineHeight: 1.7,
-                              resize: 'vertical', outline: 'none',
-                            }}
-                          />
-                        )}
+                        <textarea
+                          value={alphaJsonInput}
+                          onChange={e => {
+                            const val = e.target.value;
+                            setAlphaJsonInput(val); setAlphaResult(null); setAlphaError(''); setAlphaSaved(false);
+                            // Auto-detect country + industry from pasted JSON
+                            try {
+                              const subjectMatch = val.match(/"subject"\s*:\s*"([^"]+)"/);
+                              if (subjectMatch) {
+                                const s = subjectMatch[1].toLowerCase();
+                                const allC = Object.values(ALPHA_REGIONS).flat();
+                                const cm = allC.find((c: string) => s.includes(c.toLowerCase()));
+                                if (cm) setAlphaTargetCountry(cm.toLowerCase().replace(/\s+/g, '-'));
+                                const im = ALPHA_INDUSTRIES.filter(i => i !== 'All Industries').find(ind => s.includes(ind.toLowerCase()));
+                                if (im) setAlphaTargetIndustry(im.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+                              }
+                            } catch { /* ignore parse errors during typing */ }
+                          }}
+                          placeholder='Paste JSON here&#10;&#10;{ "trends": [...], "top_companies": [...] }'
+                          style={{
+                            width: '100%', height: 140, padding: '10px 12px', borderRadius: 8,
+                            background: 'var(--s1)', border: '1px solid var(--s2)', color: '#fff',
+                            fontSize: 9, fontFamily: "'JetBrains Mono','Consolas',monospace", lineHeight: 1.6,
+                            resize: 'vertical', outline: 'none',
+                          }}
+                        />
                       </div>
 
                       {/* Right: PDF upload for chart extraction */}
@@ -741,10 +724,33 @@ export default function AdminPage() {
                               if (!raw.endsWith('}')) { const lb = raw.lastIndexOf('}'); if (lb > 0) raw = raw.substring(0, lb + 1); }
                               const si = raw.indexOf('{'); const ei = raw.lastIndexOf('}');
                               if (si !== -1 && ei > si) raw = raw.substring(si, ei + 1);
+                              // Fix unquoted URLs (e.g. "logo_url": https://... → "logo_url": "https://...")
+                              raw = raw.replace(/:\s*(https?:\/\/[^\s,}\]]+)/g, ': "$1"');
                               const parsed = JSON.parse(raw);
 
                               if (parsed.trends && Array.isArray(parsed.trends)) {
                                 if (!parsed.source) parsed.source = { subject: 'Unknown', date_generated: new Date().toISOString().split('T')[0], total_findings: (parsed.trends?.length || 0) + (parsed.opportunities?.length || 0) + (parsed.challenges?.length || 0) };
+                                // Strip counter metadata, keep _citation_urls for link resolution
+                                delete parsed._pdf_links_extracted; delete parsed._citations_mapped;
+                                // Backfill ALL URLs from _citation_urls map
+                                const citUrls = parsed._citation_urls;
+                                if (citUrls && typeof citUrls === 'object') {
+                                  for (const cat of ['trends', 'opportunities', 'challenges']) {
+                                    for (const item of (parsed[cat] || [])) {
+                                      if (!item.source?.url && item.source?.citation_id) {
+                                        const url = citUrls[String(item.source.citation_id)] || citUrls[item.source.citation_id];
+                                        if (url) item.source.url = url;
+                                      }
+                                    }
+                                  }
+                                  for (const n of (parsed.news_items || [])) {
+                                    if (!n.url && n.citation_id) {
+                                      const url = citUrls[String(n.citation_id)] || citUrls[n.citation_id];
+                                      if (url) n.url = url;
+                                    }
+                                  }
+                                }
+                                // _citation_urls stays in parsed — saved to data file for initiative/detail link lookups
                                 result = { success: true, trends: parsed, alphasense: { subject: parsed.source?.subject, findings: [], synthesis: parsed.synthesis || '', metadata: { emerging_trend_count: parsed.trends?.length || 0, strategic_opportunity_count: parsed.opportunities?.length || 0, key_challenge_count: parsed.challenges?.length || 0, news_count: parsed.news_items?.length || 0, financial_highlight_count: parsed.financial_highlights?.length || 0, top_company_count: parsed.top_companies?.length || 0 } } };
                               } else if (parsed.findings && Array.isArray(parsed.findings)) {
                                 const res = await fetch('/api/alphasense', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ json: parsed }) });
@@ -964,48 +970,6 @@ export default function AdminPage() {
                 </div>
               )}
 
-              {/* Upload zone (compact) */}
-              <div style={{ marginBottom: 12, flexShrink: 0 }}>
-                <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,.json" style={{ display: 'none' }}
-                  onChange={async (e) => {
-                    const f = e.target.files?.[0]; if (!f) return;
-                    const parsed = await parseFile(f);
-                    setParsedFile({ name: f.name, ...parsed });
-                    setColumnMap({}); setSelectedTargets([]);
-                  }}
-                />
-                <div
-                  onDragOver={e => { e.preventDefault(); setDrag(true); }}
-                  onDragLeave={() => setDrag(false)}
-                  onDrop={async (e) => {
-                    e.preventDefault(); setDrag(false);
-                    const f = e.dataTransfer.files[0]; if (!f) return;
-                    const parsed = await parseFile(f);
-                    setParsedFile({ name: f.name, ...parsed });
-                    setColumnMap({}); setSelectedTargets([]);
-                  }}
-                  onClick={() => fileRef.current?.click()}
-                  style={{
-                    padding: parsedFile ? '12px 16px' : '24px 16px', textAlign: 'center', borderRadius: 10, cursor: 'pointer', transition: 'all .3s',
-                    background: drag ? 'rgba(161,0,255,.06)' : parsedFile ? 'rgba(52,211,153,.04)' : 'var(--s1)',
-                    border: drag ? '2px dashed var(--p)' : parsedFile ? '1px solid rgba(52,211,153,.2)' : '2px dashed var(--s2)',
-                    display: parsedFile ? 'flex' : 'block', alignItems: 'center', gap: 12,
-                  }}
-                >
-                  {parsedFile ? (<>
-                    <span className="ms" style={{ fontSize: 20, color: 'var(--em)' }}>check_circle</span>
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <div style={{ fontSize: 11, fontWeight: 800 }}>{parsedFile.name}</div>
-                      <div style={{ fontSize: 9, color: 'var(--t3)' }}>{parsedFile.columns.length} cols · {parsedFile.rows.length} rows</div>
-                    </div>
-                    <span style={{ fontSize: 8, color: 'var(--t4)', fontWeight: 700 }}>Replace</span>
-                  </>) : (<>
-                    <span className="ms" style={{ fontSize: 24, color: 'var(--p)' }}>upload_file</span>
-                    <div style={{ fontSize: 13, fontWeight: 800, marginTop: 6 }}>Drop or click to upload</div>
-                    <p style={{ fontSize: 10, color: 'var(--t3)', marginTop: 3 }}>CSV, Excel, or JSON</p>
-                  </>)}
-                </div>
-              </div>
 
               {/* Multi-select target artifacts */}
               {parsedFile && (
