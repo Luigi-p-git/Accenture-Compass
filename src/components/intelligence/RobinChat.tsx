@@ -10,9 +10,11 @@ interface Message {
 }
 
 export interface RobinFocus {
-  type: 'company' | 'trend' | 'opportunity' | 'challenge' | 'general';
+  type: 'company' | 'trend' | 'opportunity' | 'challenge' | 'general' | 'element';
   label: string;
   detail?: string;
+  selector?: string;
+  sectionContext?: string;
 }
 
 function RobinMask({ size = 24 }: { size?: number }) {
@@ -117,6 +119,11 @@ function buildContext(data: TrendsData | null, focus: RobinFocus | null): string
     } else if (focus.type === 'opportunity') {
       const o = data.opportunities?.find(op => op.t === focus.label);
       if (o) parts.push(`Detail [${o.timeline}]: ${o.d}`);
+    } else if (focus.type === 'element') {
+      parts.push(`Targeted element: "${focus.label}"`);
+      if (focus.sectionContext) parts.push(`Section: ${focus.sectionContext}`);
+      if (focus.detail) parts.push(`Content: ${focus.detail}`);
+      if (focus.selector) parts.push(`DOM: ${focus.selector}`);
     }
   }
   parts.push(`\nTotal findings: ${data.source?.total_findings || 0}`);
@@ -135,6 +142,7 @@ function buildSuggestions(data: TrendsData | null, focus: RobinFocus | null): st
       case 'trend': return [`Explain this trend in detail`, `Which companies benefit most?`, `Investment implications?`, `How does this connect to challenges?`];
       case 'opportunity': return [`Break down the market size`, `Which companies are positioned?`, `What are the risks?`, `Timeline and investment needed?`];
       case 'challenge': return [`How severe is this really?`, `Which companies are most at risk?`, `What mitigation strategies exist?`, `Impact on investment decisions?`];
+      case 'element': return [`What does this show?`, `Explain this in detail`, `How is this connected to other findings?`, `What actions should I take?`];
     }
   }
   if (!data) return ['What data is available?'];
@@ -147,9 +155,32 @@ function buildSuggestions(data: TrendsData | null, focus: RobinFocus | null): st
   return s.slice(0, 4);
 }
 
+function buildSelector(el: HTMLElement): string {
+  let s = el.tagName?.toLowerCase() || '';
+  if (el.id) s += '#' + el.id;
+  else if (el.className && typeof el.className === 'string') {
+    const cls = el.className.trim().split(/\s+/).filter(c => !c.startsWith('__') && c.length < 30).slice(0, 2).join('.');
+    if (cls) s += '.' + cls;
+  }
+  return s;
+}
+
+interface Conversation {
+  id: number;
+  label: string;
+  messages: Message[];
+  focus: RobinFocus | null;
+}
+
 export default function RobinChat({ data, focus, autoMessage }: { data: TrendsData | null; focus?: RobinFocus | null; autoMessage?: string | null }) {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [convos, setConvos] = useState<Conversation[]>([{ id: 1, label: 'Chat 1', messages: [], focus: null }]);
+  const [activeConvo, setActiveConvo] = useState(1);
+  const currentConvo = convos.find(c => c.id === activeConvo) || convos[0];
+  const messages = currentConvo.messages;
+  const setMessages = (fn: (prev: Message[]) => Message[]) => {
+    setConvos(prev => prev.map(c => c.id === activeConvo ? { ...c, messages: fn(c.messages) } : c));
+  };
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [lastFocus, setLastFocus] = useState<RobinFocus | null>(null);
@@ -157,6 +188,59 @@ export default function RobinChat({ data, focus, autoMessage }: { data: TrendsDa
   const inputRef = useRef<HTMLInputElement>(null);
   const ignoreNextFocus = useRef(false);
   const lastAutoMsg = useRef<string | null>(null);
+
+  // ── Targeting mode (element inspection) ──
+  const [targeting, setTargeting] = useState(false);
+  const [targetHover, setTargetHover] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  const onTargetMove = useCallback((e: MouseEvent) => {
+    if (overlayRef.current) overlayRef.current.style.display = 'none';
+    const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+    if (overlayRef.current) overlayRef.current.style.display = '';
+    if (!el || el.closest('[data-robin-target]')) { setTargetHover(null); return; }
+    const r = el.getBoundingClientRect();
+    setTargetHover({ top: r.top, left: r.left, width: r.width, height: r.height });
+  }, []);
+
+  const onTargetClick = useCallback((e: MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    if (overlayRef.current) overlayRef.current.style.display = 'none';
+    const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+    if (overlayRef.current) overlayRef.current.style.display = '';
+    if (!el || el.closest('[data-robin-target]')) return;
+
+    const text = (el.textContent || '').trim().slice(0, 300);
+    const section = el.closest('section');
+    const sectionLabel = section?.querySelector('[style*="letterSpacing"]')?.textContent
+      || section?.querySelector('h2,h3')?.textContent || '';
+    const selector = buildSelector(el);
+
+    setLastFocus({
+      type: 'element',
+      label: text.slice(0, 60) || 'Selected Element',
+      detail: text,
+      selector,
+      sectionContext: sectionLabel,
+    });
+    setTargeting(false);
+    setTargetHover(null);
+    setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (targeting) {
+      document.addEventListener('mousemove', onTargetMove, true);
+      document.addEventListener('click', onTargetClick, true);
+      const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { setTargeting(false); setTargetHover(null); } };
+      document.addEventListener('keydown', esc);
+      return () => {
+        document.removeEventListener('mousemove', onTargetMove, true);
+        document.removeEventListener('click', onTargetClick, true);
+        document.removeEventListener('keydown', esc);
+      };
+    }
+  }, [targeting, onTargetMove, onTargetClick]);
 
   // Focus from outside — open Robin with context
   useEffect(() => {
@@ -194,6 +278,8 @@ export default function RobinChat({ data, focus, autoMessage }: { data: TrendsDa
     if (!text.trim() || loading) return;
     setInput('');
     setMessages(prev => [...prev, { role: 'user', text }]);
+    // Auto-label the tab from first message
+    setConvos(prev => prev.map(c => c.id === activeConvo && c.messages.length === 0 ? { ...c, label: text.slice(0, 20) + (text.length > 20 ? '…' : '') } : c));
     setLoading(true);
     try {
       const res = await fetch('/api/robin-chat', {
@@ -217,13 +303,46 @@ export default function RobinChat({ data, focus, autoMessage }: { data: TrendsDa
     ignoreNextFocus.current = true;
   };
 
-  const accentFocus = activeFocus?.type === 'trend' ? '#A100FF' : activeFocus?.type === 'opportunity' ? '#34d399' : activeFocus?.type === 'challenge' ? '#f87171' : activeFocus?.type === 'company' ? '#60a5fa' : null;
+  const accentFocus = activeFocus?.type === 'trend' ? '#A100FF' : activeFocus?.type === 'opportunity' ? '#34d399' : activeFocus?.type === 'challenge' ? '#f87171' : (activeFocus?.type === 'company' || activeFocus?.type === 'element') ? '#60a5fa' : null;
 
   return (
     <>
-      {/* Floating button */}
+      {/* Targeting cursor + hover highlight */}
+      {targeting && <style>{`* { cursor: crosshair !important; }`}</style>}
+      {targeting && targetHover && (
+        <div ref={overlayRef} data-robin-target style={{
+          position: 'fixed', zIndex: 99998, pointerEvents: 'none',
+          border: '2px solid #ef4444', background: 'rgba(239,68,68,.06)', borderRadius: 3,
+          transition: 'all .08s ease-out',
+          top: targetHover.top, left: targetHover.left,
+          width: targetHover.width, height: targetHover.height,
+        }} />
+      )}
+
+      {/* Target button — tucked into top-left of Robin */}
       <motion.button
-        onClick={() => { if (open) handleClose(); else setOpen(true); }}
+        data-robin-target
+        onClick={() => { setTargeting(!targeting); if (open) setOpen(false); }}
+        whileHover={{ scale: 1.12 }}
+        whileTap={{ scale: 0.9 }}
+        title={targeting ? 'Cancel targeting (Esc)' : 'Target an element to ask Robin about it'}
+        style={{
+          position: 'fixed', bottom: 138, right: 68, zIndex: 301,
+          width: 20, height: 20, borderRadius: '50%',
+          background: targeting ? '#ef4444' : 'rgba(239,68,68,.12)',
+          border: targeting ? '1.5px solid #ef4444' : '1px solid rgba(239,68,68,.25)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: targeting ? '0 2px 8px rgba(239,68,68,.4)' : 'none',
+          transition: 'all .2s',
+        }}
+      >
+        <span className="ms" style={{ fontSize: 11, color: targeting ? '#fff' : '#ef4444' }}>my_location</span>
+      </motion.button>
+
+      {/* Floating Robin button */}
+      <motion.button
+        data-robin-target data-tour="robin"
+        onClick={() => { if (targeting) { setTargeting(false); setTargetHover(null); } if (open) handleClose(); else setOpen(true); }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         style={{
@@ -264,27 +383,85 @@ export default function RobinChat({ data, focus, autoMessage }: { data: TrendsDa
             }}
           >
             {/* Header */}
-            <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,.02)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <RobinMask size={18} />
-                <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', letterSpacing: '-.01em' }}>ROBIN</span>
-                <span style={{ fontSize: 6, fontWeight: 700, color: 'rgba(96,165,250,.4)', letterSpacing: '.1em' }}>INTELLIGENCE</span>
-              </div>
-              {activeFocus && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <div style={{ width: 5, height: 5, background: accentFocus || '#60a5fa' }} />
-                  <span style={{ fontSize: 7, fontWeight: 800, color: accentFocus || '#60a5fa', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{activeFocus.label}</span>
-                  <button onClick={() => setLastFocus(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,.15)', fontSize: 9, padding: 0 }}>✕</button>
+            <div style={{ padding: '8px 16px 0', background: 'rgba(255,255,255,.02)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <RobinMask size={18} />
+                  <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', letterSpacing: '-.01em' }}>ROBIN</span>
+                  <span style={{ fontSize: 6, fontWeight: 700, color: 'rgba(96,165,250,.4)', letterSpacing: '.1em' }}>INTELLIGENCE</span>
                 </div>
-              )}
+                {activeFocus && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <div style={{ width: 5, height: 5, background: accentFocus || '#60a5fa' }} />
+                    <span style={{ fontSize: 7, fontWeight: 800, color: accentFocus || '#60a5fa', maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{activeFocus.label}</span>
+                    <button onClick={() => setLastFocus(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,.15)', fontSize: 9, padding: 0 }}>✕</button>
+                  </div>
+                )}
+              </div>
+              {/* Conversation tabs */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 2, borderBottom: '1px solid rgba(255,255,255,.06)', marginLeft: -16, marginRight: -16, paddingLeft: 16, paddingRight: 8 }}>
+                {convos.map(c => (
+                  <div key={c.id} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                    <button
+                      onClick={() => setActiveConvo(c.id)}
+                      style={{
+                        padding: '5px 10px', background: 'none', border: 'none', cursor: 'pointer',
+                        fontSize: 7, fontWeight: c.id === activeConvo ? 900 : 600,
+                        color: c.id === activeConvo ? '#60a5fa' : 'rgba(255,255,255,.25)',
+                        transition: 'color .15s',
+                        borderBottom: c.id === activeConvo ? '2px solid #60a5fa' : '2px solid transparent',
+                        marginBottom: -1,
+                      }}
+                    >{c.messages.length > 0 ? c.label : 'New'}</button>
+                    {convos.length > 1 && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setConvos(prev => prev.filter(x => x.id !== c.id)); if (activeConvo === c.id) setActiveConvo(convos.find(x => x.id !== c.id)?.id || 1); }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,.1)', fontSize: 7, padding: '0 2px', transition: 'color .15s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,.4)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,.1)'; }}
+                      >✕</button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  onClick={() => {
+                    const newId = Math.max(...convos.map(c => c.id)) + 1;
+                    setConvos(prev => [...prev, { id: newId, label: `Chat ${newId}`, messages: [], focus: null }]);
+                    setActiveConvo(newId);
+                  }}
+                  style={{
+                    width: 18, height: 18, borderRadius: 3, background: 'none',
+                    border: '1px solid rgba(255,255,255,.08)', cursor: 'pointer',
+                    display: 'grid', placeItems: 'center', marginLeft: 4,
+                    color: 'rgba(255,255,255,.2)', fontSize: 11, fontWeight: 700,
+                    transition: 'all .15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(96,165,250,.3)'; e.currentTarget.style.color = '#60a5fa'; e.currentTarget.style.background = 'rgba(96,165,250,.08)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,.08)'; e.currentTarget.style.color = 'rgba(255,255,255,.2)'; e.currentTarget.style.background = 'none'; }}
+                  title="New conversation"
+                >+</button>
+              </div>
             </div>
 
-            {/* Verify badge for focused items */}
+            {/* Verify badge — clickable, triggers auto-query */}
             {activeFocus && (
-              <div style={{ padding: '6px 16px', borderBottom: '1px solid rgba(255,255,255,.04)', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(96,165,250,.03)' }}>
+              <button
+                onClick={() => {
+                  const verifyPrompt = activeFocus.type === 'element'
+                    ? `Verify and explain this: "${activeFocus.label}". What does it mean in context? Is the data accurate? What should I know?`
+                    : activeFocus.type === 'company'
+                    ? `Verify intelligence on ${activeFocus.label}. Cross-check their linked findings, impact assessment, and key investments. Any concerns?`
+                    : `Verify this ${activeFocus.type}: "${activeFocus.label}". Is the analysis sound? What are the key implications and any gaps?`;
+                  send(verifyPrompt);
+                }}
+                style={{ width: '100%', padding: '6px 16px', borderBottom: '1px solid rgba(255,255,255,.04)', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(96,165,250,.03)', border: 'none', borderBlockEnd: '1px solid rgba(255,255,255,.04)', cursor: 'pointer', transition: 'background .15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(96,165,250,.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(96,165,250,.03)'; }}
+              >
                 <span style={{ fontSize: 10, color: '#60a5fa' }}>&#10003;</span>
-                <span style={{ fontSize: 7, fontWeight: 700, color: 'rgba(96,165,250,.6)' }}>Robin is verifying intelligence on this {activeFocus.type}</span>
-              </div>
+                <span style={{ fontSize: 7, fontWeight: 700, color: 'rgba(96,165,250,.6)' }}>Verify intelligence on this {activeFocus.type}</span>
+                <span style={{ marginLeft: 'auto', fontSize: 7, fontWeight: 800, color: '#60a5fa', opacity: .6 }}>Click to verify →</span>
+              </button>
             )}
 
             {/* Messages */}

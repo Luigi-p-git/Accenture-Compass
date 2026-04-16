@@ -11,6 +11,8 @@ import { generateIntelligenceReport } from '@/lib/intelligenceReport';
 import HeaderSelector, { REGION_COUNTRIES } from '@/components/intelligence/HeadlineSelector';
 import { useCompassStore } from '@/lib/store';
 import RobinChat, { type RobinFocus } from '@/components/intelligence/RobinChat';
+import FAQModal from '@/components/intelligence/FAQModal';
+import TourGuide, { type TourAction } from '@/components/intelligence/TourGuide';
 
 const ease = [0.4, 0, 0.2, 1] as const;
 const sevColor = (s: string) => s === 'critical' ? '#ef4444' : s === 'high' ? '#f87171' : s === 'medium' ? '#fbbf24' : '#60a5fa';
@@ -61,6 +63,9 @@ function CompanyLogo({ name, logoUrl, size = 36 }: { name: string; logoUrl?: str
 function getSourceUrl(source: { document_title?: string | null; organization?: string | null; url?: string | null } | undefined): string | null {
   if (!source) return null;
   if (source.url && source.url.startsWith('http')) return source.url;
+  // Fallback: build AlphaSense search URL from metadata
+  const q = source.document_title || source.organization;
+  if (q) return `https://research.alpha-sense.com/?q=${encodeURIComponent(q)}&scope=ANYWHERE`;
   return null;
 }
 
@@ -72,7 +77,7 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source, al
   source?: { document_title?: string | null; organization?: string | null; url?: string | null } | null;
   allFindings?: { affected_companies?: AffectedCompany[] }[];
 }) {
-  const sourceUrl = source?.url && source.url.startsWith('http') ? source.url : null;
+  const sourceUrl = getSourceUrl(source as Parameters<typeof getSourceUrl>[0]);
   const sourceName = source?.organization || source?.document_title || '';
   if (!finding.linked_top_companies?.length && !finding.affected_companies?.length) return null;
 
@@ -149,6 +154,9 @@ export default function IntelligencePage({ data, country, countrySlug }: {
   const [selCompany, setSelCompany] = useState<number | null>(null);
   const [robinFocus, setRobinFocus] = useState<RobinFocus | null>(null);
   const [robinAutoMsg, setRobinAutoMsg] = useState<string | null>(null);
+  const [impactHover, setImpactHover] = useState<string | null>(null);
+  const [faqOpen, setFaqOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
   // Derive initial region & country from the URL slug
   const initRegion = countrySlug === 'world' ? 'World'
     : Object.entries(REGION_COUNTRIES).find(([, cs]) =>
@@ -237,7 +245,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             onIndustryChange={(ind) => { setSelIndustry(ind); setHeroKey(k => k + 1); }}
           />
         </div>
-        <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+        <nav style={{ display: 'flex', gap: 14, alignItems: 'center', flexShrink: 0 }}>
           {['Trends', 'Analysis', 'Opportunities', 'Data', 'Challenges', 'Companies', 'News'].map((s, i) => (
             <a key={s} href={`#sec-${i}`} style={{ fontSize: 8, fontWeight: 900, letterSpacing: '-.01em', textTransform: 'uppercase', color: 'var(--t1)', textDecoration: 'none', transition: 'color .2s', opacity: .35 }}
               onMouseEnter={e => { e.currentTarget.style.color = '#A100FF'; e.currentTarget.style.opacity = '1'; }}
@@ -248,9 +256,9 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           <button
             onClick={toggleTheme}
             title={light ? 'Switch to dark mode' : 'Switch to light mode'}
-            style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${a(.1)}`, background: 'transparent', display: 'grid', placeItems: 'center', cursor: 'pointer', transition: 'all .2s', color: a(.5) }}
+            style={{ width: 22, height: 22, borderRadius: 4, border: `1px solid ${a(.08)}`, background: 'transparent', display: 'grid', placeItems: 'center', cursor: 'pointer', transition: 'all .2s', color: a(.4) }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(161,0,255,.1)'; e.currentTarget.style.borderColor = 'rgba(161,0,255,.3)'; e.currentTarget.style.color = '#A100FF'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = a(.1); e.currentTarget.style.color = a(.5); }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = a(.08); e.currentTarget.style.color = a(.4); }}
           >
             <motion.span
               key={theme}
@@ -259,8 +267,28 @@ export default function IntelligencePage({ data, country, countrySlug }: {
               exit={{ rotate: 30, opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.25 }}
               className="ms"
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 13 }}
             >{light ? 'dark_mode' : 'light_mode'}</motion.span>
+          </button>
+          {/* Tour button */}
+          <button
+            onClick={() => setTourOpen(true)}
+            title="Take a tour"
+            style={{ width: 22, height: 22, borderRadius: 4, border: `1px solid ${a(.08)}`, background: 'transparent', display: 'grid', placeItems: 'center', cursor: 'pointer', transition: 'all .2s', color: a(.4) }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(161,0,255,.1)'; e.currentTarget.style.borderColor = 'rgba(161,0,255,.3)'; e.currentTarget.style.color = '#A100FF'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = a(.08); e.currentTarget.style.color = a(.4); }}
+          >
+            <span className="ms" style={{ fontSize: 13 }}>tour</span>
+          </button>
+          {/* FAQ button */}
+          <button
+            onClick={() => setFaqOpen(true)}
+            title="FAQ & Help"
+            style={{ width: 22, height: 22, borderRadius: 4, border: `1px solid ${a(.08)}`, background: 'transparent', display: 'grid', placeItems: 'center', cursor: 'pointer', transition: 'all .2s', color: a(.4) }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(96,165,250,.1)'; e.currentTarget.style.borderColor = 'rgba(96,165,250,.3)'; e.currentTarget.style.color = '#60a5fa'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = a(.08); e.currentTarget.style.color = a(.4); }}
+          >
+            <span className="ms" style={{ fontSize: 13 }}>help_outline</span>
           </button>
           <span style={{ width: 1, height: 16, background: a(.1) }} />
           <a href="/admin" style={{ fontSize: 7, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: '#A100FF', textDecoration: 'none', padding: '4px 10px', border: '1px solid rgba(161,0,255,.2)', transition: 'all .2s' }}
@@ -412,6 +440,78 @@ export default function IntelligencePage({ data, country, countrySlug }: {
         </section>
 
         {/* ════════════════════════════════════════
+            EXECUTIVE SUMMARY — synthesis + key signals
+           ════════════════════════════════════════ */}
+        {synthesis && (
+          <section style={{ marginBottom: 48 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 16 }}>
+              <span style={{ fontSize: 8, fontWeight: 900, letterSpacing: '.2em', color: '#A100FF', textTransform: 'uppercase' }}>Executive Summary</span>
+              <div style={{ flex: 1, height: 1, background: a(.08) }} />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 32 }}>
+              {/* Left: synthesis bullets */}
+              <div>
+                {(() => {
+                  // Split synthesis into sentences, group into 2-sentence bullets
+                  const safe = synthesis.replace(/U\.S\./g, 'U·S·').replace(/e\.g\./g, 'e·g·').replace(/i\.e\./g, 'i·e·');
+                  const sentences = safe.split(/(?<=[.!?])\s+(?=[A-Z])/).map(s => s.replace(/·/g, '.'));
+                  const bullets: string[] = [];
+                  for (let i = 0; i < sentences.length; i += 2) {
+                    bullets.push(sentences.slice(i, i + 2).join(' ').trim());
+                  }
+                  return bullets.map((b, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+                      <span style={{ color: '#A100FF', fontSize: 11, marginTop: 1, flexShrink: 0, opacity: .5 }}>→</span>
+                      <p style={{ fontSize: 10, lineHeight: 1.7, color: a(.45), margin: 0 }}>{b}</p>
+                    </div>
+                  ));
+                })()}
+              </div>
+              {/* Right: key signals at a glance */}
+              <div style={{ borderLeft: `2px solid ${a(.06)}`, paddingLeft: 24 }}>
+                <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.15em', color: a(.15), textTransform: 'uppercase', marginBottom: 12 }}>Key Signals</div>
+                {/* Top critical challenge */}
+                {challenges.filter(c => c.severity === 'critical').slice(0, 1).map((c, i) => (
+                  <div key={`cr-${i}`} style={{ marginBottom: 10, padding: '8px 0', borderBottom: `1px solid ${a(.04)}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                      <div style={{ width: 6, height: 6, background: '#ef4444', borderRadius: 1 }} />
+                      <span style={{ fontSize: 6, fontWeight: 900, letterSpacing: '.1em', color: '#ef4444', textTransform: 'uppercase' }}>Critical Risk</span>
+                    </div>
+                    <div style={{ fontSize: 9, fontWeight: 800, lineHeight: 1.3, color: a(.7) }}>{c.t}</div>
+                  </div>
+                ))}
+                {/* Top opportunity */}
+                {opps.slice(0, 1).map((o, i) => (
+                  <div key={`op-${i}`} style={{ marginBottom: 10, padding: '8px 0', borderBottom: `1px solid ${a(.04)}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                      <div style={{ width: 6, height: 6, background: '#34d399', borderRadius: 1 }} />
+                      <span style={{ fontSize: 6, fontWeight: 900, letterSpacing: '.1em', color: '#34d399', textTransform: 'uppercase' }}>Top Opportunity</span>
+                    </div>
+                    <div style={{ fontSize: 9, fontWeight: 800, lineHeight: 1.3, color: a(.7) }}>{o.t}</div>
+                  </div>
+                ))}
+                {/* Leading trend */}
+                {trends.slice(0, 1).map((t, i) => (
+                  <div key={`tr-${i}`} style={{ marginBottom: 10, padding: '8px 0', borderBottom: `1px solid ${a(.04)}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                      <div style={{ width: 6, height: 6, background: '#A100FF', borderRadius: 1 }} />
+                      <span style={{ fontSize: 6, fontWeight: 900, letterSpacing: '.1em', color: '#A100FF', textTransform: 'uppercase' }}>Leading Trend</span>
+                    </div>
+                    <div style={{ fontSize: 9, fontWeight: 800, lineHeight: 1.3, color: a(.7) }}>{t.t}</div>
+                  </div>
+                ))}
+                {/* Counts */}
+                <div style={{ display: 'flex', gap: 16, marginTop: 6 }}>
+                  <div><span style={{ fontSize: 16, fontWeight: 900, color: '#A100FF' }}>{trends.length}</span><span style={{ fontSize: 7, color: a(.2), marginLeft: 3 }}>trends</span></div>
+                  <div><span style={{ fontSize: 16, fontWeight: 900, color: '#34d399' }}>{opps.length}</span><span style={{ fontSize: 7, color: a(.2), marginLeft: 3 }}>opps</span></div>
+                  <div><span style={{ fontSize: 16, fontWeight: 900, color: '#f87171' }}>{challenges.length}</span><span style={{ fontSize: 7, color: a(.2), marginLeft: 3 }}>risks</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ════════════════════════════════════════
             INTELLIGENCE BRIEF — top 5 per category
            ════════════════════════════════════════ */}
         {(trends.length > 0 || opps.length > 0 || challenges.length > 0) && (
@@ -554,10 +654,12 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             OPPORTUNITIES — Inverted section
            ════════════════════════════════════════ */}
         {opps.length > 0 && (
-          <section id="sec-2" style={{ marginBottom: 48, scrollMarginTop: 56 }}>
+          <section id="sec-2" style={{ marginBottom: 48, scrollMarginTop: 56, position: 'relative' }}>
             <SectionRule label="Strategic Opportunities" accent="#34d399" />
-            {/* Horizontal scrollable vertical cards */}
-            <div style={{ display: 'flex', gap: 12, marginTop: 24, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {/* Right-edge fade to hint at scrollability */}
+            <div style={{ position: 'absolute', right: -48, top: 72, bottom: 0, width: 64, background: `linear-gradient(to right, transparent, ${light ? '#fff' : '#0a0a0a'})`, pointerEvents: 'none', zIndex: 2 }} />
+            {/* Horizontal scrollable vertical cards — breaks out of parent padding */}
+            <div style={{ display: 'flex', gap: 12, marginTop: 24, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none', msOverflowStyle: 'none', marginRight: -48, paddingRight: 48 }}>
               {opps.map((item, i) => (
                 <motion.div key={i}
                   initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
@@ -588,7 +690,6 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   </div>
                 </motion.div>
               ))}
-              <div style={{ width: 48, flexShrink: 0 }} />
             </div>
           </section>
         )}
@@ -602,6 +703,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             {(financials.length > 0 || topCompanies.length > 0) && (
               <GeneratedChartsSection financials={financials} topCompanies={topCompanies}
                 findingCounts={{ trends: trends.length, opportunities: opps.length, challenges: challenges.length }}
+                allTrends={trends} allOpportunities={opps} allChallenges={challenges}
                 onAskRobin={(prompt) => setRobinAutoMsg(prompt + ' [' + Date.now() + ']')}
                 onSelectCompany={(idx) => { setExpanded(null); setSelCompany(idx); }}
                 onScrollToSection={(anchor) => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
@@ -744,14 +846,14 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                   >
                     <CompanyLogo name={co.name} logoUrl={co.logo_url} size={36} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em' }}>{co.name}</span>
-                        {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: a(.2) }}>{co.ticker}</span>}
+                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, overflow: 'hidden' }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.name}</span>
+                        {co.ticker && <span style={{ fontSize: 7, fontWeight: 700, color: a(.2), flexShrink: 0 }}>{co.ticker}</span>}
                       </div>
-                      <div style={{ fontSize: 8, color: a(.3), marginTop: 1 }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}{co.revenue ? ` · ${co.revenue}` : ''}</div>
+                      <div style={{ fontSize: 8, color: a(.3), marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.sector}{co.hq ? ` · ${co.hq}` : ''}{co.revenue ? ` · ${co.revenue}` : ''}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                    <div style={{ display: 'flex', gap: 4, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: 200 }}>
                       {tCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(161,0,255,.06)', color: '#A100FF' }}>{tCount} trend{tCount > 1 ? 's' : ''}</span>}
                       {oCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(52,211,153,.06)', color: '#34d399' }}>{oCount} opp{oCount > 1 ? 's' : ''}</span>}
                       {cCount > 0 && <span style={{ fontSize: 7, fontWeight: 800, padding: '2px 6px', background: 'rgba(248,113,113,.06)', color: '#f87171' }}>{cCount} risk{cCount > 1 ? 's' : ''}</span>}
@@ -990,7 +1092,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             <motion.div key="panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setExpanded(null)}
               style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(4px)' }}>
               <div style={{ flex: 1 }} />
-              <motion.div initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
+              <motion.div data-tour="detail-panel" initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
                 onClick={e => e.stopPropagation()}
                 style={{ width: 480, background: 'var(--panel)', borderLeft: `2px solid ${accent}`, padding: '36px 32px', overflowY: 'auto', color: 'var(--t1)' }}>
                 <button onClick={() => setExpanded(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 14 }}>✕</button>
@@ -1097,6 +1199,19 @@ export default function IntelligencePage({ data, country, countrySlug }: {
           });
           const totalImpacts = impactCounts.positive + impactCounts.negative + impactCounts.neutral;
 
+          // Group finding titles by impact type for hover detail
+          const impactGroups: Record<string, string[]> = { positive: [], neutral: [], negative: [] };
+          allLinkedFindings.forEach(({ f }) => {
+            const ac = f.affected_companies?.find((c: AffectedCompany) => {
+              const na = c.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              const nc = co.name.toLowerCase().replace(/\b(inc|corp|co|ltd)\b\.?/g, '').trim();
+              return na === nc || na.includes(nc) || nc.includes(na);
+            });
+            const impact = (ac?.impact as string) || 'neutral';
+            if (impactGroups[impact]) impactGroups[impact].push(f.t);
+            else impactGroups.neutral.push(f.t);
+          });
+
           // Helper to find impact detail for this company — search direct match first, then all findings
           const getImpactForFinding = (f: { affected_companies?: AffectedCompany[] }) => {
             const fuzzy = (a: string, b: string) => {
@@ -1120,7 +1235,7 @@ export default function IntelligencePage({ data, country, countrySlug }: {
             <motion.div key="co-panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelCompany(null)}
               style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(4px)' }}>
               <div style={{ flex: 1 }} />
-              <motion.div initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
+              <motion.div data-tour="company-panel" initial={{ x: 100 }} animate={{ x: 0 }} exit={{ x: 100 }} transition={{ duration: .3, ease }}
                 onClick={e => e.stopPropagation()}
                 style={{ width: 500, background: 'var(--panel)', borderLeft: '2px solid #60a5fa', padding: '36px 32px', overflowY: 'auto', color: 'var(--t1)' }}>
                 <button onClick={() => setSelCompany(null)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 14 }}>✕</button>
@@ -1167,22 +1282,51 @@ export default function IntelligencePage({ data, country, countrySlug }: {
                   </div>
                 )}
 
-                {/* Impact Summary Bar */}
-                {totalImpacts > 0 && (
-                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}` }}>
+                {/* Impact Summary Bar — hover to reveal finding titles */}
+                {totalImpacts > 0 && (() => {
+                  const impactColor = (k: string) => k === 'positive' ? '#34d399' : k === 'negative' ? '#f87171' : '#fbbf24';
+                  const impactLabel = (k: string) => k === 'positive' ? 'Opportunities & Positive Trends' : k === 'negative' ? 'Challenges & Risks' : 'Neutral Findings';
+                  const impactArrow = (k: string) => k === 'positive' ? '↑' : k === 'negative' ? '↓' : '→';
+                  return (
+                  <div style={{ marginBottom: 16, paddingTop: 14, borderTop: `1px solid ${a(.08)}`, position: 'relative' }}>
                     <div style={{ fontSize: 7, fontWeight: 900, color: a(.2), letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 8 }}>Impact Summary</div>
                     <div style={{ display: 'flex', height: 4, overflow: 'hidden', marginBottom: 6 }}>
-                      {impactCounts.positive > 0 && <div style={{ flex: impactCounts.positive, background: '#34d399' }} />}
-                      {impactCounts.neutral > 0 && <div style={{ flex: impactCounts.neutral, background: '#fbbf24' }} />}
-                      {impactCounts.negative > 0 && <div style={{ flex: impactCounts.negative, background: '#f87171' }} />}
+                      {(['positive', 'neutral', 'negative'] as const).map(k => impactCounts[k] > 0 && (
+                        <div key={k} style={{ flex: impactCounts[k], background: impactColor(k), transition: 'opacity .2s', opacity: impactHover && impactHover !== k ? .25 : 1 }} />
+                      ))}
                     </div>
                     <div style={{ display: 'flex', gap: 12, fontSize: 8 }}>
-                      {impactCounts.positive > 0 && <span style={{ color: '#34d399', fontWeight: 800 }}>↑ {impactCounts.positive} positive</span>}
-                      {impactCounts.neutral > 0 && <span style={{ color: '#fbbf24', fontWeight: 800 }}>→ {impactCounts.neutral} neutral</span>}
-                      {impactCounts.negative > 0 && <span style={{ color: '#f87171', fontWeight: 800 }}>↓ {impactCounts.negative} negative</span>}
+                      {(['positive', 'neutral', 'negative'] as const).map(k => impactCounts[k] > 0 && (
+                        <span key={k}
+                          style={{ color: impactColor(k), fontWeight: 800, cursor: 'pointer', transition: 'opacity .2s', opacity: impactHover && impactHover !== k ? .3 : 1 }}
+                          onMouseEnter={() => setImpactHover(k)}
+                          onMouseLeave={() => setImpactHover(null)}
+                        >{impactArrow(k)} {impactCounts[k]} {k}</span>
+                      ))}
                     </div>
+                    <AnimatePresence>
+                      {impactHover && impactGroups[impactHover]?.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: .15 }}
+                          style={{ overflow: 'hidden', marginTop: 8 }}
+                          onMouseEnter={() => setImpactHover(impactHover)}
+                          onMouseLeave={() => setImpactHover(null)}
+                        >
+                          <div style={{ padding: '10px 12px', background: a(.03), borderLeft: `2px solid ${impactColor(impactHover)}` }}>
+                            <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.1em', textTransform: 'uppercase', color: impactColor(impactHover), marginBottom: 6 }}>{impactLabel(impactHover)}</div>
+                            {impactGroups[impactHover].map((title, ti) => (
+                              <div key={ti} style={{ fontSize: 9, color: a(.5), lineHeight: 1.6, padding: '2px 0' }}>
+                                <span style={{ color: impactColor(impactHover), marginRight: 6, fontSize: 8, opacity: .6 }}>›</span>{title}
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                )}
+                  );
+                })()}
 
                 {/* Key Investments */}
                 {co.key_initiatives.length > 0 && (() => {
@@ -1316,6 +1460,19 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
       {/* ═══ ROBIN CHAT ═══ */}
       <RobinChat data={activeData} focus={robinFocus} autoMessage={robinAutoMsg} />
+
+      {/* ═══ FAQ MODAL ═══ */}
+      <FAQModal open={faqOpen} onClose={() => setFaqOpen(false)} />
+
+      {/* ═══ TOUR GUIDE ═══ */}
+      {tourOpen && <TourGuide onClose={() => setTourOpen(false)} scrollContainer={ref} onAction={(act: TourAction) => {
+        switch (act.type) {
+          case 'setTrend': setActiveTrend(act.index ?? 0); break;
+          case 'openTrend': setExpanded({ t: 'trend', i: act.index ?? 0 }); break;
+          case 'openCompany': setSelCompany(act.index ?? 0); break;
+          case 'closeAll': setExpanded(null); setSelCompany(null); break;
+        }
+      }} />}
     </div>
   );
 }
@@ -1465,14 +1622,16 @@ function TransformedChartsSection({ charts, onAskRobin }: { charts: TransformedC
 /* ══════════════════════════════════════════════
    DATA VISUALIZATIONS — ECharts premium rendering
    ══════════════════════════════════════════════ */
-function GeneratedChartsSection({ financials, topCompanies, findingCounts, onAskRobin, onSelectCompany, onScrollToSection }: {
+function GeneratedChartsSection({ financials, topCompanies, findingCounts, allTrends, allOpportunities, allChallenges, onAskRobin, onSelectCompany, onScrollToSection }: {
   financials: FinancialHighlight[]; topCompanies: TopCompany[];
   findingCounts: { trends: number; opportunities: number; challenges: number };
+  allTrends: TrendsTrend[]; allOpportunities: TrendsOpportunity[]; allChallenges: TrendsChallenge[];
   onAskRobin: (label: string) => void;
   onSelectCompany: (idx: number) => void; onScrollToSection: (anchor: string) => void;
 }) {
   const light = useCompassStore(s => s.theme) === 'light';
   const a = (o: number) => `rgb(var(--ink) / ${o})`;
+  const [heatDetail, setHeatDetail] = useState<{ compIdx: number; catIdx: number } | null>(null);
   // Dynamic import state for ECharts (heavy library — lazy load)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [EChart, setEChart] = useState<any>(null);
@@ -1584,7 +1743,25 @@ function GeneratedChartsSection({ financials, topCompanies, findingCounts, onAsk
     backgroundColor: bgColor,
     tooltip: { position: 'top' as const, backgroundColor: light ? '#fff' : '#1a1a1a', borderColor, textStyle: { color: light ? '#000' : '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'Inter' },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      formatter: (p: any) => `<b>${compNames[p.value[1]]}</b><br/>${cats[p.value[0]]}: ${p.value[2]} findings`,
+      formatter: (p: any) => {
+        const [catIdx, compIdx, count] = p.value as [number, number, number];
+        const co = topCompanies[compIdx];
+        if (!co) return '';
+        const catColor = catIdx === 0 ? '#A100FF' : catIdx === 1 ? '#34d399' : '#f87171';
+        const findArrays = [allTrends, allOpportunities, allChallenges] as const;
+        const indices = co.linked_findings[catKeys[catIdx]];
+        const titles = indices.map(idx => (findArrays[catIdx] as { t: string }[])[idx]?.t).filter(Boolean);
+        let html = `<div style="max-width:280px"><b>${co.name}</b><br/><span style="color:${catColor}">${cats[catIdx]}: ${count} findings</span>`;
+        if (titles.length > 0) {
+          html += `<div style="margin-top:6px;border-top:1px solid ${light ? 'rgba(0,0,0,.08)' : 'rgba(255,255,255,.1)'};padding-top:6px">`;
+          titles.slice(0, 5).forEach(t => { html += `<div style="font-size:10px;color:${light ? 'rgba(0,0,0,.5)' : 'rgba(255,255,255,.5)'};padding:2px 0">› ${t}</div>`; });
+          if (titles.length > 5) html += `<div style="font-size:9px;color:${light ? 'rgba(0,0,0,.25)' : 'rgba(255,255,255,.25)'}">+${titles.length - 5} more — click to see all</div>`;
+          html += '</div>';
+        }
+        if (count > 0) html += `<div style="font-size:8px;color:${light ? 'rgba(0,0,0,.2)' : 'rgba(255,255,255,.2)'};margin-top:4px">Click for full detail</div>`;
+        html += '</div>';
+        return html;
+      },
     },
     grid: { left: 10, right: 20, top: 30, bottom: 10, containLabel: true },
     xAxis: { type: 'category' as const, data: [...cats], position: 'top' as const, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: txtColor, fontSize: 9, fontWeight: 800, fontFamily: 'Inter' }, splitArea: { show: false } },
@@ -1657,10 +1834,37 @@ function GeneratedChartsSection({ financials, topCompanies, findingCounts, onAsk
                 onEvents={{ click: (p: { value?: [number, number, number] }) => {
                   if (!p.value) return;
                   const [catIdx, compIdx] = p.value;
-                  const sectionMap = ['sec-0', 'sec-2', 'sec-4'];
-                  if (p.value[2] > 0) onScrollToSection(sectionMap[catIdx]);
+                  if (p.value[2] > 0) setHeatDetail({ compIdx, catIdx });
                   else onSelectCompany(compIdx);
                 } }} />
+              {/* Heatmap detail panel */}
+              <AnimatePresence>
+                {heatDetail && (() => {
+                  const co = topCompanies[heatDetail.compIdx];
+                  if (!co) return null;
+                  const catKey = catKeys[heatDetail.catIdx];
+                  const catColor = heatDetail.catIdx === 0 ? '#A100FF' : heatDetail.catIdx === 1 ? '#34d399' : '#f87171';
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const findArrays: Record<string, any[]> = { trends: allTrends, opportunities: allOpportunities, challenges: allChallenges };
+                  const findings = co.linked_findings[catKey].map(idx => findArrays[catKey][idx]).filter(Boolean);
+                  return (
+                    <motion.div key="heat-detail" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: .2 }}
+                      style={{ marginTop: 12, padding: '16px 20px', background: a(.02), borderLeft: `3px solid ${catColor}`, position: 'relative' }}>
+                      <button onClick={() => setHeatDetail(null)} style={{ position: 'absolute', top: 8, right: 10, background: 'none', border: 'none', color: a(.25), cursor: 'pointer', fontSize: 12 }}>✕</button>
+                      <div style={{ fontSize: 7, fontWeight: 900, letterSpacing: '.15em', textTransform: 'uppercase', color: catColor, marginBottom: 3 }}>{co.name} — {cats[heatDetail.catIdx]}</div>
+                      <div style={{ fontSize: 8, color: a(.2), marginBottom: 10 }}>{findings.length} linked finding{findings.length !== 1 ? 's' : ''}</div>
+                      {findings.map((f, fi) => (
+                        <div key={fi} style={{ padding: '8px 0', borderBottom: fi < findings.length - 1 ? `1px solid ${a(.06)}` : 'none' }}>
+                          <div style={{ fontSize: 11, fontWeight: 800, lineHeight: 1.3 }}>{f.t}</div>
+                          <div style={{ fontSize: 9, color: a(.35), lineHeight: 1.6, marginTop: 3 }}>{f.d?.substring(0, 150)}{(f.d?.length || 0) > 150 ? '...' : ''}</div>
+                          {f.source?.url && <a href={f.source.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 7, fontWeight: 700, color: '#60a5fa', textDecoration: 'none', marginTop: 4, display: 'inline-block' }}>{f.source.organization || 'Source'} ↗</a>}
+                        </div>
+                      ))}
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
             </motion.div>
           )}
         </div>
