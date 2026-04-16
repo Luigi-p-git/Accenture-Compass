@@ -6,8 +6,8 @@ Accenture Compass is an interactive strategic intelligence platform with two mai
 - **Compass Dashboard** — World map → Region → Country → Topics (Talent, Industries, Financials, Macro, Trends)
 - **AccSense Magazine** — Interactive editorial intelligence report powered by AlphaSense data
 
-**Current version:** 0.4.1 (Phase 1 complete + AccSense Magazine + AlphaSense Pipeline + Robin AI + AI Structuring + Cross-Reference System)
-**Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4 + Framer Motion 12.38 + D3-geo + Zustand + Recharts + jsPDF + clsx + tailwind-merge
+**Current version:** 0.4.2 (Phase 1 complete + AccSense Magazine + AlphaSense Pipeline + Robin AI + AI Structuring + Cross-Reference System + ECharts Data Viz + PDF Link Extraction + Unified Admin)
+**Stack:** Next.js 16 (App Router) + React 19 + Tailwind v4 + Framer Motion 12.38 + D3-geo + Zustand + Recharts + ECharts + jsPDF + pdfjs-dist + clsx + tailwind-merge
 **Design system:** Stitch (Accenture dark theme) + Editorial broadsheet (Magazine)
 
 ## Running the App
@@ -32,7 +32,9 @@ npm run start     # Start production server
 | `src/app/api/alphasense/` | AlphaSense conversion — text/PDF/JSON → structured findings (regex + AI fallback) |
 | `src/app/api/robin-chat/` | Robin AI chat proxy — Claude CLI file-based backend |
 | `src/app/api/ai-structure/` | AI structuring endpoint — Claude CLI PDF/text → JSON |
-| `src/app/api/extract-images/` | PDF image extractor — chart images for Visual Intelligence |
+| `src/app/api/extract-images/` | PDF image extractor — JPEG/PNG binary extraction with dedup |
+| `src/app/api/extract-links/` | PDF link extractor — pdfjs-dist annotation parsing + citation-to-finding matching with date bonuses |
+| `src/app/api/transform-charts/` | Chart recreation — Claude vision analyzes chart images → ECharts specs |
 | `src/app/api/pipeline/` | AI pipeline API — document processing (simulated) |
 | `src/components/intelligence/HeadlineSelector.tsx` | 3-cascade slot-machine spinner (Region › Country › Industry) |
 | `src/components/intelligence/RobinChat.tsx` | Robin AI floating chat — context-aware, auto-sends from "Ask Robin" buttons |
@@ -166,22 +168,54 @@ public/visuals/{country}/{industry}/chart-1.jpeg
 
 **Important:** Do NOT pipe large text through stdin on Windows — use the file-based approach.
 
+## Data Visualizations (ECharts)
+
+`echarts` + `echarts-for-react` — 4 interactive panels in `GeneratedChartsSection`:
+
+1. **Market Metrics** — horizontal bar chart from `financial_highlights` (amber gradient, sorted ascending)
+2. **Company Revenue** — horizontal bar chart of top companies (blue gradient, clickable → opens company panel)
+3. **Intelligence Mix** — donut chart of trends/opps/challenges counts (clickable → scrolls to section)
+4. **Company × Finding Heatmap** — purple intensity grid (clickable → navigates)
+
+All charts lazy-loaded via dynamic import. Dark/light theme aware.
+
+## PDF Link Extraction (pdfjs-dist)
+
+`/api/extract-links/route.ts` — Mozilla PDF.js for deterministic annotation parsing:
+
+1. Extracts citation# → URL from PDF link annotations (decompresses zlib streams)
+2. Parses Citations section (last pages) for citation# → document title + org + date
+3. Two-tier matching: **Tier 1** uses `citation_id` from data (perfect), **Tier 2** uses title + org + date text matching
+4. Date-matching bonus: +8 score when citation date matches finding source date
+5. `getSourceUrl()` only returns real URLs — no fake search links
+
+## Admin Pipeline (Unified)
+
+Single "Process & Update Website" button handles JSON + PDF together:
+
+1. **Paste JSON** (left) or **Paste Text** — auto-detects country + industry from subject
+2. **Attach PDF** (right) — optional, with 3 checkboxes:
+   - **Extract Charts** (instant) — pulls JPEG/PNG images from PDF binary
+   - **Extract Links** (instant) — pdfjs-dist citation → URL matching
+   - **Recreate Charts** (~2min) — Claude vision analyzes chart images → ECharts specs
+3. Progress bar with step labels + percentage
+4. All saved to data in one flow
+
 ## AlphaSense Pipeline (No API Keys Required)
 
-1. Admin → Manual → AlphaSense Mode ON
-2. Configure region/country/industry/timeframe → prompt generated
-3. Copy prompt → run in AlphaSense Deep Research
-4. Paste output (text/PDF/JSON) → Convert to JSON
-5. Parser: block format → legacy numbered → lenient (3 fallback levels)
-6. Extracts: findings, financial highlights, news items, companies affected, top companies
-7. Select country + industry → Update Website (triggers cross-linker + sanitizer)
-8. Optional: Upload PDF for chart image extraction (Visual Intelligence)
-9. Magazine reads data and renders all sections
+1. Admin → Paste JSON or Text + optionally attach PDF
+2. Parser: block format → legacy numbered → lenient (3 fallback levels)
+3. Extracts: findings, financial highlights, news items, companies affected, top companies
+4. Cross-linker runs on save (bidirectional finding↔company↔news linking)
+5. PDF link extraction matches real AlphaSense document URLs to findings
+6. Magazine renders all sections with interconnected navigation
 
 **AlphaSense Prompt features:**
-- "Top 10 Companies" section with linked findings, ticker, sector, HQ, revenue, key initiatives
+- "Top 10 Companies" with linked findings, ticker, sector, HQ, revenue, key investments with citation brackets
+- "Key Investments" with `[citation#]` for PDF link matching
+- "Source Citation" field for perfect finding-to-URL matching
 - "Analyst Quote" field in Broker Analysis articles
-- Cross-reference rules (13-15): impact criteria, broker Companies Mentioned + Sector, company Investment Focus + Recent Moves
+- Cross-reference rules: impact criteria, broker Companies Mentioned + Sector, company Investment Focus + Recent Moves
 
 ## AccSense Magazine Sections
 
@@ -192,15 +226,17 @@ public/visuals/{country}/{industry}/chart-1.jpeg
 | Emerging Trends | Master-detail: hover list → expanded card with LinkedCompanyChips | trends[] |
 | Broker Analysis | Magazine crest + spine, paginated 3×2 article grid, page-turn animation | news_items[] |
 | Opportunities | Horizontal scroll vertical cards with sentence-boundary truncation | opportunities[] |
-| Visual Intelligence | Compact thumbnail grid (180px) with lightbox, nav arrows, "Ask Robin" | images[] |
-| Key Challenges | Master-detail with severity colors, LinkedCompanyChips | challenges[] |
-| Companies Intelligence | Editorial vertical list, company logos, colored finding-count pills, side panel | top_companies[] |
-| News (Coming Soon) | Newspaper-style section with newsprint grain, double rules | Future |
+| Data Visualizations | 4 ECharts panels: market metrics, company revenue, donut, heatmap — all interactive | financial_highlights[] + top_companies[] |
+| Key Challenges | Master-detail with severity colors (sorted critical→low), LinkedCompanyChips | challenges[] |
+| Companies Intelligence | Editorial vertical list, company logos, colored finding-count pills, enriched side panel | top_companies[] |
+| Report Charts | Coming Soon teaser (code preserved: TransformedChartsSection + Claude vision pipeline) | transformed_charts[] |
+| AccSense Daily | Coming Soon teaser (code preserved in git history) | Future |
 
-## Key Types (v0.4.1)
+## Key Types (v0.4.2)
 
 ```typescript
-TopCompany: name, ticker, sector, hq, revenue, key_initiatives, investment_focus?, recent_moves?, logo_url?, linked_findings: { trends[], opportunities[], challenges[] }
+TopCompany: name, ticker, sector, hq, revenue, key_initiatives (string[] — may contain [citation#] brackets), investment_focus?, recent_moves?, logo_url?, linked_findings: { trends[], opportunities[], challenges[] }
+TransformedChart: original_src, title, type ('bar'|'line'|'pie'|'combo'|'stacked'|'waterfall'|...), categories?, series[], description, source?, annotations?, isDualAxis?, isStacked?
 TrendsChallenge: t, d, severity ('critical'|'high'|'medium'|'low'), ic, source?, affected_companies?, linked_top_companies?
 TrendsOpportunity: t, p, timeline, d, ic, priority?, source?, affected_companies?, linked_top_companies?
 TrendsTrend: t, tag, d, ic, source?, affected_companies?, linked_top_companies?
