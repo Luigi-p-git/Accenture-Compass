@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#0a0a0a"/>
+  <!-- Outer ring -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="#A100FF" stroke-width="4" opacity="0.3"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#A100FF" stroke-width="2" opacity="0.15"/>
+  <!-- Cardinal ticks -->
+  <rect x="253" y="50" width="6" height="24" rx="3" fill="#A100FF" opacity="0.8"/>
+  <rect x="253" y="438" width="6" height="24" rx="3" fill="#A100FF" opacity="0.4"/>
+  <rect x="50" y="253" width="24" height="6" rx="3" fill="#A100FF" opacity="0.4"/>
+  <rect x="438" y="253" width="24" height="6" rx="3" fill="#A100FF" opacity="0.4"/>
+  <!-- Minor ticks -->
+  <rect x="253.5" y="86" width="5" height="12" rx="2.5" fill="#A100FF" opacity="0.15" transform="rotate(45 256 256)"/>
+  <rect x="253.5" y="86" width="5" height="12" rx="2.5" fill="#A100FF" opacity="0.15" transform="rotate(135 256 256)"/>
+  <rect x="253.5" y="86" width="5" height="12" rx="2.5" fill="#A100FF" opacity="0.15" transform="rotate(225 256 256)"/>
+  <rect x="253.5" y="86" width="5" height="12" rx="2.5" fill="#A100FF" opacity="0.15" transform="rotate(315 256 256)"/>
+  <!-- Compass needle — North (purple) -->
+  <polygon points="256,90 232,256 256,240 280,256" fill="#A100FF"/>
+  <!-- Compass needle — South (dark) -->
+  <polygon points="256,422 232,256 256,272 280,256" fill="#333333"/>
+  <!-- Center dot -->
+  <circle cx="256" cy="256" r="12" fill="#0a0a0a" stroke="#A100FF" stroke-width="3"/>
+  <circle cx="256" cy="256" r="4" fill="#A100FF"/>
+  <!-- ">" watermark -->
+  <text x="310" y="280" font-family="Arial" font-size="80" font-weight="900" fill="#A100FF" opacity="0.08">></text>
+</svg>

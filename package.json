@@ -1,12 +1,13 @@
 {
   "name": "compass",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "package": "next build && node scripts/package.js"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",

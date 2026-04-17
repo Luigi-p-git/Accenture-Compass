@@ -14,8 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   };
 }
 
-export default async function IntelligenceRoute({ params }: { params: Promise<{ country: string }> }) {
+export default async function IntelligenceRoute({ params, searchParams }: { params: Promise<{ country: string }>; searchParams: Promise<{ industry?: string }> }) {
   const { country } = await params;
+  const { industry: industrySlug } = await searchParams;
   const countryName = country.charAt(0).toUpperCase() + country.slice(1).replace(/-/g, ' ');
 
   // Try to load all-industries data as default
@@ -35,5 +36,5 @@ export default async function IntelligenceRoute({ params }: { params: Promise<{ 
     }
   }
 
-  return <IntelligencePage data={data} country={countryName} countrySlug={country} />;
+  return <IntelligencePage data={data} country={countryName} countrySlug={country} initialIndustry={industrySlug} />;
 }

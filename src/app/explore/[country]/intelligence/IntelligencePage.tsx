@@ -169,8 +169,8 @@ function LinkedCompanyChips({ finding, topCompanies, onSelectCompany, source, al
   );
 }
 
-export default function IntelligencePage({ data, country, countrySlug }: {
-  data: TrendsData | null; country: string; countrySlug: string;
+export default function IntelligencePage({ data, country, countrySlug, initialIndustry }: {
+  data: TrendsData | null; country: string; countrySlug: string; initialIndustry?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: ref });
@@ -197,7 +197,16 @@ export default function IntelligencePage({ data, country, countrySlug }: {
 
   const [selRegion, setSelRegion] = useState(initRegion);
   const [selCountry, setSelCountry] = useState(initCountry);
-  const [selIndustry, setSelIndustry] = useState('All Industries');
+  // Resolve initial industry from URL query param slug (e.g. "communications-media" → "Communications & Media")
+  const resolvedIndustry = (() => {
+    if (!initialIndustry) return 'All Industries';
+    // Try to match slug to a known industry name from the HeadlineSelector
+    const slug = initialIndustry.toLowerCase();
+    const industries = ['Communications & Media', 'Banking & Capital Markets', 'Chemicals & Natural Resources', 'Consumer Goods & Services', 'Energy', 'Health & Life Sciences', 'High Tech', 'Industrial', 'Insurance', 'Public Service', 'Retail', 'Travel', 'Utilities'];
+    const match = industries.find(i => i.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') === slug);
+    return match || initialIndustry.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  })();
+  const [selIndustry, setSelIndustry] = useState(resolvedIndustry);
   const [heroKey, setHeroKey] = useState(0);
   const [liveData, setLiveData] = useState<TrendsData | null>(data);
 

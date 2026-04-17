@@ -42,3 +42,8 @@ next-env.d.ts
 .tmp/
 DR-Report-by-Alphasense-*.pdf
 *.jsx
+
+# Distribution outputs
+dist-portable/
+dist-electron/
+
